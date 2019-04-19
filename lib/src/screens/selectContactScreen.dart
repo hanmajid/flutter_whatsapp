@@ -4,11 +4,74 @@ import 'package:flutter_whatsapp/src/helpers/dialogHelper.dart';
 import 'package:flutter_whatsapp/src/widgets/contactItem.dart';
 
 class SelectContactScreen extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return SelectContact();
+  }
+}
+
+class SelectContact extends StatefulWidget {
+  @override
+  _SelectContact createState() => _SelectContact();
+}
+
+class _SelectContact extends State<SelectContact> {
+
+  Future<Iterable<Contact>> _contacts;
+  var numContacts;
+
+  Future<int> _getNumContacts() async {
+    Iterable<Contact> contacts = await ContactsService.getContacts();
+    return contacts.length;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _contacts = _getContacts();
+    _getNumContacts().then((num) {
+      setState(() {
+        numContacts = num;
+      });
+    });
+  }
+
+  Future<Iterable<Contact>> _getContacts() async {
+    return await ContactsService.getContacts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select contact'),
+        title: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2.0),
+              child: Text(
+                  'Select contact',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Container(
+              child: numContacts == null
+               ? null
+              : Text(
+                  '${numContacts} contacts',
+                style: TextStyle(
+                  fontSize: 12.0,
+                ),
+              ),
+            )
+          ],
+        ),
         actions: <Widget>[
           IconButton(
             tooltip: 'Search',
@@ -41,69 +104,40 @@ class SelectContactScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SelectContact(),
-    );
-  }
-
-  void _selectOption(dynamic option) {
-
-  }
-}
-
-class SelectContact extends StatefulWidget {
-  @override
-  _SelectContact createState() => _SelectContact();
-}
-
-class _SelectContact extends State<SelectContact> {
-
-  Future<Iterable<Contact>> _contacts;
-
-  @override
-  void initState() {
-    super.initState();
-    _contacts = _getContacts();
-  }
-
-  Future<Iterable<Contact>> _getContacts() async {
-    return await ContactsService.getContacts();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Iterable<Contact>>(
-      future: _contacts,
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
-              ),
-            );
-          case ConnectionState.active:
-          case ConnectionState.waiting:
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
-              ),
-            );
-          case ConnectionState.done:
-            if (snapshot.hasError) {
+      body: FutureBuilder<Iterable<Contact>>(
+        future: _contacts,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
               return Center(
-                child: Text('Error: ${snapshot.error}'),
+                child: CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+                ),
               );
-            }
-            return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, i) {
-                  return ContactItem(snapshot.data.elementAt(i),
-                      null,
-                      () => onTapProfileContactItem(snapshot.data.elementAt(i)), () {});
-                });
-        }
-        return null; // unreachable
-      },
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+                ),
+              );
+            case ConnectionState.done:
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              }
+              return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (context, i) {
+                    return ContactItem(snapshot.data.elementAt(i),
+                        null,
+                            () => onTapProfileContactItem(snapshot.data.elementAt(i)), () {});
+                  });
+          }
+          return null; // unreachable
+        },
+      ),
     );
   }
 
@@ -118,4 +152,8 @@ class _SelectContact extends State<SelectContact> {
     );
   }
 
+
+  void _selectOption(dynamic option) {
+
+  }
 }
