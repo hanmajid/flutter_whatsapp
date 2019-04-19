@@ -5,21 +5,33 @@ import 'package:flutter_whatsapp/src/services/chatService.dart';
 import 'package:flutter_whatsapp/src/widgets/chatItem.dart';
 
 class ChatsTab extends StatefulWidget {
+  TextEditingController _searchBarController;
+
+  ChatsTab(this._searchBarController);
+
   @override
   _ChatsTab createState() => _ChatsTab();
 }
 
-class _ChatsTab extends State<ChatsTab> with AutomaticKeepAliveClientMixin<ChatsTab> {
-
+class _ChatsTab extends State<ChatsTab>
+    with AutomaticKeepAliveClientMixin<ChatsTab> {
   @override
   bool get wantKeepAlive => true;
 
-  Future<ChatList>_chatList;
+  Future<ChatList> _chatList;
+  ChatList _shownChatList;
+  String _searchKeyword = "";
 
   @override
   void initState() {
+    _shownChatList = new ChatList();
     _chatList = getChats();
     super.initState();
+    widget._searchBarController.addListener(() {
+      setState(() {
+        _searchKeyword = widget._searchBarController.text;
+      });
+    });
   }
 
   @override
@@ -49,10 +61,31 @@ class _ChatsTab extends State<ChatsTab> with AutomaticKeepAliveClientMixin<Chats
                 child: Text('Couldn\'t connect to Internet.'),
               );
             }
+            _shownChatList = snapshot.data;
+            bool isFound = false;
             return ListView.builder(
-                itemCount: snapshot.data.chats.length,
-                itemBuilder: (context2, i) {
-                  return _buildChatItem(context2, snapshot.data.chats[i]);
+                itemCount: _shownChatList.chats.length,
+                itemBuilder: (context, i) {
+                  if (_searchKeyword.isNotEmpty) {
+                    if (!_shownChatList.chats[i].name
+                        .toLowerCase()
+                        .contains(_searchKeyword.toLowerCase())) {
+                      if (!isFound && i >= _shownChatList.chats.length - 1) {
+                        return Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Center(
+                              child: Text(
+                                  'No results found for \'$_searchKeyword\''),
+                            ));
+                      }
+                      return SizedBox(
+                        height: 0.0,
+                      );
+                    }
+                  }
+                  isFound = true;
+                  return _buildChatItem(
+                      context, _searchKeyword, _shownChatList.chats[i]);
                 });
         }
         return null; // unreachable
@@ -60,11 +93,12 @@ class _ChatsTab extends State<ChatsTab> with AutomaticKeepAliveClientMixin<Chats
     );
   }
 
-  Widget _buildChatItem(BuildContext context, Chat chat) {
-    return ChatItem(chat, () => onTapChatItem(context, chat));
+  Widget _buildChatItem(BuildContext context, _searchKeyword, Chat chat) {
+    return ChatItem(chat, _searchKeyword, () => onTapChatItem(context, chat));
   }
 
   static onTapChatItem(BuildContext context, Chat chat) {
-    Scaffold.of(context).showSnackBar(new SnackBar(content: Text("You clicked: ${chat.name}")));
+    Scaffold.of(context)
+        .showSnackBar(new SnackBar(content: Text("You clicked: ${chat.name}")));
   }
 }
