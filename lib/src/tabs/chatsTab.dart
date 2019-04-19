@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/models/chatList.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
 import 'package:flutter_whatsapp/src/services/chatService.dart';
+import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/chatItem.dart';
 
 class ChatsTab extends StatefulWidget {
@@ -94,11 +95,73 @@ class _ChatsTab extends State<ChatsTab>
   }
 
   Widget _buildChatItem(BuildContext context, _searchKeyword, Chat chat) {
-    return ChatItem(chat, _searchKeyword, () => onTapChatItem(context, chat));
+    return ChatItem(chat, _searchKeyword, () => onTapProfileChatItem(context, chat),() => onTapChatItem(context, chat));
   }
 
-  static onTapChatItem(BuildContext context, Chat chat) {
+  void onTapChatItem(BuildContext context, Chat chat) {
     Scaffold.of(context)
         .showSnackBar(new SnackBar(content: Text("You clicked: ${chat.name}")));
+  }
+
+  void onTapProfileChatItem(BuildContext context, Chat chat) {
+    Dialog profileDialog = Dialog(
+      shape: RoundedRectangleBorder(),
+      child: Container(
+        child: Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              SizedBox(
+                child: Stack(
+                  children: <Widget>[
+                    Image(
+                      image: NetworkImage(chat.avatarUrl),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        chat.name,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.message),
+                    onPressed: () {},
+                    color: secondaryColor,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.call),
+                    onPressed: () {},
+                    color: secondaryColor,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.videocam),
+                    onPressed: () {},
+                    color: secondaryColor,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.info_outline),
+                    onPressed: () {},
+                    color: secondaryColor,
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+    showDialog(
+        context: context, builder: (BuildContext context) => profileDialog);
   }
 }

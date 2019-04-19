@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/tabs/chatsTab.dart';
+import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -22,9 +23,6 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
   TextField _searchBar;
   TextEditingController _searchBarController;
 
-  /// FloatingActionButton's background color
-  Color fabBgColor = const Color(0xff20c659);
-  Color fabBgSecondaryColor = const Color(0xff507578);
   List<Widget> _fabs;
 
   static final TextStyle _textBold = const TextStyle(

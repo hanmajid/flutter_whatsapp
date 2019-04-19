@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/home.dart';
+import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class FlutteredApp extends StatelessWidget {
-
-  /// WhatsApp's signature green color.
-  static final primaryColor = const Color(0xff075e54);
-  /// White-ish background color.
-  static final scaffoldBgColor = const Color(0xfffafafa);
 
   /// Default theme.
   static final ThemeData _defaultTheme = new ThemeData(

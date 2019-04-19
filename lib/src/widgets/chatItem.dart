@@ -5,17 +5,36 @@ import 'package:intl/intl.dart';
 class ChatItem extends StatelessWidget {
   Chat _chat;
   String _searchKeyword;
+  var _onProfileTap;
   var _onTap;
 
-  ChatItem(this._chat, this._searchKeyword, this._onTap);
+  ChatItem(this._chat, this._searchKeyword, this._onProfileTap, this._onTap);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 16.0),
-      leading: CircleAvatar(
-        radius: 30.0,
-        backgroundImage: NetworkImage(_chat.avatarUrl),
+//      leading: Container(
+//          child: ConstrainedBox(
+//            constraints: BoxConstraints.expand(),
+//            child: FlatButton(
+//              onPressed: null,
+//              padding: EdgeInsets.all(0.0),
+//              child: CircleAvatar(
+//                radius: 30.0,
+//                backgroundImage: NetworkImage(_chat.avatarUrl),
+//              )
+//            )
+//          )
+//      ),
+      leading: GestureDetector(
+        onTap: () {
+          _onProfileTap();
+        },
+        child: CircleAvatar(
+          radius: 30.0,
+          backgroundImage: NetworkImage(_chat.avatarUrl),
+        ),
       ),
       title: _searchKeyword == null || _searchKeyword.isEmpty
           ? Text(
