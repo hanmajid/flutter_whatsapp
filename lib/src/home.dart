@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/screens/selectContactScreen.dart';
 import 'package:flutter_whatsapp/src/tabs/chatsTab.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
@@ -19,7 +20,6 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
   ChatsTab _chatsTab;
 
   bool _isSearching;
-  String _searchKeyword = "";
   TextField _searchBar;
   TextEditingController _searchBarController;
 
@@ -72,7 +72,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
       ),
       PopupMenuButton(
         tooltip: "More options",
-        onSelected: _select,
+        onSelected: _selectOption,
         itemBuilder: (BuildContext context) {
           return _popupMenus[_tabIndex];
         },
@@ -168,7 +168,13 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
           child: Icon(Icons.message),
           backgroundColor: fabBgColor,
           foregroundColor: Colors.white,
-          onPressed: () {}),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return SelectContactScreen();
+                }
+            ));
+          }),
       Container(
         height: 150.0,
         child: Column(
@@ -254,11 +260,5 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
     return;
   }
 
-  void _select(dynamic item) {}
-
-  void onSearchBarChanged(text) {
-    setState(() {
-      _searchKeyword = text;
-    });
-  }
+  void _selectOption(dynamic option) {}
 }
