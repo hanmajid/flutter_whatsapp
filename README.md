@@ -2,15 +2,29 @@
 
 Whatsapp clone using Flutter.
 
-## Getting Started
+## About
 
-This project is a starting point for a Flutter application.
+This project is still under development. The list below are the features that I'm planning to implement. The item that's been implemented is marked by strikethrough.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+1. ~~AppBar & TabBar~~
+2. Chat Tab
+    1. ~~Retrieve list of chats from API and display them~~.
+    2. ~~Search through chats~~.
+    3. ~~Show popup when profile is clicked~~.
+    4. ~~Create New Chat Screen~~
+        1. ~~Retrieve list of contacts in phone~~.
+    5. Chat Detail Screen
+        1. ~~Retrieve chat details (conversations) from API and display them~~.
+        2. Send a new text message.
+3. Status Tab
+    1. Retrieve list of statuses from API and display them.
+    2. Search through statuses.
+    3. Status Detail Screen
+        1. Retrieve status details from API and display them.
+4. Calls Tab
+    1. Retrieve list of calls from API and display them.
+    2. Call Detail Screen
+5. Camera Tab
+    1. List all images in Gallery and display them.
+    2. Take picture and save in storage.
+    3. Record a video and save in storage.
