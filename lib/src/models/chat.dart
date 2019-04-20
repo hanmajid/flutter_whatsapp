@@ -28,6 +28,11 @@ Chat chatFromJson(String str) {
   return Chat.fromJson(jsonData);
 }
 
+Chat chatFromJsonFull(String str) {
+  final jsonData = json.decode(str);
+  return Chat.fromJsonFull(jsonData);
+}
+
 class Chat {
   int id;
   String name;
@@ -49,6 +54,19 @@ class Chat {
       name: json["name"],
       avatarUrl: json["avatarPath"],
       lastMessage: Message.fromJson(json["lastMessage"]),
+    );
+  }
+
+  factory Chat.fromJsonFull(Map<String, dynamic> json) {
+    List<Message> messages = new List<Message>();
+    messages = json["messages"].map<Message>((i) => Message.fromJson(i)).toList();
+    print(messages);
+
+    return new Chat(
+      id: json["id"],
+      name: json["name"],
+      avatarUrl: json["avatarPath"],
+      messages: messages,
     );
   }
 }

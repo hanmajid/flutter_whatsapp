@@ -4,8 +4,6 @@ import 'package:flutter_whatsapp/src/helpers/dialogHelper.dart';
 import 'package:flutter_whatsapp/src/widgets/contactItem.dart';
 
 class SelectContactScreen extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return SelectContact();

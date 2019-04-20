@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/helpers/dialogHelper.dart';
 import 'package:flutter_whatsapp/src/models/chatList.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
+import 'package:flutter_whatsapp/src/screens/detailChatScreen.dart';
 import 'package:flutter_whatsapp/src/services/chatService.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/chatItem.dart';
@@ -96,12 +97,32 @@ class _ChatsTab extends State<ChatsTab>
   }
 
   Widget _buildChatItem(BuildContext context, _searchKeyword, Chat chat) {
-    return ChatItem(chat, _searchKeyword, () => onTapProfileChatItem(chat),() => onTapChatItem(context, chat));
+    return ChatItem(
+      chat: chat,
+      searchKeyword: _searchKeyword,
+      iconSubtitle: _getIconSubtitle(chat),
+      onTapProfile: () => onTapProfileChatItem(chat),
+      onTap: () => onTapChatItem(context, chat)
+    );
+  }
+
+  Icon _getIconSubtitle(Chat chat) {
+    if(!chat.lastMessage.isYou) return null;
+
+    if(chat.lastMessage.isRead) {
+      return new Icon(Icons.done_all, color: blueCheckColor, size: 16.0,);
+    }
+    else {
+      return new Icon(Icons.done_all, color: Colors.grey, size: 16.0,);
+    }
   }
 
   void onTapChatItem(BuildContext context, Chat chat) {
-    Scaffold.of(context)
-        .showSnackBar(new SnackBar(content: Text("You clicked: ${chat.name}")));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) {
+          return DetailChatScreen(chat);
+        }
+    ));
   }
 
   void onTapProfileChatItem(Chat chat) {
