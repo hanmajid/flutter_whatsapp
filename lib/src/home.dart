@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/screens/selectContactScreen.dart';
 import 'package:flutter_whatsapp/src/tabs/chatsTab.dart';
+import 'package:flutter_whatsapp/src/tabs/statusTab.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class Home extends StatefulWidget {
@@ -18,6 +19,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
   List<Widget> _tabBars;
   List<Widget> _tabViews;
   ChatsTab _chatsTab;
+  StatusTab _statusTab;
 
   bool _isSearching;
   TextField _searchBar;
@@ -46,6 +48,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
       ),
     );
     _chatsTab = ChatsTab(_searchBarController);
+    _statusTab = StatusTab();
     _tabController = new TabController(
       length: 4,
       initialIndex: _tabIndex,
@@ -108,9 +111,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
         child: Text('Camera'),
       ),
       _chatsTab,
-      Center(
-        child: Text('Status'),
-      ),
+      _statusTab,
       Center(
         child: Text('Calls'),
       ),
