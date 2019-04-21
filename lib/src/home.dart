@@ -48,7 +48,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
       ),
     );
     _chatsTab = ChatsTab(_searchBarController);
-    _statusTab = StatusTab();
+    _statusTab = StatusTab(_searchBarController);
     _tabController = new TabController(
       length: 4,
       initialIndex: _tabIndex,

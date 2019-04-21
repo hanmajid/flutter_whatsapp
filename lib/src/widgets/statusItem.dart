@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/helpers/textHelper.dart';
+import 'package:flutter_whatsapp/src/models/status.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:intl/intl.dart';
 
 class StatusItem extends StatelessWidget {
-  String name;
-  DateTime timestamp;
-  String thumbnailUrl;
-  bool isSeen;
+  Status status;
   var onTap;
+  String searchKeyword;
 
   StatusItem({
-    this.name,
-    this.timestamp,
-    this.thumbnailUrl,
-    this.isSeen,
+    this.status,
     this.onTap,
+    this.searchKeyword,
   });
 
   @override
@@ -22,16 +20,21 @@ class StatusItem extends StatelessWidget {
     return ListTile(
       onTap: () {},
       leading: _getThumbnail(),
-      title: Text(
-        name,
-        style: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-      ),
+      title: getHighlightedText(
+          status.name,
+          searchKeyword,
+          TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+          TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          )),
       subtitle: Text(
-        DateFormat('dd/MM/yy, HH:mm').format(timestamp),
+        DateFormat('dd/MM/yy, HH:mm').format(status.timestamp),
         style: TextStyle(
           fontSize: 12.0,
           color: Colors.grey,
@@ -48,7 +51,7 @@ class StatusItem extends StatelessWidget {
           color: Colors.white,
           borderRadius: new BorderRadius.all(new Radius.circular(30.0)),
           border: new Border.all(
-            color: isSeen ? Colors.grey : statusThumbnailBorderColor,
+            color: status.isSeen ? Colors.grey : statusThumbnailBorderColor,
             width: 2.0,
           )
       ),
@@ -56,7 +59,7 @@ class StatusItem extends StatelessWidget {
         decoration: BoxDecoration(
             color: Colors.white,
             image: DecorationImage(
-              image: NetworkImage(thumbnailUrl),
+              image: NetworkImage(status.thumbnailUrl),
               fit: BoxFit.cover,
             ),
             borderRadius: new BorderRadius.all(new Radius.circular(30.0)),

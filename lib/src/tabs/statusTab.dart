@@ -4,6 +4,11 @@ import 'package:flutter_whatsapp/src/services/statusService.dart';
 import 'package:flutter_whatsapp/src/widgets/statusItem.dart';
 
 class StatusTab extends StatefulWidget {
+
+  TextEditingController _searchBarController;
+
+  StatusTab(this._searchBarController);
+
   @override
   _StatusTab createState() => _StatusTab();
 }
@@ -15,6 +20,7 @@ class _StatusTab extends State<StatusTab>
 
   StatusList _statusList;
   Future<StatusList> _mStatusList;
+  String _searchKeyword = "";
 
   @override
   void initState() {
@@ -22,6 +28,11 @@ class _StatusTab extends State<StatusTab>
     _mStatusList = getStatuses().then((statusList) {
       setState(() {
         _statusList = statusList;
+      });
+    });
+    widget._searchBarController.addListener(() {
+      setState(() {
+        _searchKeyword = widget._searchBarController.text;
       });
     });
   }
@@ -51,14 +62,31 @@ class _StatusTab extends State<StatusTab>
                 child: Text('Error: ${snapshot.error}'),
               );
             }
+            bool isFound = false;
             return ListView.builder(
               itemCount: _statusList.statuses.length,
               itemBuilder: (context, i) {
+                if (_searchKeyword.isNotEmpty) {
+                  if (!_statusList.statuses[i].name
+                      .toLowerCase()
+                      .contains(_searchKeyword.toLowerCase())) {
+                    if (!isFound && i >= _statusList.statuses.length - 1) {
+                      return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Center(
+                            child: Text(
+                                'No results found for \'$_searchKeyword\''),
+                          ));
+                    }
+                    return SizedBox(
+                      height: 0.0,
+                    );
+                  }
+                }
+                isFound = true;
                 return StatusItem(
-                  name: _statusList.statuses[i].name,
-                  timestamp: _statusList.statuses[i].timestamp,
-                  thumbnailUrl: _statusList.statuses[i].thumbnailUrl,
-                  isSeen: _statusList.statuses[i].isSeen,
+                  status: _statusList.statuses[i],
+                  searchKeyword: _searchKeyword,
                 );
               },
             );

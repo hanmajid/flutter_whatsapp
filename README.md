@@ -18,7 +18,7 @@ This project is still under development. The list below are the features that I'
         2. ~~Send a new text message~~.
 3. Status Tab
     1. ~~Retrieve list of statuses from API and display them~~.
-    2. Search through statuses.
+    2. ~~Search through statuses~~.
     3. Status Detail Screen
         1. Retrieve status details from API and display them.
 4. Calls Tab

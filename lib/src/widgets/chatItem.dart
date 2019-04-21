@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/helpers/textHelper.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
 import 'package:intl/intl.dart';
 
@@ -38,8 +39,9 @@ class ChatItem extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             )
-          : _getHighlightedName(
+          : getHighlightedText(
               chat.name,
+              searchKeyword,
               TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -67,35 +69,6 @@ class ChatItem extends StatelessWidget {
         ),
       ),
       onTap: onTap,
-    );
-  }
-
-  RichText _getHighlightedName(
-      String text, TextStyle normalStyle, TextStyle highlightStyle) {
-    int index = text.toLowerCase().indexOf(searchKeyword.toLowerCase());
-
-    List<TextSpan> texts = new List<TextSpan>();
-    if (index > 0) {
-      texts.add(TextSpan(
-        text: text.substring(0, index),
-        style: normalStyle,
-      ));
-    }
-    texts.add(TextSpan(
-      text: text.substring(index, index + searchKeyword.length),
-      style: highlightStyle,
-    ));
-    if (index + searchKeyword.length < text.length) {
-      texts.add(TextSpan(
-        text: text.substring(index + searchKeyword.length),
-        style: normalStyle,
-      ));
-    }
-
-    return RichText(
-      text: TextSpan(
-        children: texts,
-      ),
     );
   }
 }
