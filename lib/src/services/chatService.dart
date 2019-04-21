@@ -13,3 +13,8 @@ Future<Chat> getChat(int id) async {
   final response = await http.get('$url/$id');
   return chatFromJsonFull(response.body);
 }
+
+Future<Chat> updateChat(int id, String message) async {
+  final response = await http.post('$url/$id', body: {'message': message});
+  return chatFromJsonFull(response.body);
+}

@@ -5,12 +5,14 @@ class Message {
   DateTime timestamp;
   bool isYou;
   bool isRead;
+  bool isSent;
 
   Message({
     this.content,
     this.timestamp,
     this.isYou,
     this.isRead,
+    this.isSent
   });
 
   factory Message.fromJson(Map<String, dynamic> json) {
@@ -19,6 +21,7 @@ class Message {
       timestamp: DateTime.parse(json["timestamp"]),
       isYou: json["isYou"],
       isRead: json["isRead"],
+      isSent: true,
     );
   }
 }

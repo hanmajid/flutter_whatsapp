@@ -7,12 +7,14 @@ class MessageItem extends StatelessWidget {
   final DateTime timestamp;
   final bool isYou;
   final bool isRead;
+  final bool isSent;
 
   MessageItem({
     this.content,
     this.timestamp,
     this.isYou,
     this.isRead = false,
+    this.isSent = true,
   });
 
   @override
@@ -81,12 +83,7 @@ class MessageItem extends StatelessWidget {
                               width: 4.0,
                             ),
                             isYou
-                                ? Icon(
-                                    Icons.done_all,
-                                    size: 18.0,
-                                    color:
-                                        isRead ? blueCheckColor : Colors.grey,
-                                  )
+                                ? _getIcon()
                                 : Container()
                           ],
                         ),
@@ -101,53 +98,19 @@ class MessageItem extends StatelessWidget {
     ;
   }
 
-  Widget _buildFriendMessage() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-          child: Container(
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    new BoxShadow(
-                        color: Colors.grey,
-                        offset: new Offset(1.0, 1.0),
-                        blurRadius: 1.0)
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(5.0))),
-              constraints: BoxConstraints(
-                minWidth: 100.0,
-                maxWidth: 280.0,
-              ),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      content,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    new DateFormat('HH:mm').format(timestamp),
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12.0,
-                    ),
-                  )
-                ],
-              )),
-        ),
-      ],
+  Widget _getIcon() {
+    if(!isSent) {
+      return Icon(
+        Icons.check,
+        size: 18.0,
+        color: Colors.grey,
+      );
+    }
+    return Icon(
+      Icons.done_all,
+      size: 18.0,
+      color:
+      isRead ? blueCheckColor : Colors.grey,
     );
   }
 }

@@ -7,15 +7,15 @@ Whatsapp clone using Flutter.
 This project is still under development. The list below are the features that I'm planning to implement. The item that's been implemented is marked by strikethrough.
 
 1. ~~AppBar & TabBar~~
-2. Chat Tab
+2. ~~Chat Tab~~
     1. ~~Retrieve list of chats from API and display them~~.
     2. ~~Search through chats~~.
     3. ~~Show popup when profile is clicked~~.
     4. ~~Create New Chat Screen~~
         1. ~~Retrieve list of contacts in phone~~.
-    5. Chat Detail Screen
+    5. ~~Chat Detail Screen~~
         1. ~~Retrieve chat details (conversations) from API and display them~~.
-        2. Send a new text message.
+        2. ~~Send a new text message~~.
 3. Status Tab
     1. Retrieve list of statuses from API and display them.
     2. Search through statuses.

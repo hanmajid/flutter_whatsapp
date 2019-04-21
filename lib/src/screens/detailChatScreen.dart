@@ -32,14 +32,22 @@ class DetailChatScreen extends StatefulWidget {
 class _DetailChatScreen extends State<DetailChatScreen> {
   Chat _chat;
   List<Widget> _actions;
+  String _message = '';
   PopupMenuButton<ChatDetailMoreMenuOptions> _morePopMenu;
-  Future<List<dynamic>> _messages;
+  Future<List<Message>> _fMessages;
+  List<Message> _messages;
+  TextEditingController textFieldController;
 
   @override
   void initState() {
     super.initState();
     _chat = widget.chat;
-    _messages = getChat(_chat.id).then((chat) => chat.messages.reversed.toList());
+    _fMessages =
+        getChat(_chat.id).then((chat) {
+          setState(() {
+            _messages = chat.messages.reversed.toList();
+          });
+        });
     _actions = <Widget>[
       IconButton(
         icon: Icon(Icons.videocam),
@@ -113,6 +121,12 @@ class _DetailChatScreen extends State<DetailChatScreen> {
         ];
       },
     );
+    textFieldController = new TextEditingController()
+      ..addListener(() {
+        setState(() {
+          _message = textFieldController.text;
+        });
+      });
   }
 
   @override
@@ -177,7 +191,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
           Flexible(
             flex: 1,
             child: FutureBuilder(
-                future: _messages,
+                future: _fMessages,
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.none:
@@ -201,16 +215,16 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                           child: Text('Error: ${snapshot.error}'),
                         );
                       }
-                      bool isFound = false;
                       return ListView.builder(
                           reverse: true,
-                          itemCount: snapshot.data.length,
+                          itemCount: _messages.length,
                           itemBuilder: (context, i) {
                             return MessageItem(
-                              content: snapshot.data[i].content,
-                              timestamp: snapshot.data[i].timestamp,
-                              isYou: snapshot.data[i].isYou,
-                              isRead: snapshot.data[i].isRead,
+                              content: _messages[i].content,
+                              timestamp: _messages[i].timestamp,
+                              isYou: _messages[i].isYou,
+                              isRead: _messages[i].isRead,
+                              isSent: _messages[i].isSent,
                             );
                           });
                   }
@@ -241,7 +255,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                         ),
                         Flexible(
                           child: TextField(
-                            onChanged: (text) {},
+                            controller: textFieldController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.all(0.0),
@@ -258,11 +272,13 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                           icon: Icon(Icons.attach_file),
                           onPressed: () {},
                         ),
-                        IconButton(
-                          color: iconColor,
-                          icon: Icon(Icons.camera_alt),
-                          onPressed: () {},
-                        ),
+                        _message.isEmpty || _message == null
+                            ? IconButton(
+                                color: iconColor,
+                                icon: Icon(Icons.camera_alt),
+                                onPressed: () {},
+                              )
+                            : Container(),
                       ],
                     ),
                   ),
@@ -273,8 +289,10 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                     elevation: 2.0,
                     backgroundColor: secondaryColor,
                     foregroundColor: Colors.white,
-                    child: Icon(Icons.settings_voice),
-                    onPressed: () {},
+                    child: _message.isEmpty || _message == null
+                        ? Icon(Icons.settings_voice)
+                        : Icon(Icons.send),
+                    onPressed: _sendMessage,
                   ),
                 )
               ],
@@ -309,4 +327,34 @@ class _DetailChatScreen extends State<DetailChatScreen> {
 
   // TODO
   _onSelectMoreMenuOption(ChatDetailMoreMenuOptions option) {}
+
+  int offsetUnsentMessage = 0;
+
+  void _sendMessage() {
+    if(_message == null || _message.isEmpty) return;
+
+    updateChat(_chat.id, _message).then((chat) {
+      setState(() {
+        _messages[offsetUnsentMessage-1].isSent = true;
+        offsetUnsentMessage--;
+      });
+    });
+    
+    setState(() {
+      _messages.insert(
+        0,
+          new Message(
+            content: _message,
+            timestamp: DateTime.now(),
+            isRead: false,
+            isYou: true,
+            isSent: false,
+          )
+      );
+      offsetUnsentMessage++;
+      _message = '';
+      textFieldController.text = '';
+    });
+    
+  }
 }
