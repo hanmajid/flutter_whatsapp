@@ -20,7 +20,7 @@ class StatusItem extends StatelessWidget {
     return ListTile(
       onTap: () {},
       leading: _getThumbnail(),
-      title: getHighlightedText(
+      title: TextHelpers.getHighlightedText(
           status.name,
           searchKeyword,
           TextStyle(

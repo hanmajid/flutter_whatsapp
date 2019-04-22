@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/screens/selectContactScreen.dart';
+import 'package:flutter_whatsapp/src/tabs/calls_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/chatsTab.dart';
 import 'package:flutter_whatsapp/src/tabs/statusTab.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
@@ -20,6 +21,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
   List<Widget> _tabViews;
   ChatsTab _chatsTab;
   StatusTab _statusTab;
+  CallsTab _callsTab;
 
   bool _isSearching;
   TextField _searchBar;
@@ -49,6 +51,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
     );
     _chatsTab = ChatsTab(_searchBarController);
     _statusTab = StatusTab(_searchBarController);
+    _callsTab = CallsTab(_searchBarController);
     _tabController = new TabController(
       length: 4,
       initialIndex: _tabIndex,
@@ -112,9 +115,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
       ),
       _chatsTab,
       _statusTab,
-      Center(
-        child: Text('Calls'),
-      ),
+      _callsTab,
     ];
 
     _popupMenus  = [

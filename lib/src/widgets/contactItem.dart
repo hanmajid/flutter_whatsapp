@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter_whatsapp/src/helpers/textHelper.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class ContactItem extends StatelessWidget {
@@ -37,8 +38,9 @@ class ContactItem extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             )
-          : _getHighlightedName(
+          : TextHelpers.getHighlightedText(
               _contact.displayName,
+              _searchKeyword,
               TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -54,35 +56,6 @@ class ContactItem extends StatelessWidget {
 //        maxLines: 1,
 //      ),
       onTap: _onTap,
-    );
-  }
-
-  RichText _getHighlightedName(
-      String text, TextStyle normalStyle, TextStyle highlightStyle) {
-    int index = text.toLowerCase().indexOf(_searchKeyword.toLowerCase());
-
-    List<TextSpan> texts = new List<TextSpan>();
-    if (index > 0) {
-      texts.add(TextSpan(
-        text: text.substring(0, index),
-        style: normalStyle,
-      ));
-    }
-    texts.add(TextSpan(
-      text: text.substring(index, index + _searchKeyword.length),
-      style: highlightStyle,
-    ));
-    if (index + _searchKeyword.length < text.length) {
-      texts.add(TextSpan(
-        text: text.substring(index + _searchKeyword.length),
-        style: normalStyle,
-      ));
-    }
-
-    return RichText(
-      text: TextSpan(
-        children: texts,
-      ),
     );
   }
 }

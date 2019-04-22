@@ -39,7 +39,7 @@ class ChatItem extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             )
-          : getHighlightedText(
+          : TextHelpers.getHighlightedText(
               chat.name,
               searchKeyword,
               TextStyle(

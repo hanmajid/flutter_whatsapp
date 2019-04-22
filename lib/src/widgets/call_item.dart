@@ -1,0 +1,93 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/helpers/textHelper.dart';
+import 'package:flutter_whatsapp/src/models/call.dart';
+import 'package:flutter_whatsapp/src/values/colors.dart';
+import 'package:intl/intl.dart';
+
+class CallItem extends StatelessWidget {
+  final Call call;
+  final String searchKeyword;
+  final Function onProfileTap;
+  final Function onTap;
+
+  CallItem({
+    this.call,
+    this.searchKeyword,
+    this.onProfileTap,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: GestureDetector(
+        onTap: () {
+          onProfileTap();
+        },
+        child: CircleAvatar(
+          radius: 30.0,
+          backgroundImage: NetworkImage(call.avatarUrl),
+        ),
+      ),
+      title: searchKeyword == null || searchKeyword.isEmpty
+          ? Text(
+              call.name,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            )
+          : TextHelpers.getHighlightedText(
+              call.name,
+              searchKeyword,
+              TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              )),
+      subtitle: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          call.lastCall.isIncoming
+          ? Icon(
+            Icons.call_received,
+            color: call.lastCall.isMissed ? Colors.red : Colors.green,
+            size: 16.0,
+          )
+          : Icon(
+            Icons.call_made,
+            color: call.lastCall.isMissed ? Colors.red : Colors.green,
+            size: 16.0,
+          ),
+          call.callDetails.length > 1
+          ? Text(
+              '(${call.callDetails.length})',
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Colors.grey,
+            ),
+          )
+          : Container(),
+          Text(
+            DateFormat('dd/MM/yy, HH:mm').format(call.lastCall.timestamp),
+            style: TextStyle(
+              fontSize: 12.0,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+      trailing: IconButton(
+          icon: Icon(Icons.call, color: Theme.of(context).primaryColor,),
+          onPressed: (){}
+      ),
+      onTap: onTap,
+    );
+  }
+}

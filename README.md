@@ -22,7 +22,7 @@ This project is still under development. The list below are the features that I'
     3. Status Detail Screen
         1. Retrieve status details from API and display them.
 4. Calls Tab
-    1. Retrieve list of calls from API and display them.
+    1. ~~Retrieve list of calls from API and display them~~.
     2. Call Detail Screen
 5. Camera Tab
     1. List all images in Gallery and display them.
