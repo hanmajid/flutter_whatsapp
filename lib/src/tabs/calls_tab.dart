@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/models/call_list.dart';
+import 'package:flutter_whatsapp/src/screens/detail_call_screen.dart';
 import 'package:flutter_whatsapp/src/services/call_service.dart';
 import 'package:flutter_whatsapp/src/widgets/call_item.dart';
 
@@ -94,7 +95,13 @@ class _CallsTab extends State<CallsTab> with AutomaticKeepAliveClientMixin<Calls
                 return CallItem(
                   call: _callList.calls[i],
                   searchKeyword: _searchKeyword,
-                  onTap: (){},
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return DetailCallScreen(_callList.calls[i]);
+                        }
+                    ));
+                  },
                   onProfileTap: (){},
                 );
               },
