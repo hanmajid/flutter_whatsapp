@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_whatsapp/src/helpers/dialogHelper.dart';
-import 'package:flutter_whatsapp/src/models/chatList.dart';
+import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
+import 'package:flutter_whatsapp/src/models/chat_list.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
-import 'package:flutter_whatsapp/src/screens/detailChatScreen.dart';
-import 'package:flutter_whatsapp/src/services/chatService.dart';
+import 'package:flutter_whatsapp/src/screens/detail_chat_screen.dart';
+import 'package:flutter_whatsapp/src/services/chat_service.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
-import 'package:flutter_whatsapp/src/widgets/chatItem.dart';
+import 'package:flutter_whatsapp/src/widgets/chat_item.dart';
 
 class ChatsTab extends StatefulWidget {
   TextEditingController _searchBarController;
@@ -28,7 +28,7 @@ class _ChatsTab extends State<ChatsTab>
   @override
   void initState() {
     _shownChatList = new ChatList();
-    _chatList = getChats();
+    _chatList = ChatService.getChats();
     super.initState();
     widget._searchBarController.addListener(() {
       setState(() {
@@ -126,7 +126,7 @@ class _ChatsTab extends State<ChatsTab>
   }
 
   void onTapProfileChatItem(Chat chat) {
-    Dialog profileDialog = getProfileDialog(
+    Dialog profileDialog = DialogHelpers.getProfileDialog(
       imageUrl: chat.avatarUrl,
       name: chat.name,
     );

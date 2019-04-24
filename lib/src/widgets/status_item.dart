@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_whatsapp/src/helpers/textHelper.dart';
+import 'package:flutter_whatsapp/src/helpers/text_helpers.dart';
 import 'package:flutter_whatsapp/src/models/status.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:intl/intl.dart';
 
 class StatusItem extends StatelessWidget {
-  Status status;
-  var onTap;
-  String searchKeyword;
+  final Status status;
+  final Function onTap;
+  final String searchKeyword;
 
   StatusItem({
     this.status,

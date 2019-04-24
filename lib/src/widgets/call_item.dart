@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_whatsapp/src/helpers/textHelper.dart';
+import 'package:flutter_whatsapp/src/helpers/text_helpers.dart';
 import 'package:flutter_whatsapp/src/models/call.dart';
-import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:intl/intl.dart';
 
 class CallItem extends StatelessWidget {
@@ -55,25 +54,25 @@ class CallItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           call.lastCall.isIncoming
-          ? Icon(
-            Icons.call_received,
-            color: call.lastCall.isMissed ? Colors.red : Colors.green,
-            size: 16.0,
-          )
-          : Icon(
-            Icons.call_made,
-            color: call.lastCall.isMissed ? Colors.red : Colors.green,
-            size: 16.0,
-          ),
+              ? Icon(
+                  Icons.call_received,
+                  color: call.lastCall.isMissed ? Colors.red : Colors.green,
+                  size: 16.0,
+                )
+              : Icon(
+                  Icons.call_made,
+                  color: call.lastCall.isMissed ? Colors.red : Colors.green,
+                  size: 16.0,
+                ),
           call.callDetails.length > 1
-          ? Text(
-              '(${call.callDetails.length})',
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Colors.grey,
-            ),
-          )
-          : Container(),
+              ? Text(
+                  '(${call.callDetails.length})',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.grey,
+                  ),
+                )
+              : Container(),
           Text(
             DateFormat('dd/MM/yy, HH:mm').format(call.lastCall.timestamp),
             style: TextStyle(
@@ -84,9 +83,11 @@ class CallItem extends StatelessWidget {
         ],
       ),
       trailing: IconButton(
-          icon: Icon(Icons.call, color: Theme.of(context).primaryColor,),
-          onPressed: (){}
-      ),
+          icon: Icon(
+            Icons.call,
+            color: Theme.of(context).primaryColor,
+          ),
+          onPressed: () {}),
       onTap: onTap,
     );
   }

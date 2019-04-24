@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
-import 'package:flutter_whatsapp/src/helpers/dialogHelper.dart';
-import 'package:flutter_whatsapp/src/widgets/contactItem.dart';
+import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
+import 'package:flutter_whatsapp/src/widgets/contact_item.dart';
 
 class SelectContactScreen extends StatelessWidget {
   @override
@@ -128,9 +128,11 @@ class _SelectContact extends State<SelectContact> {
               return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, i) {
-                    return ContactItem(snapshot.data.elementAt(i),
-                        null,
-                            () => onTapProfileContactItem(snapshot.data.elementAt(i)), () {});
+                    return ContactItem(
+                        contact: snapshot.data.elementAt(i),
+                        onProfileTap: () => onTapProfileContactItem(snapshot.data.elementAt(i)),
+                        onTap:() {}
+                        );
                   });
           }
           return null; // unreachable
@@ -140,7 +142,7 @@ class _SelectContact extends State<SelectContact> {
   }
 
   void onTapProfileContactItem(Contact contact) {
-    Dialog profileDialog = getProfileDialog(
+    Dialog profileDialog = DialogHelpers.getProfileDialog(
       imageUrl: null,
       name: contact.displayName,
     );

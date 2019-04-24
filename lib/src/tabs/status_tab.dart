@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_whatsapp/src/models/statusList.dart';
-import 'package:flutter_whatsapp/src/services/statusService.dart';
-import 'package:flutter_whatsapp/src/widgets/statusItem.dart';
+import 'package:flutter_whatsapp/src/models/status_list.dart';
+import 'package:flutter_whatsapp/src/services/status_service.dart';
+import 'package:flutter_whatsapp/src/widgets/status_item.dart';
 
 class StatusTab extends StatefulWidget {
 
@@ -25,7 +25,7 @@ class _StatusTab extends State<StatusTab>
   @override
   void initState() {
     super.initState();
-    _mStatusList = getStatuses().then((statusList) {
+    _mStatusList = StatusService.getStatuses().then((statusList) {
       setState(() {
         _statusList = statusList;
       });

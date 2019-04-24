@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
-import 'package:flutter_whatsapp/src/services/chatService.dart';
+import 'package:flutter_whatsapp/src/services/chat_service.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
-import 'package:flutter_whatsapp/src/widgets/messageItem.dart';
+import 'package:flutter_whatsapp/src/widgets/message_item.dart';
 
 enum ChatDetailMenuOptions {
   viewContact,
@@ -43,7 +43,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
     super.initState();
     _chat = widget.chat;
     _fMessages =
-        getChat(_chat.id).then((chat) {
+        ChatService.getChat(_chat.id).then((chat) {
           setState(() {
             _messages = chat.messages.reversed.toList();
           });
@@ -333,7 +333,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
   void _sendMessage() {
     if(_message == null || _message.isEmpty) return;
 
-    updateChat(_chat.id, _message).then((chat) {
+    ChatService.updateChat(_chat.id, _message).then((chat) {
       setState(() {
         _messages[offsetUnsentMessage-1].isSent = true;
         offsetUnsentMessage--;

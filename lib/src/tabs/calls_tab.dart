@@ -25,7 +25,7 @@ class _CallsTab extends State<CallsTab> with AutomaticKeepAliveClientMixin<Calls
   @override
   void initState() {
     super.initState();
-    _fCallList = getCalls().then((callList) {
+    _fCallList = CallService.getCalls().then((callList) {
       setState(() {
         _callList = callList;
       });

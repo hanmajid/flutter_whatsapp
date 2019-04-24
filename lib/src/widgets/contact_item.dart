@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
-import 'package:flutter_whatsapp/src/helpers/textHelper.dart';
+import 'package:flutter_whatsapp/src/helpers/text_helpers.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class ContactItem extends StatelessWidget {
-  Contact _contact;
-  String _searchKeyword;
-  var _onProfileTap;
-  var _onTap;
+  final Contact contact;
+  final String searchKeyword;
+  final Function onProfileTap;
+  final Function onTap;
 
-  ContactItem(
-      this._contact, this._searchKeyword, this._onProfileTap, this._onTap);
+  ContactItem({
+    this.contact,
+    this.searchKeyword,
+    this.onProfileTap,
+    this.onTap
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +30,12 @@ class ContactItem extends StatelessWidget {
               size: 45.0,
             ),
             color: lightGrey,
-            onPressed: _onProfileTap
+            onPressed: onProfileTap
         ),
       ),
-      title: _searchKeyword == null || _searchKeyword.isEmpty
+      title: searchKeyword == null || searchKeyword.isEmpty
           ? Text(
-              _contact.displayName,
+              contact.displayName,
               maxLines: 1,
               style: TextStyle(
                 fontSize: 18.0,
@@ -39,8 +43,8 @@ class ContactItem extends StatelessWidget {
               ),
             )
           : TextHelpers.getHighlightedText(
-              _contact.displayName,
-              _searchKeyword,
+              contact.displayName,
+              searchKeyword,
               TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -55,7 +59,7 @@ class ContactItem extends StatelessWidget {
 //        _contact.displayName.lastMessage.content,
 //        maxLines: 1,
 //      ),
-      onTap: _onTap,
+      onTap: onTap,
     );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_whatsapp/src/screens/selectContactScreen.dart';
+import 'package:flutter_whatsapp/src/screens/select_contact_screen.dart';
 import 'package:flutter_whatsapp/src/tabs/calls_tab.dart';
-import 'package:flutter_whatsapp/src/tabs/chatsTab.dart';
-import 'package:flutter_whatsapp/src/tabs/statusTab.dart';
+import 'package:flutter_whatsapp/src/tabs/chats_tab.dart';
+import 'package:flutter_whatsapp/src/tabs/status_tab.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class Home extends StatefulWidget {
@@ -110,8 +110,11 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
     ];
 
     _tabViews = <Widget>[
-      Center(
-        child: Text('Camera'),
+      Container(
+        color: Colors.black,
+        child: Center(
+          child: Text('Camera'),
+        ),
       ),
       _chatsTab,
       _statusTab,
@@ -218,7 +221,9 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: _tabIndex == 0
+          ? null
+        : AppBar(
         backgroundColor: _isSearching
           ? Colors.white
           : null,

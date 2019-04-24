@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_whatsapp/src/helpers/textHelper.dart';
+import 'package:flutter_whatsapp/src/helpers/text_helpers.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
 import 'package:intl/intl.dart';
 
 class ChatItem extends StatelessWidget {
-  Chat chat;
-  String searchKeyword;
-  Icon iconSubtitle;
-  var onTapProfile;
-  var onTap;
+  final Chat chat;
+  final String searchKeyword;
+  final Icon iconSubtitle;
+  final Function onTapProfile;
+  final Function onTap;
 
   ChatItem(
       {this.chat,
@@ -54,7 +54,10 @@ class ChatItem extends StatelessWidget {
               )),
       subtitle: Row(
         children: <Widget>[
-          iconSubtitle == null ? Container() : Padding(padding: EdgeInsets.only(right: 2.0),child: iconSubtitle),
+          iconSubtitle == null
+              ? Container()
+              : Padding(
+                  padding: EdgeInsets.only(right: 2.0), child: iconSubtitle),
           Text(
             chat.lastMessage.content,
             maxLines: 1,
