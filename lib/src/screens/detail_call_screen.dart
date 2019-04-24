@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/models/call.dart';
 import 'package:flutter_whatsapp/src/models/call_detail.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
@@ -58,9 +59,21 @@ class _DetailCallScreen extends State<DetailCallScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  CircleAvatar(
-                    radius: 30.0,
-                    backgroundImage: NetworkImage(widget.call.avatarUrl),
+                  GestureDetector(
+                    onTap: () {
+                      Dialog profileDialog = DialogHelpers.getProfileDialog(
+                        imageUrl: widget.call.avatarUrl,
+                        name: widget.call.name,
+                      );
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => profileDialog
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 30.0,
+                      backgroundImage: NetworkImage(widget.call.avatarUrl),
+                    ),
                   ),
                   Expanded(
                     child: Padding(

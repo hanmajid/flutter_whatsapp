@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/models/call_list.dart';
 import 'package:flutter_whatsapp/src/screens/detail_call_screen.dart';
 import 'package:flutter_whatsapp/src/services/call_service.dart';
@@ -102,7 +103,16 @@ class _CallsTab extends State<CallsTab> with AutomaticKeepAliveClientMixin<Calls
                         }
                     ));
                   },
-                  onProfileTap: (){},
+                  onProfileTap: (){
+                    Dialog profileDialog = DialogHelpers.getProfileDialog(
+                      imageUrl: _callList.calls[i].avatarUrl,
+                      name: _callList.calls[i].name,
+                    );
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => profileDialog
+                    );
+                  },
                 );
               },
             );
