@@ -4,6 +4,8 @@ Whatsapp clone using Flutter.
 
 ## About
 
+This is a clone of WhatsApp (version 2.19.98) with [Flutter](https://flutter.dev).
+
 This project is still under development. The list below are the features that I'm planning to implement. The item that's been implemented is marked by strikethrough.
 
 1. ~~AppBar & TabBar~~
@@ -29,3 +31,8 @@ This project is still under development. The list below are the features that I'
     1. List all images in Gallery and display them.
     2. Take picture and save in storage.
     3. Record a video and save in storage.
+
+## Others
+
+- [Trello board](https://trello.com/b/xg3PHKxO/fluttered-whatsapp)
+- [My blog](http://blog.hanmajid.com/posts/272/fluttered---whatsapp)
