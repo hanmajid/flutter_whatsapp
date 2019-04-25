@@ -1,46 +1,31 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/models/status_list.dart';
 import 'package:flutter_whatsapp/src/services/status_service.dart';
 import 'package:flutter_whatsapp/src/widgets/status_item.dart';
 
-class StatusTab extends StatefulWidget {
+class StatusTab extends StatelessWidget {
 
-  TextEditingController _searchBarController;
+  final String searchKeyword;
+  final AsyncMemoizer memoizer;
+  final refresh;
 
-  StatusTab(this._searchBarController);
+  StatusTab({
+    this.memoizer,
+    this.searchKeyword,
+    this.refresh,
+  });
 
-  @override
-  _StatusTab createState() => _StatusTab();
-}
-
-class _StatusTab extends State<StatusTab>
-    with AutomaticKeepAliveClientMixin<StatusTab> {
-  @override
-  bool get wantKeepAlive => true;
-
-  StatusList _statusList;
-  Future<StatusList> _mStatusList;
-  String _searchKeyword = "";
-
-  @override
-  void initState() {
-    super.initState();
-    _mStatusList = StatusService.getStatuses().then((statusList) {
-      setState(() {
-        _statusList = statusList;
-      });
-    });
-    widget._searchBarController.addListener(() {
-      setState(() {
-        _searchKeyword = widget._searchBarController.text;
-      });
+  _getStatusList() {
+    return memoizer.runOnce(() async {
+      return StatusService.getStatuses();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<StatusList>(
-      future: _mStatusList,
+    return FutureBuilder(
+      future: _getStatusList(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -58,24 +43,33 @@ class _StatusTab extends State<StatusTab>
             );
           case ConnectionState.done:
             if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
+              return Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Error: ${snapshot.error}', textAlign: TextAlign.center,),
+                    RaisedButton(
+                      child: Text('Refresh'),
+                      onPressed: refresh,
+                    )
+                  ]
               );
             }
             bool isFound = false;
+            StatusList _statusList = snapshot.data;
             return ListView.builder(
               itemCount: _statusList.statuses.length,
               itemBuilder: (context, i) {
-                if (_searchKeyword.isNotEmpty) {
+                if (searchKeyword.isNotEmpty) {
                   if (!_statusList.statuses[i].name
                       .toLowerCase()
-                      .contains(_searchKeyword.toLowerCase())) {
+                      .contains(searchKeyword.toLowerCase())) {
                     if (!isFound && i >= _statusList.statuses.length - 1) {
                       return Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Center(
                             child: Text(
-                                'No results found for \'$_searchKeyword\''),
+                                'No results found for \'$searchKeyword\''),
                           ));
                     }
                     return SizedBox(
@@ -86,7 +80,7 @@ class _StatusTab extends State<StatusTab>
                 isFound = true;
                 return StatusItem(
                   status: _statusList.statuses[i],
-                  searchKeyword: _searchKeyword,
+                  searchKeyword: searchKeyword,
                 );
               },
             );

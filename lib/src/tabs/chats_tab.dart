@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/models/chat_list.dart';
@@ -7,42 +8,80 @@ import 'package:flutter_whatsapp/src/services/chat_service.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/chat_item.dart';
 
-class ChatsTab extends StatefulWidget {
-  TextEditingController _searchBarController;
+class ChatsTab extends StatelessWidget {
+  final String searchKeyword;
+  final AsyncMemoizer memoizer;
+  final refresh;
 
-  ChatsTab(this._searchBarController);
+  ChatsTab({
+    this.memoizer,
+    this.searchKeyword,
+    this.refresh,
+  });
 
-  @override
-  _ChatsTab createState() => _ChatsTab();
-}
-
-class _ChatsTab extends State<ChatsTab>
-    with AutomaticKeepAliveClientMixin<ChatsTab> {
-  @override
-  bool get wantKeepAlive => true;
-
-  Future<ChatList> _chatList;
-  ChatList _shownChatList;
-  String _searchKeyword = "";
-
-  @override
-  void initState() {
-    _shownChatList = new ChatList();
-    _chatList = ChatService.getChats();
-    super.initState();
-    widget._searchBarController.addListener(() {
-      setState(() {
-        _searchKeyword = widget._searchBarController.text;
-      });
+  _getChatList() {
+    return memoizer.runOnce(() {
+      return ChatService.getChats();
     });
+  }
+
+  Icon _getIconSubtitle(Chat chat) {
+    if (!chat.lastMessage.isYou) return null;
+
+    if (chat.lastMessage.isRead) {
+      return new Icon(
+        Icons.done_all,
+        color: blueCheckColor,
+        size: 16.0,
+      );
+    } else {
+      return new Icon(
+        Icons.done_all,
+        color: Colors.grey,
+        size: 16.0,
+      );
+    }
+  }
+
+  void onTapChatItem(BuildContext context, Chat chat) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) {
+      return DetailChatScreen(
+        chat: chat,
+      );
+    }));
+  }
+
+  void onTapProfileChatItem(BuildContext context, Chat chat) {
+    Dialog profileDialog = DialogHelpers.getProfileDialog(
+        context: context,
+        imageUrl: chat.avatarUrl,
+        name: chat.name,
+        onTapMessage: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (BuildContext context) {
+            return DetailChatScreen(
+              chat: chat,
+            );
+          }));
+        });
+    showDialog(
+        context: context, builder: (BuildContext context) => profileDialog);
+  }
+
+  Widget _buildChatItem(BuildContext context, _searchKeyword, Chat chat) {
+    return ChatItem(
+        chat: chat,
+        searchKeyword: _searchKeyword,
+        iconSubtitle: _getIconSubtitle(chat),
+        onTapProfile: () => onTapProfileChatItem(context, chat),
+        onTap: () => onTapChatItem(context, chat));
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
-    return FutureBuilder<ChatList>(
-      future: _chatList,
+    return FutureBuilder(
+      future: _getChatList(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -60,25 +99,33 @@ class _ChatsTab extends State<ChatsTab>
             );
           case ConnectionState.done:
             if (snapshot.hasError) {
-              return Center(
-                child: Text('Couldn\'t connect to Internet.'),
+              return Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Error: ${snapshot.error}', textAlign: TextAlign.center,),
+                  RaisedButton(
+                    child: Text('Refresh'),
+                    onPressed: refresh,
+                  )
+                ]
               );
             }
-            _shownChatList = snapshot.data;
+            ChatList _shownChatList = snapshot.data;
             bool isFound = false;
             return ListView.builder(
                 itemCount: _shownChatList.chats.length,
                 itemBuilder: (context, i) {
-                  if (_searchKeyword.isNotEmpty) {
+                  if (searchKeyword.isNotEmpty) {
                     if (!_shownChatList.chats[i].name
                         .toLowerCase()
-                        .contains(_searchKeyword.toLowerCase())) {
+                        .contains(searchKeyword.toLowerCase())) {
                       if (!isFound && i >= _shownChatList.chats.length - 1) {
                         return Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Center(
                               child: Text(
-                                  'No results found for \'$_searchKeyword\''),
+                                  'No results found for \'$searchKeyword\''),
                             ));
                       }
                       return SizedBox(
@@ -88,63 +135,11 @@ class _ChatsTab extends State<ChatsTab>
                   }
                   isFound = true;
                   return _buildChatItem(
-                      context, _searchKeyword, _shownChatList.chats[i]);
+                      context, searchKeyword, _shownChatList.chats[i]);
                 });
         }
         return null; // unreachable
       },
-    );
-  }
-
-  Widget _buildChatItem(BuildContext context, _searchKeyword, Chat chat) {
-    return ChatItem(
-      chat: chat,
-      searchKeyword: _searchKeyword,
-      iconSubtitle: _getIconSubtitle(chat),
-      onTapProfile: () => onTapProfileChatItem(chat),
-      onTap: () => onTapChatItem(context, chat)
-    );
-  }
-
-  Icon _getIconSubtitle(Chat chat) {
-    if(!chat.lastMessage.isYou) return null;
-
-    if(chat.lastMessage.isRead) {
-      return new Icon(Icons.done_all, color: blueCheckColor, size: 16.0,);
-    }
-    else {
-      return new Icon(Icons.done_all, color: Colors.grey, size: 16.0,);
-    }
-  }
-
-  void onTapChatItem(BuildContext context, Chat chat) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) {
-          return DetailChatScreen(
-              chat: chat,
-          );
-        }
-    ));
-  }
-
-  void onTapProfileChatItem(Chat chat) {
-    Dialog profileDialog = DialogHelpers.getProfileDialog(
-        context: context,
-      imageUrl: chat.avatarUrl,
-      name: chat.name,
-      onTapMessage: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (BuildContext context) {
-              return DetailChatScreen(
-                chat: chat,
-              );
-            }
-        ));
-      }
-    );
-    showDialog(
-        context: context,
-        builder: (BuildContext context) => profileDialog
     );
   }
 }

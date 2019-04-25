@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/screens/camera_screen.dart';
 import 'package:flutter_whatsapp/src/screens/select_contact_screen.dart';
@@ -19,10 +20,6 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
   int _tabIndex;
   TabController _tabController;
   List<Widget> _tabBars;
-  List<Widget> _tabViews;
-  ChatsTab _chatsTab;
-  StatusTab _statusTab;
-  CallsTab _callsTab;
 
   bool _isSearching;
   TextField _searchBar;
@@ -34,6 +31,12 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
     fontWeight: FontWeight.bold,
   );
 
+  String _searchKeyword = '';
+
+  AsyncMemoizer _memoizerChats = AsyncMemoizer();
+  AsyncMemoizer _memoizerStatus = AsyncMemoizer();
+  AsyncMemoizer _memoizerCalls = AsyncMemoizer();
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +44,11 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
     _isSearching = false;
 
     _searchBarController = new TextEditingController();
+    _searchBarController.addListener(() {
+      setState(() {
+        _searchKeyword = _searchBarController.text;
+      });
+    });
 
     _searchBar  = new TextField(
       controller: _searchBarController,
@@ -50,9 +58,6 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
         border: InputBorder.none,
       ),
     );
-    _chatsTab = ChatsTab(_searchBarController);
-    _statusTab = StatusTab(_searchBarController);
-    _callsTab = CallsTab(_searchBarController);
     _tabController = new TabController(
       length: 4,
       initialIndex: _tabIndex,
@@ -108,19 +113,6 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
           style: _textBold,
         ),
       ),
-    ];
-
-    _tabViews = <Widget>[
-//      Container(
-//        color: Colors.black,
-//        child: Center(
-//          child: Text('Camera', style: TextStyle(color: Colors.white)),
-//        ),
-//      ),
-      CameraScreen(),
-      _chatsTab,
-      _statusTab,
-      _callsTab,
     ];
 
     _popupMenus  = [
@@ -259,7 +251,24 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
       ),
       body: TabBarView(
         controller: _tabController,
-        children: _tabViews,
+        children: <Widget>[
+          CameraScreen(),
+          ChatsTab(
+            searchKeyword: _searchKeyword,
+            memoizer: _memoizerChats,
+            refresh: () {setState((){_memoizerChats = new AsyncMemoizer();});}
+          ),
+          StatusTab(
+            searchKeyword: _searchKeyword,
+            memoizer: _memoizerStatus,
+              refresh: () {setState((){_memoizerStatus = new AsyncMemoizer();});}
+          ),
+          CallsTab(
+            searchKeyword: _searchKeyword,
+            memoizer: _memoizerCalls,
+              refresh: () {setState((){_memoizerCalls = new AsyncMemoizer();});}
+          ),
+        ],
       ),
       floatingActionButton: _fabs[_tabIndex],
     );

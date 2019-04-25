@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/models/call.dart';
@@ -7,51 +8,28 @@ import 'package:flutter_whatsapp/src/screens/detail_chat_screen.dart';
 import 'package:flutter_whatsapp/src/services/call_service.dart';
 import 'package:flutter_whatsapp/src/widgets/call_item.dart';
 
-class CallsTab extends StatefulWidget {
-  
-  final TextEditingController searchBarController;
-  
-  CallsTab(this.searchBarController);
-  
-  _CallsTab createState() => _CallsTab();
-}
+class CallsTab extends StatelessWidget {
 
-class _CallsTab extends State<CallsTab> with AutomaticKeepAliveClientMixin<CallsTab> {
+  final String searchKeyword;
+  final AsyncMemoizer memoizer;
+  final refresh;
 
-  @override
-  bool get wantKeepAlive => true;
-  
-  String _searchKeyword = '';
-  Future<CallList> _fCallList;
-  CallList _callList;
-  
-  @override
-  void initState() {
-    super.initState();
-    _fCallList = CallService.getCalls().then((callList) {
-      setState(() {
-        _callList = callList;
-      });
-    });
-    widget.searchBarController.addListener(_onChangeSearchBar);
-  }
-  
-  @override
-  void dispose() {
-    widget.searchBarController.removeListener(_onChangeSearchBar);
-    super.dispose();
-  }
+  CallsTab({
+    this.memoizer,
+    this.searchKeyword,
+    this.refresh,
+  });
 
-  void _onChangeSearchBar() {
-    setState(() {
-      _searchKeyword = widget.searchBarController.text;
+  _getCallList() {
+    return memoizer.runOnce(() {
+      return CallService.getCalls();
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _fCallList,
+      future: _getCallList(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -69,24 +47,33 @@ class _CallsTab extends State<CallsTab> with AutomaticKeepAliveClientMixin<Calls
             );
           case ConnectionState.done:
             if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
+              return Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Error: ${snapshot.error}', textAlign: TextAlign.center,),
+                    RaisedButton(
+                      child: Text('Refresh'),
+                      onPressed: refresh,
+                    )
+                  ]
               );
             }
             bool isFound = false;
+            CallList _callList = snapshot.data;
             return ListView.builder(
               itemCount: _callList.calls.length,
               itemBuilder: (context, i) {
-                if (_searchKeyword.isNotEmpty) {
+                if (searchKeyword.isNotEmpty) {
                   if (!_callList.calls[i].name
                       .toLowerCase()
-                      .contains(_searchKeyword.toLowerCase())) {
+                      .contains(searchKeyword.toLowerCase())) {
                     if (!isFound && i >= _callList.calls.length - 1) {
                       return Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Center(
                             child: Text(
-                                'No results found for \'$_searchKeyword\''),
+                                'No results found for \'$searchKeyword\''),
                           ));
                     }
                     return SizedBox(
@@ -97,7 +84,7 @@ class _CallsTab extends State<CallsTab> with AutomaticKeepAliveClientMixin<Calls
                 isFound = true;
                 return CallItem(
                   call: _callList.calls[i],
-                  searchKeyword: _searchKeyword,
+                  searchKeyword: searchKeyword,
                   onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (BuildContext context) {

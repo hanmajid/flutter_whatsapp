@@ -9,8 +9,8 @@ class LinePainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
     Path path = Path();
-    path.moveTo(0.25 * size.width, size.height);
-    path.lineTo(size.width-10.0, size.height);
+    path.moveTo(0.25 * size.width, 0);
+    path.lineTo(size.width-10.0, 0);
 
     canvas.drawPath(path, paint);
   }
