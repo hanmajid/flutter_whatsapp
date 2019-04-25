@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/helpers/text_helpers.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ChatItem extends StatelessWidget {
   final Chat chat;
@@ -27,7 +28,7 @@ class ChatItem extends StatelessWidget {
         },
         child: CircleAvatar(
           radius: 30.0,
-          backgroundImage: NetworkImage(chat.avatarUrl),
+          backgroundImage: CachedNetworkImageProvider(chat.avatarUrl),
         ),
       ),
       title: searchKeyword == null || searchKeyword.isEmpty

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/helpers/text_helpers.dart';
 import 'package:flutter_whatsapp/src/models/status.dart';
@@ -59,7 +60,7 @@ class StatusItem extends StatelessWidget {
         decoration: BoxDecoration(
             color: Colors.white,
             image: DecorationImage(
-              image: NetworkImage(status.thumbnailUrl),
+              image: CachedNetworkImageProvider(status.thumbnailUrl),
               fit: BoxFit.cover,
             ),
             borderRadius: new BorderRadius.all(new Radius.circular(30.0)),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
+import 'package:flutter_whatsapp/src/models/call.dart';
 import 'package:flutter_whatsapp/src/models/call_list.dart';
 import 'package:flutter_whatsapp/src/screens/detail_call_screen.dart';
+import 'package:flutter_whatsapp/src/screens/detail_chat_screen.dart';
 import 'package:flutter_whatsapp/src/services/call_service.dart';
 import 'package:flutter_whatsapp/src/widgets/call_item.dart';
 
@@ -103,10 +105,20 @@ class _CallsTab extends State<CallsTab> with AutomaticKeepAliveClientMixin<Calls
                         }
                     ));
                   },
-                  onProfileTap: (){
+                  onProfileTap: () {
                     Dialog profileDialog = DialogHelpers.getProfileDialog(
+                      context: context,
                       imageUrl: _callList.calls[i].avatarUrl,
                       name: _callList.calls[i].name,
+                      onTapMessage: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return DetailChatScreen(
+                                id: _callList.calls[i].id,
+                              );
+                            }
+                        ));
+                      },
                     );
                     showDialog(
                         context: context,
@@ -121,5 +133,4 @@ class _CallsTab extends State<CallsTab> with AutomaticKeepAliveClientMixin<Calls
       },
     );
   }
-  
 }

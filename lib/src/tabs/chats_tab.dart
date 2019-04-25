@@ -120,15 +120,27 @@ class _ChatsTab extends State<ChatsTab>
   void onTapChatItem(BuildContext context, Chat chat) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) {
-          return DetailChatScreen(chat);
+          return DetailChatScreen(
+              chat: chat,
+          );
         }
     ));
   }
 
   void onTapProfileChatItem(Chat chat) {
     Dialog profileDialog = DialogHelpers.getProfileDialog(
+        context: context,
       imageUrl: chat.avatarUrl,
       name: chat.name,
+      onTapMessage: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) {
+              return DetailChatScreen(
+                chat: chat,
+              );
+            }
+        ));
+      }
     );
     showDialog(
         context: context,

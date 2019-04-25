@@ -1,8 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class DialogHelpers {
-  static Dialog getProfileDialog({String imageUrl, String name}) {
+  static Dialog getProfileDialog({
+    @required BuildContext context,
+    String imageUrl,
+    String name,
+    GestureTapCallback onTapMessage,
+    GestureTapCallback onTapCall,
+    GestureTapCallback onTapVideoCall,
+    GestureTapCallback onTapInfo,
+  }) {
     Widget image = imageUrl == null
         ? SizedBox(
         child: Container(
@@ -16,7 +25,7 @@ class DialogHelpers {
         )
     )
         : Image(
-      image: NetworkImage(imageUrl),
+      image: CachedNetworkImageProvider(imageUrl),
     );
     return new Dialog(
       shape: RoundedRectangleBorder(),
@@ -58,22 +67,22 @@ class DialogHelpers {
                 children: <Widget>[
                   IconButton(
                     icon: Icon(Icons.message),
-                    onPressed: () {},
+                    onPressed: onTapMessage ?? () => _defOnTapMessage(context),
                     color: secondaryColor,
                   ),
                   IconButton(
                     icon: Icon(Icons.call),
-                    onPressed: () {},
+                    onPressed: onTapCall ?? () => _defOnTapCall(context),
                     color: secondaryColor,
                   ),
                   IconButton(
                     icon: Icon(Icons.videocam),
-                    onPressed: () {},
+                    onPressed: onTapVideoCall ?? () => _defOnTapVideoCall(context),
                     color: secondaryColor,
                   ),
                   IconButton(
                     icon: Icon(Icons.info_outline),
-                    onPressed: () {},
+                    onPressed: onTapInfo ?? () => _defOnTapInfo(context),
                     color: secondaryColor,
                   ),
                 ],
@@ -81,6 +90,42 @@ class DialogHelpers {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  static _defOnTapMessage(BuildContext context) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+          content: Text('Message Button tapped'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static _defOnTapCall(BuildContext context) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+          content: Text('Call Button tapped'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static _defOnTapVideoCall(BuildContext context) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+          content: Text('Video Call Button tapped'),
+          duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
+  static _defOnTapInfo(BuildContext context) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Info Button tapped'),
+        duration: Duration(seconds: 1),
       ),
     );
   }

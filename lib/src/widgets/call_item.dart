@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/helpers/text_helpers.dart';
 import 'package:flutter_whatsapp/src/models/call.dart';
@@ -25,7 +26,7 @@ class CallItem extends StatelessWidget {
         },
         child: CircleAvatar(
           radius: 30.0,
-          backgroundImage: NetworkImage(call.avatarUrl),
+          backgroundImage: CachedNetworkImageProvider(call.avatarUrl),
         ),
       ),
       title: searchKeyword == null || searchKeyword.isEmpty

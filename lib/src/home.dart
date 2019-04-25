@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/screens/camera_screen.dart';
 import 'package:flutter_whatsapp/src/screens/select_contact_screen.dart';
 import 'package:flutter_whatsapp/src/tabs/calls_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/chats_tab.dart';
@@ -110,12 +111,13 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
     ];
 
     _tabViews = <Widget>[
-      Container(
-        color: Colors.black,
-        child: Center(
-          child: Text('Camera'),
-        ),
-      ),
+//      Container(
+//        color: Colors.black,
+//        child: Center(
+//          child: Text('Camera', style: TextStyle(color: Colors.white)),
+//        ),
+//      ),
+      CameraScreen(),
       _chatsTab,
       _statusTab,
       _callsTab,

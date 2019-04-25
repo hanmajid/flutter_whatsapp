@@ -22,9 +22,13 @@ enum ChatDetailMoreMenuOptions {
 }
 
 class DetailChatScreen extends StatefulWidget {
-  Chat chat;
+  final Chat chat;
+  final int id;
 
-  DetailChatScreen(this.chat);
+  DetailChatScreen({
+    this.chat,
+    this.id,
+  });
 
   _DetailChatScreen createState() => _DetailChatScreen();
 }
@@ -42,9 +46,11 @@ class _DetailChatScreen extends State<DetailChatScreen> {
   void initState() {
     super.initState();
     _chat = widget.chat;
+    int chatId = widget.chat?.id ?? widget.id;
     _fMessages =
-        ChatService.getChat(_chat.id).then((chat) {
+        ChatService.getChat(chatId).then((chat) {
           setState(() {
+            _chat = chat;
             _messages = chat.messages.reversed.toList();
           });
         });
@@ -149,7 +155,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
               ),
               CircleAvatar(
                 radius: 15.0,
-                backgroundImage: NetworkImage(_chat.avatarUrl),
+                backgroundImage: _chat == null ? null : NetworkImage(_chat.avatarUrl),
               ),
             ],
           ),
@@ -170,7 +176,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2.0),
                       child: Text(
-                        _chat.name,
+                        _chat == null ? '' : _chat.name,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.0,
