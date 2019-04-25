@@ -24,8 +24,8 @@ dependencies:
   contacts_service: ^0.2.4
 
   camera: ^0.4.3+2
-  video_player: ^0.10.0+5
-  path_provider: ^0.5.0+1
+#  video_player: ^0.10.0+5
+#  path_provider: ^0.5.0+1
 
 dev_dependencies:
   flutter_test:
