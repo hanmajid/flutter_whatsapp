@@ -22,6 +22,8 @@ class Routes {
   static String newCall = '/call/new';
   static String clearCallLog = '/call/clear';
 
+  static String editImage = '/edit/image';
+
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
       handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -47,5 +49,7 @@ class Routes {
     router.define(callDetail, handler: callDetailHandler);
     router.define(newCall, handler: newCallHandler);
     router.define(clearCallLog, handler: clearCallLogHandler);
+
+    router.define(editImage, handler: editImageHandler);
   }
 }

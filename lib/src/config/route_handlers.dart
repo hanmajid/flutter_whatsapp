@@ -5,6 +5,7 @@ import 'package:flutter_whatsapp/src/screens/camera_screen.dart';
 import 'package:flutter_whatsapp/src/screens/detail_call_screen.dart';
 import 'package:flutter_whatsapp/src/screens/detail_chat_screen.dart';
 import 'package:flutter_whatsapp/src/screens/detail_status_screen.dart';
+import 'package:flutter_whatsapp/src/screens/edit_image_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_call_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_chat_broadcast_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_chat_group_screen.dart';
@@ -122,6 +123,20 @@ var clearCallLogHandler = new Handler(
             content: Text('Hi'),
           );
         }
+      );
+    }
+);
+
+var editImageHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      String id = params['id']?.first;
+      String resource = params['resource']?.first;
+
+      print('!!!!!!!!!!!!!!!!! $id : $resource');
+
+      return new EditImageScreen(
+        id: id,
+        resource: Uri.decodeComponent(resource),
       );
     }
 );

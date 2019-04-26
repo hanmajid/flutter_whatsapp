@@ -1,23 +1,26 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:camera/camera.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_whatsapp/src/config/application.dart';
+import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 List<CameraDescription> cameras;
 
 class CameraScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CameraHome(),
-    );
+    return CameraHome();
   }
 }
 
 class CameraHome extends StatefulWidget {
+
   @override
   _CameraHomeState createState() => _CameraHomeState();
 }
@@ -27,6 +30,7 @@ class _CameraHomeState extends State<CameraHome> {
   int _cameraIndex = 0;
   bool isShowGallery = true;
   Future<List<String>> _images;
+  PanelController _panelController;
 
   @override
   void initState() {
@@ -35,6 +39,7 @@ class _CameraHomeState extends State<CameraHome> {
 
     _initCamera(_cameraIndex);
     _getGalleryImages();
+    _panelController = new PanelController();
   }
 
   void _getGalleryImages() {
@@ -48,7 +53,7 @@ class _CameraHomeState extends State<CameraHome> {
             paths.add(f.path);
           }
         });
-        return paths.reversed.toList().sublist(0,10);
+        return paths.reversed.toList().sublist(0, 10);
       });
     });
   }
@@ -98,6 +103,7 @@ class _CameraHomeState extends State<CameraHome> {
       return GestureDetector(
         onTap: () {
           setState(() {
+            _minHeight = 0;
             isShowGallery = false;
           });
         },
@@ -109,118 +115,143 @@ class _CameraHomeState extends State<CameraHome> {
     }
   }
 
+  double _opacity = 0.0;
+  double _minHeight = 210.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         color: Colors.black,
-        child: Stack(children: <Widget>[
-          Column(
-            children: <Widget>[Expanded(child: _cameraPreviewWidget())],
-          ),
-          Positioned(
-              bottom: 10.0,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  isShowGallery
-                      ? Icon(
-                          Icons.keyboard_arrow_up,
-                          color: Colors.white,
-                        )
-                      : Container(),
-                  isShowGallery
-                      ? Container(
-                          height: 80.0,
-                          width: MediaQuery.of(context).size.width,
-                          child: FutureBuilder<List<String>>(
-                              future: _images,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<List<String>> snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.none:
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                            new AlwaysStoppedAnimation<Color>(
-                                                Colors.grey),
-                                      ),
-                                    );
-                                  case ConnectionState.active:
-                                  case ConnectionState.waiting:
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        valueColor:
-                                            new AlwaysStoppedAnimation<Color>(
-                                                Colors.grey),
-                                      ),
-                                    );
-                                  case ConnectionState.done:
-                                    if (snapshot.hasError) {
-                                      return Center(
-                                        child: Text('Error: ${snapshot.error}'),
-                                      );
-                                    }
-                                    if(snapshot.data.length <= 0) return Container();
-                                    return ListView.builder(
-                                      padding: const EdgeInsets.symmetric(horizontal: 1.0),
-                                      itemCount: snapshot.data.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, i) {
-                                        print(snapshot.data[i]);
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            SlidingUpPanel(
+              controller: _panelController,
+              maxHeight: MediaQuery.of(context).size.height,
+              minHeight: _minHeight,
+              panel: Opacity(
+                opacity: _opacity,
+                child: Scaffold(
+                  appBar: AppBar(
+                    elevation: 0.0,
+                    backgroundColor: Colors.white,
+                    leading: IconButton(
+                      color: secondaryColor,
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () {
+                        _panelController.close();
+                      },
+                    ),
+                    actions: <Widget>[
+                      IconButton(
+                        color: secondaryColor,
+                        icon: Icon(Icons.check_box),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                  body: Container(
+                    color: Colors.white,
+                    child: FutureBuilder<List<String>>(
+                        future: _images,
+                        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.none:
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+                                ),
+                              );
+                            case ConnectionState.active:
+                            case ConnectionState.waiting:
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+                                ),
+                              );
+                            case ConnectionState.done:
+                              if (snapshot.hasError) {
+                                return Center(
+                                  child: Text('Error: ${snapshot.error}'),
+                                );
+                              }
+                              if (snapshot.data.length <= 0) return Container();
+                              return CustomScrollView(
+                                slivers: <Widget>[
+                                  SliverPersistentHeader(
+                                    pinned: true,
+                                    floating: false,
+                                    delegate: _SliverAppBarDelegate(
+                                        text:'RECENTLY'
+                                    ),
+                                  ),
+                                  SliverGrid(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      mainAxisSpacing: 2.0,
+                                      crossAxisSpacing: 2.0,
+                                    ),
+                                    delegate: SliverChildBuilderDelegate(
+                                          (context, index) {
                                         return GalleryItemThumbnail(
-                                            resource: snapshot.data[i],
+                                          heroId: 'itemPanel-$index',
+                                          height: 150,
+                                          resource: snapshot.data[index],
                                           onTap: () {
-                                            Scaffold.of(context).showSnackBar(SnackBar(content: Text(snapshot.data[i])));
+                                            Application.router.navigateTo(
+                                              context,
+                                              "/edit/image?resource=${Uri.encodeComponent(snapshot.data[index])}&id=itemPanel-$index",
+                                              transition: TransitionType.fadeIn,
+                                            );
                                           },
                                         );
                                       },
-                                    );
-                                }
-                                return null;
-                              }),
-                        )
-                      : Container(),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.flash_off),
-                          color: Colors.white,
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.panorama_fish_eye),
-                          iconSize: 70.0,
-                          color: Colors.white,
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.switch_camera),
-                          color: Colors.white,
-                          highlightColor: Colors.green,
-                          splashColor: Colors.red,
-                          onPressed: _toggleCamera,
-                        ),
-                      ],
+                                      childCount: snapshot.data.length,
+                                    ),
+                                  )
+                                ],
+                              );
+                          }
+                          return null;
+                        }
                     ),
                   ),
-                  Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text(
-                        'Hold for video, tap for photo',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                      ))
-                ],
-              ))
-        ]),
+                ),
+              ),
+              color: Color.fromARGB(0, 0, 0, 0),
+              collapsed: isShowGallery ? _buildCollapsedPanel() : Container(),
+              body: Container(
+                color: Colors.black,
+                child: _cameraPreviewWidget(),
+              ),
+              onPanelSlide: (double pos) {
+                setState(() {
+                  _opacity = pos;
+                });
+              },
+            ),
+            Positioned(
+              bottom: 2.0,
+              child: Opacity(
+                opacity: 1 - _opacity,
+                child: Column(
+                  children: <Widget>[
+                    _buildCameraControls(),
+                    Container(
+                        child: Text(
+                          'Hold for video, tap for photo',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ))
+                  ],
+                )
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -234,37 +265,185 @@ class _CameraHomeState extends State<CameraHome> {
     });
     _initCamera(_cameraIndex);
   }
+
+  Widget _buildCollapsedPanel() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Icon(
+            Icons.keyboard_arrow_up,
+            color: Colors.white,
+          ),
+          _buildGalleryItems(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCameraControls() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.flash_off),
+            color: Colors.white,
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.panorama_fish_eye),
+            iconSize: 70.0,
+            color: Colors.white,
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.switch_camera),
+            color: Colors.white,
+            highlightColor: Colors.green,
+            splashColor: Colors.red,
+            onPressed: _toggleCamera,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGalleryItems() {
+    return Container(
+      height: 80.0,
+      child: FutureBuilder<List<String>>(
+          future: _images,
+          builder:
+              (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+                  ),
+                );
+              case ConnectionState.active:
+              case ConnectionState.waiting:
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+                  ),
+                );
+              case ConnectionState.done:
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                }
+                if (snapshot.data.length <= 0) return Container();
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                  itemCount: snapshot.data.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, i) {
+                    print(snapshot.data[i]);
+                    return GalleryItemThumbnail(
+                      heroId: 'item-$i',
+                      margin: const EdgeInsets.symmetric(horizontal: 1.0),
+                      height: 81,
+                      resource: snapshot.data[i],
+                      onTap: () {
+                        Application.router.navigateTo(
+                          context,
+                          "/edit/image?resource=${Uri.encodeComponent(snapshot.data[i])}&id=item-$i",
+                          transition: TransitionType.fadeIn,
+                        );
+                      },
+                    );
+                  },
+                );
+            }
+            return null;
+          }),
+    );
+  }
 }
 
 class GalleryItemThumbnail extends StatelessWidget {
-
   GalleryItemThumbnail({
+    this.heroId,
     this.resource,
     this.onTap,
+    this.height,
+    this.margin,
   });
 
+  final String heroId;
+  final double height;
   final String resource;
   final GestureTapCallback onTap;
+  final margin;
 
   @override
   Widget build(BuildContext context) {
+    //print('gallery: img-$id');
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 1.0),
+      margin: margin,
       color: Color.fromRGBO(255, 255, 255, 0.05),
       child: GestureDetector(
         onTap: onTap,
         child: ClipRect(
           child: Align(
             alignment: Alignment.topCenter,
-            child: Image.file(
-              new File(resource),
-              width: 81,
-              height: 81,
-              fit: BoxFit.cover,
+            child: Hero(
+              tag: heroId,
+              child: Image.file(
+                new File(resource),
+                width: height,
+                height: height,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
       ),
     );
   }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+
+  _SliverAppBarDelegate({
+    @required this.text,
+  });
+
+  final String text;
+
+  @override
+  Widget build(
+      BuildContext context,
+      double shrinkOffset,
+      bool overlapsContent)
+  {
+    return new Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+        color: Colors.white,
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 14.0,
+            color: Colors.grey,
+            fontWeight: FontWeight.bold
+          ),
+        )
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
+  }
+
+  @override
+  double get maxExtent => 46.0;
+
+  @override
+  double get minExtent => 46.0;
 }
