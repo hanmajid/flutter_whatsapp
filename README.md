@@ -28,7 +28,7 @@ This project is still under development. The list below are the features that I'
     2. ~~Search through calls~~.
     3. ~~Call Detail Screen~~
 5. Camera Tab
-    1. List all images in Gallery and display them.
+    1. ~~List all images in Gallery and display them~~. (Only images in `DCIM/Camera` in Android)
     2. Take picture and save in storage.
     3. Record a video and save in storage.
 
