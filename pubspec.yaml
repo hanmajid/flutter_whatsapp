@@ -26,6 +26,7 @@ dependencies:
   camera: ^0.4.3+2
 #  video_player: ^0.10.0+5
   path_provider: ^0.5.0+1
+  fluro: ^1.4.0
 
 dev_dependencies:
   flutter_test:

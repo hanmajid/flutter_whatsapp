@@ -1,21 +1,36 @@
 import 'package:async/async.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/config/application.dart';
+import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_whatsapp/src/screens/camera_screen.dart';
-import 'package:flutter_whatsapp/src/screens/select_contact_screen.dart';
 import 'package:flutter_whatsapp/src/tabs/calls_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/chats_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/status_tab.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
-class Home extends StatefulWidget {
-  @override
-  _Home createState() => _Home();
+enum HomeOptions {
+  settings,
+  // Chats Tab
+  newGroup,
+  newBroadcast,
+  whatsappWeb,
+  starredMessages,
+  // Status Tab
+  statusPrivacy,
+  // Calls Tab
+  clearCallLog,
 }
 
-class _Home extends State<Home> with SingleTickerProviderStateMixin {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   List<Widget> _actionButtons;
-  List<List<PopupMenuItem>> _popupMenus;
+  List<List<PopupMenuItem<HomeOptions>>> _popupMenus;
 
   int _tabIndex;
   TabController _tabController;
@@ -82,7 +97,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
           });
         },
       ),
-      PopupMenuButton(
+      PopupMenuButton<HomeOptions>(
         tooltip: "More options",
         onSelected: _selectOption,
         itemBuilder: (BuildContext context) {
@@ -118,45 +133,45 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
     _popupMenus  = [
       null,
       [
-        PopupMenuItem(
+        PopupMenuItem<HomeOptions>(
           child: Text("New group"),
-          value: "New group",
+          value: HomeOptions.newGroup,
         ),
-        PopupMenuItem(
+        PopupMenuItem<HomeOptions>(
           child: Text("New broadcast"),
-          value: "New broadcast",
+          value: HomeOptions.newBroadcast,
         ),
-        PopupMenuItem(
+        PopupMenuItem<HomeOptions>(
           child: Text("WhatsApp Web"),
-          value: "WhatsApp Web",
+          value: HomeOptions.whatsappWeb,
         ),
-        PopupMenuItem(
+        PopupMenuItem<HomeOptions>(
           child: Text("Starred messages"),
-          value: "Starred messages",
+          value: HomeOptions.starredMessages,
         ),
-        PopupMenuItem(
+        PopupMenuItem<HomeOptions>(
           child: Text("Settings"),
-          value: "Settings",
+          value: HomeOptions.settings,
         ),
       ],
       [
-        PopupMenuItem(
+        PopupMenuItem<HomeOptions>(
           child: Text("Status privacy"),
-          value: "Status privacy",
+          value: HomeOptions.statusPrivacy,
         ),
-        PopupMenuItem(
+        PopupMenuItem<HomeOptions>(
           child: Text("Settings"),
-          value: "Settings",
+          value: HomeOptions.settings,
         ),
       ],
       [
-        PopupMenuItem(
+        PopupMenuItem<HomeOptions>(
           child: Text("Clear call log"),
-          value: "Clear call log",
+          value: HomeOptions.clearCallLog,
         ),
-        PopupMenuItem(
+        PopupMenuItem<HomeOptions>(
           child: Text("Settings"),
-          value: "Settings",
+          value: HomeOptions.settings,
         ),
       ],
     ];
@@ -168,11 +183,11 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
           backgroundColor: fabBgColor,
           foregroundColor: Colors.white,
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return SelectContactScreen();
-                }
-            ));
+            Application.router.navigateTo(
+              context,
+              "/chat/new",
+              transition: TransitionType.inFromRight,
+            );
           }),
       Container(
         height: 150.0,
@@ -181,19 +196,33 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             new FloatingActionButton(
+                heroTag: 'newTextStatus',
                 mini: true,
                 child: Icon(Icons.edit),
                 backgroundColor: Colors.white,
                 foregroundColor: fabBgSecondaryColor,
-                onPressed: () {}),
+                onPressed: () {
+                  Application.router.navigateTo(
+                    context,
+                    Routes.newTextStatus,
+                    transition: TransitionType.inFromRight,
+                  );
+                }),
             new SizedBox(
               height: 16.0,
             ),
             new FloatingActionButton(
+                heroTag: 'newStatus',
                 child: Icon(Icons.camera_alt),
                 backgroundColor: fabBgColor,
                 foregroundColor: Colors.white,
-                onPressed: () {}),
+                onPressed: () {
+                  Application.router.navigateTo(
+                    context,
+                    Routes.newStatus,
+                    transition: TransitionType.inFromRight,
+                  );
+                }),
           ],
         ),
       ),
@@ -201,7 +230,13 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
           child: Icon(Icons.add_call),
           backgroundColor: fabBgColor,
           foregroundColor: Colors.white,
-          onPressed: () {}),
+          onPressed: () {
+            Application.router.navigateTo(
+              context,
+              Routes.newCall,
+              transition: TransitionType.inFromRight,
+            );
+          }),
     ];
   }
 
@@ -274,9 +309,57 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
-  void _getPopupMenu(BuildContext context) {
-    return;
+  void _selectOption(HomeOptions option) {
+    switch(option) {
+      case HomeOptions.newGroup:
+        Application.router.navigateTo(
+          context,
+          Routes.newChatGroup,
+          transition: TransitionType.inFromRight,
+        );
+        break;
+      case HomeOptions.newBroadcast:
+        Application.router.navigateTo(
+          context,
+          Routes.newChatBroadcast,
+          transition: TransitionType.inFromRight,
+        );
+        break;
+      case HomeOptions.whatsappWeb:
+        Application.router.navigateTo(
+          context,
+          Routes.whatsappWeb,
+          transition: TransitionType.inFromRight,
+        );
+        break;
+      case HomeOptions.starredMessages:
+        Application.router.navigateTo(
+          context,
+          Routes.starredMessages,
+          transition: TransitionType.inFromRight,
+        );
+        break;
+      case HomeOptions.settings:
+        Application.router.navigateTo(
+          context,
+          Routes.settings,
+          transition: TransitionType.inFromRight,
+        );
+        break;
+      case HomeOptions.statusPrivacy:
+        Application.router.navigateTo(
+          context,
+          Routes.statusPrivacy,
+          transition: TransitionType.inFromRight,
+        );
+        break;
+      case HomeOptions.clearCallLog:
+        Application.router.navigateTo(
+          context,
+          Routes.clearCallLog,
+          transition: TransitionType.inFromRight,
+        );
+        break;
+    }
   }
-
-  void _selectOption(dynamic option) {}
 }

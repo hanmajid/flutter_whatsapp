@@ -88,7 +88,9 @@ class CallsTab extends StatelessWidget {
                   onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return DetailCallScreen(_callList.calls[i]);
+                          return DetailCallScreen(
+                            id: _callList.calls[i].id,
+                          );
                         }
                     ));
                   },

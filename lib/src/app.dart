@@ -1,8 +1,23 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/config/application.dart';
+import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_whatsapp/src/home.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
-class FlutteredApp extends StatelessWidget {
+class FlutteredApp extends StatefulWidget {
+  @override
+  _FlutteredAppState createState() => _FlutteredAppState();
+}
+
+
+class _FlutteredAppState extends State<FlutteredApp> {
+
+  _FlutteredAppState() {
+    final router = new Router();
+    Routes.configureRoutes(router);
+    Application.router = router;
+  }
 
   /// Default theme.
   static final ThemeData _defaultTheme = new ThemeData(
@@ -17,7 +32,7 @@ class FlutteredApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fluttered WhatsApp',
       theme: _defaultTheme,
-      home: Home(),
+      onGenerateRoute: Application.router.generator,
     );
   }
 

@@ -3,7 +3,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/widgets/contact_item.dart';
 
-class SelectContactScreen extends StatelessWidget {
+class NewChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SelectContact();

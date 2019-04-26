@@ -12,9 +12,11 @@ enum CallDetailOptions {
 
 class DetailCallScreen extends StatefulWidget {
 
-  Call call;
+  final int id;
 
-  DetailCallScreen(this.call);
+  DetailCallScreen({
+    this.id,
+  });
 
     _DetailCallScreen createState() => _DetailCallScreen();
 }
@@ -22,6 +24,18 @@ class DetailCallScreen extends StatefulWidget {
 class _DetailCallScreen extends State<DetailCallScreen> {
   @override
   Widget build(BuildContext context) {
+    Call call = new Call(
+      name: 'NAME',
+      avatarUrl: 'https://via.placeholder.com/100x100',
+      callDetails: <CallDetail>[
+        new CallDetail(
+          timestamp: DateTime.now(),
+          isMissed: true,
+          isIncoming: true,
+        )
+      ]
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Call info'),
@@ -62,8 +76,8 @@ class _DetailCallScreen extends State<DetailCallScreen> {
                   GestureDetector(
                     onTap: () {
                       Dialog profileDialog = DialogHelpers.getProfileDialog(
-                        imageUrl: widget.call.avatarUrl,
-                        name: widget.call.name,
+                        imageUrl: call.avatarUrl,
+                        name: call.name,
                       );
                       showDialog(
                           context: context,
@@ -72,14 +86,14 @@ class _DetailCallScreen extends State<DetailCallScreen> {
                     },
                     child: CircleAvatar(
                       radius: 30.0,
-                      backgroundImage: NetworkImage(widget.call.avatarUrl),
+                      backgroundImage: NetworkImage(call.avatarUrl),
                     ),
                   ),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        widget.call.name,
+                        call.name,
                         style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.bold,
@@ -109,7 +123,7 @@ class _DetailCallScreen extends State<DetailCallScreen> {
                 Padding(
                   padding: const EdgeInsets.only(right: 14.0, left: 14.0, top: 16.0),
                   child: Text(
-                    new DateFormat('MMMM dd').format(widget.call.lastCall.timestamp),
+                    new DateFormat('MMMM dd').format(call.lastCall.timestamp),
                     style: TextStyle(
                       fontSize: 16.0,
                       color: secondaryColor,
@@ -117,7 +131,7 @@ class _DetailCallScreen extends State<DetailCallScreen> {
                   ),
                 ),
                 Divider(),
-                _buildCallDetails(),
+                _buildCallDetails(call),
               ],
             ),
           )
@@ -126,10 +140,10 @@ class _DetailCallScreen extends State<DetailCallScreen> {
     );
   }
 
-  Widget _buildCallDetails() {
+  Widget _buildCallDetails(Call call) {
     List<Widget> callDetails = new List<Widget>();
 
-    for(CallDetail detail in widget.call.callDetails.reversed.toList()) {
+    for(CallDetail detail in call.callDetails.reversed.toList()) {
       callDetails.add(new Padding(
         padding: const EdgeInsets.all(14.0),
         child: Row(

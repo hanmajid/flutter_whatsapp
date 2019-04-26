@@ -19,7 +19,7 @@ class StatusItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {},
+      onTap: onTap,
       leading: _getThumbnail(),
       title: TextHelpers.getHighlightedText(
           status.name,

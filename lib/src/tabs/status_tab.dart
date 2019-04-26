@@ -1,5 +1,7 @@
 import 'package:async/async.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/models/status_list.dart';
 import 'package:flutter_whatsapp/src/services/status_service.dart';
 import 'package:flutter_whatsapp/src/widgets/status_item.dart';
@@ -81,6 +83,13 @@ class StatusTab extends StatelessWidget {
                 return StatusItem(
                   status: _statusList.statuses[i],
                   searchKeyword: searchKeyword,
+                  onTap: () {
+                    Application.router.navigateTo(
+                      context,
+                      "/status?id=${_statusList.statuses[i].id}",
+                      transition: TransitionType.inFromRight,
+                    );
+                  },
                 );
               },
             );

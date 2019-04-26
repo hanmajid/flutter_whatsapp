@@ -1,5 +1,7 @@
 import 'package:async/async.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/models/chat_list.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
@@ -44,12 +46,11 @@ class ChatsTab extends StatelessWidget {
   }
 
   void onTapChatItem(BuildContext context, Chat chat) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (BuildContext context) {
-      return DetailChatScreen(
-        chat: chat,
-      );
-    }));
+    Application.router.navigateTo(
+        context,
+        "/chat?profileId=${chat.id}",
+      transition: TransitionType.inFromRight,
+    );
   }
 
   void onTapProfileChatItem(BuildContext context, Chat chat) {
