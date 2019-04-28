@@ -11,6 +11,8 @@ class Routes {
   static String whatsappWeb = '/web';
   static String starredMessages = '/starred';
 
+  static String contactsHelp = '/contacts/help';
+
   static String settings = '/settings';
 
   static String statusDetail = '/status';
@@ -38,6 +40,8 @@ class Routes {
     router.define(newChatBroadcast, handler: newChatBroadcastHandler);
     router.define(whatsappWeb, handler: whatsappWebHandler);
     router.define(starredMessages, handler: starredMessagesHandler);
+
+    router.define(contactsHelp, handler: contactsHelpHandler);
 
     router.define(settings, handler: settingsHandler);
 

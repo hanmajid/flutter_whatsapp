@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/home.dart';
 import 'package:flutter_whatsapp/src/screens/camera_screen.dart';
+import 'package:flutter_whatsapp/src/screens/contacts/contacs_help_screen.dart';
 import 'package:flutter_whatsapp/src/screens/detail_call_screen.dart';
 import 'package:flutter_whatsapp/src/screens/detail_chat_screen.dart';
 import 'package:flutter_whatsapp/src/screens/detail_status_screen.dart';
@@ -138,5 +139,11 @@ var editImageHandler = new Handler(
         id: id,
         resource: Uri.decodeComponent(resource),
       );
+    }
+);
+
+var contactsHelpHandler  = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new ContactsHelpScreen();
     }
 );

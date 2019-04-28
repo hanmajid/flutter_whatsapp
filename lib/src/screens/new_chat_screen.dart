@@ -1,7 +1,17 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter_whatsapp/src/config/application.dart';
+import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/widgets/contact_item.dart';
+
+enum NewChatOptions {
+  inviteAFriend,
+  contacts,
+  refresh,
+  help,
+}
 
 class NewChatScreen extends StatelessWidget {
   @override
@@ -76,26 +86,26 @@ class _SelectContact extends State<SelectContact> {
             icon: Icon(Icons.search),
             onPressed: () {},
           ),
-          PopupMenuButton(
+          PopupMenuButton<NewChatOptions>(
             tooltip: "More options",
-            onSelected: _selectOption,
+            onSelected: _onSelectOption,
             itemBuilder: (BuildContext context) {
-              return <PopupMenuItem>[
-                PopupMenuItem(
+              return [
+                PopupMenuItem<NewChatOptions>(
                   child: Text("Invite a friend"),
-                  value: "Invite a friend",
+                  value: NewChatOptions.inviteAFriend,
                 ),
-                PopupMenuItem(
+                PopupMenuItem<NewChatOptions>(
                   child: Text("Contacts"),
-                  value: "Contacts",
+                  value: NewChatOptions.contacts,
                 ),
                 PopupMenuItem(
                   child: Text("Refresh"),
-                  value: "Refresh",
+                  value: NewChatOptions.refresh,
                 ),
                 PopupMenuItem(
                   child: Text("Help"),
-                  value: "Help",
+                  value: NewChatOptions.help,
                 ),
               ];
             },
@@ -153,7 +163,21 @@ class _SelectContact extends State<SelectContact> {
   }
 
 
-  void _selectOption(dynamic option) {
-
+  void _onSelectOption(NewChatOptions option) {
+    switch(option) {
+      case NewChatOptions.inviteAFriend:
+        break;
+      case NewChatOptions.contacts:
+        break;
+      case NewChatOptions.refresh:
+        break;
+      case NewChatOptions.help:
+        Application.router.navigateTo(
+          context,
+          Routes.contactsHelp,
+          transition: TransitionType.inFromRight,
+        );
+        break;
+    }
   }
 }
