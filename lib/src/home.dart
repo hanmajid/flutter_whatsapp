@@ -7,6 +7,7 @@ import 'package:flutter_whatsapp/src/models/chat.dart';
 import 'package:flutter_whatsapp/src/models/chat_list.dart';
 import 'package:flutter_whatsapp/src/screens/camera_screen.dart';
 import 'package:flutter_whatsapp/src/services/chat_service.dart';
+import 'package:flutter_whatsapp/src/services/status_service.dart';
 import 'package:flutter_whatsapp/src/tabs/calls_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/chats_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/status_tab.dart';
@@ -53,6 +54,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   AsyncMemoizer _memoizerChats = AsyncMemoizer();
   Future<dynamic> _chatList;
   AsyncMemoizer _memoizerStatus = AsyncMemoizer();
+  Future<dynamic> _statusList;
   AsyncMemoizer _memoizerCalls = AsyncMemoizer();
 
   int _unreadMessages = 0;
@@ -63,10 +65,23 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     });
   }
 
+  bool isNewStatus = false;
+
+  Future<dynamic> _getStatusList() {
+    return _memoizerStatus.runOnce(() async {
+      return StatusService.getStatuses().whenComplete(() {
+        setState(() {
+          isNewStatus = true;
+        });
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _chatList = _getChatList();
+    _statusList = _getStatusList();
     _tabIndex = 1; // Start at second tab.
     _isSearching = false;
 
@@ -95,6 +110,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         _tabIndex = _tabController.index;
         _isSearching = false;
         _searchBarController?.text = "";
+        if(_tabController.index == 2) {
+          isNewStatus = false;
+        }
       });
     });
 
@@ -331,9 +349,33 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   ),
                 ),
                 Tab(
-                  child: Text(
-                    "STATUS",
-                    style: _textBold,
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "STATUS",
+                          style: _textBold,
+                        ),
+                        FutureBuilder(
+                          future: _statusList,
+                          builder: (context, snapshot) {
+                            if(snapshot.data == null) return Container();
+                            if(!isNewStatus) return Container();
+
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                             child: Text(
+                               '•',
+                               style: TextStyle(
+                                 fontWeight: FontWeight.bold,
+                               ),
+                             ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Tab(
@@ -362,8 +404,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ),
             StatusTab(
               searchKeyword: _searchKeyword,
-              memoizer: _memoizerStatus,
-                refresh: () {setState((){_memoizerStatus = new AsyncMemoizer();});}
+              statusList: _statusList,
+                refresh: () {
+                  setState((){
+                    _memoizerStatus = new AsyncMemoizer();
+                    _statusList = _getStatusList();
+                  });}
             ),
             CallsTab(
               searchKeyword: _searchKeyword,

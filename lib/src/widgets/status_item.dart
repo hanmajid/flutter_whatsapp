@@ -7,11 +7,17 @@ import 'package:intl/intl.dart';
 
 class StatusItem extends StatelessWidget {
   final Status status;
+  final String title;
+  final String subtitle;
+  final String thumbnail;
   final Function onTap;
   final String searchKeyword;
 
   StatusItem({
     this.status,
+    this.title,
+    this.subtitle,
+    this.thumbnail,
     this.onTap,
     this.searchKeyword,
   });
@@ -20,22 +26,57 @@ class StatusItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
-      leading: _getThumbnail(),
-      title: TextHelpers.getHighlightedText(
-          status.name,
-          searchKeyword,
-          TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+      leading: status != null
+          ? _getThumbnail()
+          : Stack(
+        children: <Widget>[
+          CircleAvatar(
+            radius: 28.0,
+            backgroundImage: CachedNetworkImageProvider(thumbnail),
           ),
-          TextStyle(
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue,
-          )),
+          Positioned(
+            bottom: 0.0,
+            right: 0.0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: fabBgColor,
+                borderRadius: BorderRadius.all(Radius.circular(10))
+              ),
+              child: Icon(
+                Icons.add,
+                size: 20.0,
+                color: Colors.white,
+              ),
+            ),
+          )
+        ],
+      ),
+      title: status != null
+          ? TextHelpers.getHighlightedText(
+              status.name,
+              searchKeyword,
+              TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ))
+          : Text(
+          title,
+        style: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
       subtitle: Text(
-        DateFormat('dd/MM/yy, HH:mm').format(status.timestamp),
+        status != null
+            ? DateFormat('dd/MM/yy, HH:mm').format(status.timestamp)
+            : subtitle,
         style: TextStyle(
           fontSize: 12.0,
           color: Colors.grey,
@@ -54,8 +95,7 @@ class StatusItem extends StatelessWidget {
           border: new Border.all(
             color: status.isSeen ? Colors.grey : statusThumbnailBorderColor,
             width: 2.0,
-          )
-      ),
+          )),
       child: Container(
         decoration: BoxDecoration(
             color: Colors.white,
@@ -67,8 +107,7 @@ class StatusItem extends StatelessWidget {
             border: new Border.all(
               color: Colors.white,
               width: 2.0,
-            )
-        ),
+            )),
       ),
     );
   }

@@ -2,6 +2,8 @@ import 'package:async/async.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
+import 'package:flutter_whatsapp/src/config/routes.dart';
+import 'package:flutter_whatsapp/src/models/status.dart';
 import 'package:flutter_whatsapp/src/models/status_list.dart';
 import 'package:flutter_whatsapp/src/services/status_service.dart';
 import 'package:flutter_whatsapp/src/widgets/status_item.dart';
@@ -9,25 +11,19 @@ import 'package:flutter_whatsapp/src/widgets/status_item.dart';
 class StatusTab extends StatelessWidget {
 
   final String searchKeyword;
-  final AsyncMemoizer memoizer;
+  final Future<dynamic> statusList;
   final refresh;
 
   StatusTab({
-    this.memoizer,
+    this.statusList,
     this.searchKeyword,
     this.refresh,
   });
 
-  _getStatusList() {
-    return memoizer.runOnce(() async {
-      return StatusService.getStatuses();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _getStatusList(),
+      future: statusList,
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -59,14 +55,31 @@ class StatusTab extends StatelessWidget {
             }
             bool isFound = false;
             StatusList _statusList = snapshot.data;
+            List<dynamic> data = new List<dynamic>();
+            data.add(StatusItem(
+              title: 'My Status',
+              subtitle: 'Tap to add status update',
+              thumbnail: 'https://api.adorable.io/avatars/285/circle@adorable.png',
+              onTap: (){
+                Application.router.navigateTo(
+                  context,
+                  Routes.newStatus,
+                  transition: TransitionType.inFromRight,
+                );
+              },
+            ));
+            data.addAll(_statusList.statuses);
             return ListView.builder(
-              itemCount: _statusList.statuses.length,
+              itemCount: data.length,
               itemBuilder: (context, i) {
+                if(i == 0) {
+                  return data[i];
+                }
                 if (searchKeyword.isNotEmpty) {
-                  if (!_statusList.statuses[i].name
+                  if (!data[i].name
                       .toLowerCase()
                       .contains(searchKeyword.toLowerCase())) {
-                    if (!isFound && i >= _statusList.statuses.length - 1) {
+                    if (!isFound && i >= data.length - 1) {
                       return Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Center(
@@ -81,12 +94,12 @@ class StatusTab extends StatelessWidget {
                 }
                 isFound = true;
                 return StatusItem(
-                  status: _statusList.statuses[i],
+                  status: data[i],
                   searchKeyword: searchKeyword,
                   onTap: () {
                     Application.router.navigateTo(
                       context,
-                      "/status?id=${_statusList.statuses[i].id}",
+                      "/status?id=${data[i].id}",
                       transition: TransitionType.inFromRight,
                     );
                   },
