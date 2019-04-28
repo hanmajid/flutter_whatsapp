@@ -3,7 +3,10 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
+import 'package:flutter_whatsapp/src/models/chat.dart';
+import 'package:flutter_whatsapp/src/models/chat_list.dart';
 import 'package:flutter_whatsapp/src/screens/camera_screen.dart';
+import 'package:flutter_whatsapp/src/services/chat_service.dart';
 import 'package:flutter_whatsapp/src/tabs/calls_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/chats_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/status_tab.dart';
@@ -34,7 +37,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   int _tabIndex;
   TabController _tabController;
-  List<Widget> _tabBars;
 
   bool _isSearching;
   TextField _searchBar;
@@ -49,12 +51,22 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   String _searchKeyword = '';
 
   AsyncMemoizer _memoizerChats = AsyncMemoizer();
+  Future<dynamic> _chatList;
   AsyncMemoizer _memoizerStatus = AsyncMemoizer();
   AsyncMemoizer _memoizerCalls = AsyncMemoizer();
+
+  int _unreadMessages = 0;
+
+  Future<dynamic> _getChatList() {
+    return _memoizerChats.runOnce(() {
+      return ChatService.getChats();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _chatList = _getChatList();
     _tabIndex = 1; // Start at second tab.
     _isSearching = false;
 
@@ -92,6 +104,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         icon: const Icon(Icons.search),
         onPressed: () {
           setState(() {
+            _searhBarOpen = true;
             _isSearching = true;
             _searchBarController?.text = "";
           });
@@ -103,30 +116,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         itemBuilder: (BuildContext context) {
           return _popupMenus[_tabIndex];
         },
-      ),
-    ];
-
-    _tabBars = <Widget>[
-      Tab(
-        icon: Icon(Icons.camera_alt),
-      ),
-      Tab(
-        child: Text(
-          "CHATS",
-          style: _textBold,
-        ),
-      ),
-      Tab(
-        child: Text(
-          "STATUS",
-          style: _textBold,
-        ),
-      ),
-      Tab(
-        child: Text(
-          "CALLS",
-          style: _textBold,
-        ),
       ),
     ];
 
@@ -247,65 +236,144 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  bool _searhBarOpen = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _tabIndex == 0
-          ? null
-        : AppBar(
-        backgroundColor: _isSearching
-          ? Colors.white
-          : null,
-        leading: _isSearching
-            ? IconButton(
-                icon: Icon(Icons.arrow_back),
-                color: const Color(0xff075e54),
-                onPressed: () {
-                  setState(() {
-                    _isSearching = false;
-                    _searchBarController?.text = "";
-                  });
-                },
-              )
-            : null,
-        title: _isSearching
-            ? _searchBar
-            : Text(
-                'WhatsApp',
-                style: _textBold,
-              ),
-        actions: _isSearching
+    return WillPopScope(
+      onWillPop: () async {
+        if(_searhBarOpen) {
+          setState(() {
+            _searhBarOpen = false;
+            _isSearching = false;
+            _searchBarController?.text = "";
+          });
+          return false;
+        }
+        else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        appBar: _tabIndex == 0
             ? null
-            : _actionButtons,
-        bottom: _isSearching
-          ? null
-          : TabBar(
-            controller: _tabController,
-            tabs: _tabBars,
-          ),
+          : AppBar(
+          backgroundColor: _isSearching
+            ? Colors.white
+            : null,
+          leading: _isSearching
+              ? IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  color: const Color(0xff075e54),
+                  onPressed: () {
+                    setState(() {
+                      _searhBarOpen = false;
+                      _isSearching = false;
+                      _searchBarController?.text = "";
+                    });
+                  },
+                )
+              : null,
+          title: _isSearching
+              ? _searchBar
+              : Text(
+                  'WhatsApp',
+                  style: _textBold,
+                ),
+          actions: _isSearching
+              ? null
+              : _actionButtons,
+          bottom: _isSearching
+            ? null
+            : TabBar(
+              controller: _tabController,
+              tabs: <Widget>[
+                Tab(
+                  icon: Icon(Icons.camera_alt),
+                ),
+                Tab(
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "CHATS",
+                          style: _textBold,
+                        ),
+                        FutureBuilder(
+                          future: _chatList,
+                          builder: (context, snapshot) {
+                            if(snapshot.data == null) return Container();
+                            if(snapshot.data.unreadMessages <= 0) return Container();
+
+                            return Container(
+                              margin: const EdgeInsets.only(left: 4.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(Radius.circular(9.0))
+                              ),
+                              alignment: Alignment.center,
+                              height: 18.0,
+                              width: 18.0,
+                              child: Text(
+                                '${snapshot.data.unreadMessages}',
+                                style: TextStyle(
+                                  fontSize: 9.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    "STATUS",
+                    style: _textBold,
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    "CALLS",
+                    style: _textBold,
+                  ),
+                ),
+              ],
+              labelPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            ),
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: <Widget>[
+            CameraScreen(),
+            ChatsTab(
+              searchKeyword: _searchKeyword,
+              chatList: _chatList,
+              refresh: () {
+                setState(() {
+                  _memoizerChats = new AsyncMemoizer();
+                  _chatList = _getChatList();
+                });
+              }
+            ),
+            StatusTab(
+              searchKeyword: _searchKeyword,
+              memoizer: _memoizerStatus,
+                refresh: () {setState((){_memoizerStatus = new AsyncMemoizer();});}
+            ),
+            CallsTab(
+              searchKeyword: _searchKeyword,
+              memoizer: _memoizerCalls,
+                refresh: () {setState((){_memoizerCalls = new AsyncMemoizer();});}
+            ),
+          ],
+        ),
+        floatingActionButton: _fabs[_tabIndex],
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: <Widget>[
-          CameraScreen(),
-          ChatsTab(
-            searchKeyword: _searchKeyword,
-            memoizer: _memoizerChats,
-            refresh: () {setState((){_memoizerChats = new AsyncMemoizer();});}
-          ),
-          StatusTab(
-            searchKeyword: _searchKeyword,
-            memoizer: _memoizerStatus,
-              refresh: () {setState((){_memoizerStatus = new AsyncMemoizer();});}
-          ),
-          CallsTab(
-            searchKeyword: _searchKeyword,
-            memoizer: _memoizerCalls,
-              refresh: () {setState((){_memoizerCalls = new AsyncMemoizer();});}
-          ),
-        ],
-      ),
-      floatingActionButton: _fabs[_tabIndex],
     );
   }
 

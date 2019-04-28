@@ -12,20 +12,14 @@ import 'package:flutter_whatsapp/src/widgets/chat_item.dart';
 
 class ChatsTab extends StatelessWidget {
   final String searchKeyword;
-  final AsyncMemoizer memoizer;
+  final Future<dynamic> chatList;
   final refresh;
 
   ChatsTab({
-    this.memoizer,
+    this.chatList,
     this.searchKeyword,
     this.refresh,
   });
-
-  _getChatList() {
-    return memoizer.runOnce(() {
-      return ChatService.getChats();
-    });
-  }
 
   Icon _getIconSubtitle(Chat chat) {
     if (!chat.lastMessage.isYou) return null;
@@ -82,7 +76,7 @@ class ChatsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _getChatList(),
+      future: chatList,
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:

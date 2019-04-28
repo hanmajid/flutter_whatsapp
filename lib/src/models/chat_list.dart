@@ -10,6 +10,14 @@ ChatList chatListFromJson(String str) {
 class ChatList {
   List<Chat> chats;
 
+  int get unreadMessages {
+    int i = 0;
+    for(Chat c in chats) {
+      i += c.unreadMessages;
+    }
+    return i;
+  }
+
   ChatList({
     this.chats
   });

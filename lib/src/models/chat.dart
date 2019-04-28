@@ -42,6 +42,7 @@ class Chat {
   String avatarUrl;
   Message lastMessage;
   List<Message> messages;
+  int unreadMessages;
 
   Chat({
     this.id,
@@ -49,6 +50,7 @@ class Chat {
     this.avatarUrl,
     this.lastMessage,
     this.messages,
+    this.unreadMessages,
   });
 
   factory Chat.fromJson(Map<String, dynamic> json) {
@@ -57,6 +59,7 @@ class Chat {
       name: json["name"],
       avatarUrl: json["avatarPath"],
       lastMessage: Message.fromJson(json["lastMessage"]),
+      unreadMessages: json["unreadMessages"],
     );
   }
 
@@ -70,6 +73,7 @@ class Chat {
       name: json["name"],
       avatarUrl: json["avatarPath"],
       messages: messages,
+      unreadMessages: json["unreadMessages"],
     );
   }
 }

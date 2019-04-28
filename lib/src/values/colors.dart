@@ -26,3 +26,5 @@ final Color messageBubbleColor = const Color(0xffe1ffc7);
 final Color blueCheckColor = const Color(0xff3fbbec);
 
 final Color statusThumbnailBorderColor = const Color(0xff21bfa6);
+
+final Color notificationBadgeColor = const Color(0xff08d160);
