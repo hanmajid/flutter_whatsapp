@@ -10,12 +10,14 @@ class CallItem extends StatelessWidget {
   final String searchKeyword;
   final Function onProfileTap;
   final Function onTap;
+  final Function onLeadingTap;
 
   CallItem({
     this.call,
     this.searchKeyword,
     this.onProfileTap,
     this.onTap,
+    this.onLeadingTap,
   });
 
   @override
@@ -91,7 +93,7 @@ class CallItem extends StatelessWidget {
               Icons.call,
               color: Theme.of(context).primaryColor,
             ),
-            onPressed: () {}),
+            onPressed: onLeadingTap),
         onTap: onTap,
       ),
     );

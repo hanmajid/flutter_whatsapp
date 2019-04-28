@@ -114,6 +114,11 @@ class CallsTab extends StatelessWidget {
                         builder: (BuildContext context) => profileDialog
                     );
                   },
+                  onLeadingTap: () {
+                    Scaffold.of(context).showSnackBar(
+                      new SnackBar(content: Text('Calling ${_callList.calls[i].name}...'))
+                    );
+                  },
                 );
               },
             );

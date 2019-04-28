@@ -16,6 +16,7 @@ import 'package:flutter_whatsapp/src/screens/settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/starred_messages_screen.dart';
 import 'package:flutter_whatsapp/src/screens/status_privacy_screen.dart';
 import 'package:flutter_whatsapp/src/screens/whatsapp_web_screen.dart';
+import 'package:flutter_whatsapp/src/values/colors.dart';
 
 var rootHandler = new Handler(
   handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -120,8 +121,40 @@ var clearCallLogHandler = new Handler(
         context: context,
         builder: (context) {
           return new AlertDialog(
-            title: Text('Clear call log'),
-            content: Text('Hi'),
+            title: Text(
+                'Do you want to clear your entire call log?',
+              style: TextStyle(
+                fontSize: 16.0,
+              ),
+            ),
+            actions: <Widget>[
+              Material(
+                child: FlatButton(
+                  child: Text(
+                    'CANCEL',
+                    style: TextStyle(
+                        color: secondaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+              ),
+              FlatButton(
+                child: Text(
+                    'OK',
+                  style: TextStyle(
+                      color: secondaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
           );
         }
       );
