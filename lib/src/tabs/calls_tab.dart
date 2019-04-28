@@ -1,5 +1,7 @@
 import 'package:async/async.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/models/call.dart';
 import 'package:flutter_whatsapp/src/models/call_list.dart';
@@ -86,28 +88,18 @@ class CallsTab extends StatelessWidget {
                   call: _callList.calls[i],
                   searchKeyword: searchKeyword,
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return DetailCallScreen(
-                            id: _callList.calls[i].id,
-                          );
-                        }
-                    ));
+                    Application.router.navigateTo(
+                      context,
+                      "/call?id=${_callList.calls[i]}",
+                      transition: TransitionType.inFromRight,
+                    );
                   },
                   onProfileTap: () {
                     Dialog profileDialog = DialogHelpers.getProfileDialog(
                       context: context,
+                      id: _callList.calls[i].id,
                       imageUrl: _callList.calls[i].avatarUrl,
                       name: _callList.calls[i].name,
-                      onTapMessage: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return DetailChatScreen(
-                                id: _callList.calls[i].id,
-                              );
-                            }
-                        ));
-                      },
                     );
                     showDialog(
                         context: context,

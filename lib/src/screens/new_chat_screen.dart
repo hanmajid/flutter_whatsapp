@@ -153,6 +153,8 @@ class _SelectContact extends State<SelectContact> {
 
   void onTapProfileContactItem(Contact contact) {
     Dialog profileDialog = DialogHelpers.getProfileDialog(
+      context: context,
+      id: 1,
       imageUrl: null,
       name: contact.displayName,
     );

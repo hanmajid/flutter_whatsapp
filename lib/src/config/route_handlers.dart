@@ -12,6 +12,7 @@ import 'package:flutter_whatsapp/src/screens/new_chat_broadcast_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_chat_group_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_chat_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_text_status_screen.dart';
+import 'package:flutter_whatsapp/src/screens/profile_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/starred_messages_screen.dart';
 import 'package:flutter_whatsapp/src/screens/status_privacy_screen.dart';
@@ -178,5 +179,13 @@ var editImageHandler = new Handler(
 var contactsHelpHandler  = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       return new ContactsHelpScreen();
+    }
+);
+
+var profileHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      int id = int.tryParse(params['id']?.first) ?? null;
+
+      return new ProfileScreen();
     }
 );

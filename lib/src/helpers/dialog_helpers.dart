@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class DialogHelpers {
   static Dialog getProfileDialog({
     @required BuildContext context,
+    int id,
     String imageUrl,
     String name,
     GestureTapCallback onTapMessage,
@@ -67,7 +70,7 @@ class DialogHelpers {
                 children: <Widget>[
                   IconButton(
                     icon: Icon(Icons.message),
-                    onPressed: onTapMessage ?? () => _defOnTapMessage(context),
+                    onPressed: onTapMessage ?? () => _defOnTapMessage(context, id),
                     color: secondaryColor,
                   ),
                   IconButton(
@@ -82,7 +85,7 @@ class DialogHelpers {
                   ),
                   IconButton(
                     icon: Icon(Icons.info_outline),
-                    onPressed: onTapInfo ?? () => _defOnTapInfo(context),
+                    onPressed: onTapInfo ?? () => _defOnTapInfo(context, id),
                     color: secondaryColor,
                   ),
                 ],
@@ -94,13 +97,14 @@ class DialogHelpers {
     );
   }
 
-  static _defOnTapMessage(BuildContext context) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-          content: Text('Message Button tapped'),
-        duration: Duration(seconds: 1),
-      ),
-    );
+  static _defOnTapMessage(BuildContext context, int id) {
+    Application.router.navigateTo(
+      context,
+      "/chat?profileId=$id",
+      transition: TransitionType.inFromRight,
+    ).then((result) {
+      Navigator.of(context).pop();
+    });
   }
 
   static _defOnTapCall(BuildContext context) {
@@ -121,12 +125,13 @@ class DialogHelpers {
     );
   }
 
-  static _defOnTapInfo(BuildContext context) {
-    Scaffold.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Info Button tapped'),
-        duration: Duration(seconds: 1),
-      ),
-    );
+  static _defOnTapInfo(BuildContext context, int id) {
+    Application.router.navigateTo(
+      context,
+      "/profile?id=$id",
+      transition: TransitionType.inFromRight,
+    ).then((result) {
+      Navigator.of(context).pop();
+    });
   }
 }

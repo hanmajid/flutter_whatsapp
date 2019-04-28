@@ -76,6 +76,8 @@ class _DetailCallScreen extends State<DetailCallScreen> {
                   GestureDetector(
                     onTap: () {
                       Dialog profileDialog = DialogHelpers.getProfileDialog(
+                        context: context,
+                        id: 1,
                         imageUrl: call.avatarUrl,
                         name: call.name,
                       );

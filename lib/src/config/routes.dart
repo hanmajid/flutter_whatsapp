@@ -13,6 +13,8 @@ class Routes {
 
   static String contactsHelp = '/contacts/help';
 
+  static String profile = '/profile';
+
   static String settings = '/settings';
 
   static String statusDetail = '/status';
@@ -42,6 +44,8 @@ class Routes {
     router.define(starredMessages, handler: starredMessagesHandler);
 
     router.define(contactsHelp, handler: contactsHelpHandler);
+
+    router.define(profile, handler: profileHandler);
 
     router.define(settings, handler: settingsHandler);
 

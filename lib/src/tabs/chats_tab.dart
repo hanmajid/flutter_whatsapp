@@ -50,16 +50,10 @@ class ChatsTab extends StatelessWidget {
   void onTapProfileChatItem(BuildContext context, Chat chat) {
     Dialog profileDialog = DialogHelpers.getProfileDialog(
         context: context,
+        id: chat.id,
         imageUrl: chat.avatarUrl,
         name: chat.name,
-        onTapMessage: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (BuildContext context) {
-            return DetailChatScreen(
-              chat: chat,
-            );
-          }));
-        });
+        );
     showDialog(
         context: context, builder: (BuildContext context) => profileDialog);
   }
