@@ -4,6 +4,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
+import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/contact_item.dart';
 
 enum NewChatOptions {
@@ -135,13 +136,100 @@ class _SelectContact extends State<SelectContact> {
                   child: Text('Error: ${snapshot.error}'),
                 );
               }
+              List<dynamic> data = List<dynamic>();
+              data.add(ListTile(
+                leading: Container(
+                  decoration: BoxDecoration(
+                    color: fabBgColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.all(4.0),
+                  child: Icon(
+                    Icons.group,
+                    size: 32.0,
+                    color: Colors.white,
+                  ),
+                ),
+                title: Text('New group',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    )),
+                onTap: (){
+                  Application.router.navigateTo(
+                    context,
+                    Routes.newChatBroadcast,
+                    transition: TransitionType.inFromRight,
+                  );
+                },
+              ));
+              data.add(ListTile(
+                leading: Container(
+                  decoration: BoxDecoration(
+                    color: fabBgColor,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.person_add,
+                    size: 24.0,
+                    color: Colors.white,
+                  ),
+                ),
+                title: Text('New contact',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    )),
+                onTap: (){},
+              ));
+              data.addAll(snapshot.data);
+              data.add(ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.share),
+                ),
+                title: Text('Invite friends',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    )),
+                onTap: (){},
+              ));
+              data.add(ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.help),
+                ),
+                title: Text('Contacts help',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    )),
+                onTap: (){
+                  Application.router.navigateTo(
+                    context,
+                    Routes.contactsHelp,
+                    transition: TransitionType.inFromRight,
+                  );
+                },
+              ));
               return ListView.builder(
-                  itemCount: snapshot.data.length,
+                  itemCount: data.length,
                   itemBuilder: (context, i) {
+                    if(i < 2 || i > data.length-3) {
+                      return data[i];
+                    }
                     return ContactItem(
-                        contact: snapshot.data.elementAt(i),
-                        onProfileTap: () => onTapProfileContactItem(snapshot.data.elementAt(i)),
-                        onTap:() {}
+                        contact: data.elementAt(i),
+                        onProfileTap: () => onTapProfileContactItem(context, snapshot.data.elementAt(i)),
+                        onTap:() {
+                          Application.router.navigateTo(
+                            context,
+                            '/chat?profileId=1',
+                            transition: TransitionType.inFromRight,
+                          );
+                        }
                         );
                   });
           }
@@ -151,7 +239,7 @@ class _SelectContact extends State<SelectContact> {
     );
   }
 
-  void onTapProfileContactItem(Contact contact) {
+  void onTapProfileContactItem(BuildContext context, Contact contact) {
     Dialog profileDialog = DialogHelpers.getProfileDialog(
       context: context,
       id: 1,

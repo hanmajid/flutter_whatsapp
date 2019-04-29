@@ -3,8 +3,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
-import 'package:flutter_whatsapp/src/models/chat.dart';
-import 'package:flutter_whatsapp/src/models/chat_list.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_whatsapp/src/screens/camera_screen.dart';
 import 'package:flutter_whatsapp/src/services/chat_service.dart';
 import 'package:flutter_whatsapp/src/services/status_service.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_whatsapp/src/tabs/calls_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/chats_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/status_tab.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
+import 'package:flutter/services.dart';
 
 enum HomeOptions {
   settings,
@@ -61,7 +61,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   Future<dynamic> _getChatList() {
     return _memoizerChats.runOnce(() {
-      return ChatService.getChats();
+      return ChatService.getChats().then((chatlist) {
+        updateAppBadge(chatlist.unreadMessages);
+        return chatlist;
+      });
     });
   }
 
@@ -252,6 +255,25 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _tabController.dispose();
     _searchBarController.dispose();
     super.dispose();
+  }
+
+  updateAppBadge(int count) async {
+    bool appBadgeSupported;
+    try {
+      bool res = await FlutterAppBadger.isAppBadgeSupported();
+      appBadgeSupported = res;
+    } on PlatformException {
+      appBadgeSupported = false;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    if(appBadgeSupported) {
+      FlutterAppBadger.updateBadgeCount(count);
+    }
   }
 
   bool _searhBarOpen = false;

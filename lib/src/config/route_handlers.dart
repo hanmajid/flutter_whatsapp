@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/home.dart';
 import 'package:flutter_whatsapp/src/screens/camera_screen.dart';
+import 'package:flutter_whatsapp/src/screens/chat_media_screen.dart';
 import 'package:flutter_whatsapp/src/screens/contacts/contacs_help_screen.dart';
 import 'package:flutter_whatsapp/src/screens/detail_call_screen.dart';
 import 'package:flutter_whatsapp/src/screens/detail_chat_screen.dart';
@@ -13,6 +14,12 @@ import 'package:flutter_whatsapp/src/screens/new_chat_group_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_chat_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_text_status_screen.dart';
 import 'package:flutter_whatsapp/src/screens/profile_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/account_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/chats_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/data_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/help_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/notifications_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/your_profile_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/starred_messages_screen.dart';
 import 'package:flutter_whatsapp/src/screens/status_privacy_screen.dart';
@@ -186,6 +193,49 @@ var profileHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       int id = int.tryParse(params['id']?.first) ?? null;
 
-      return new ProfileScreen();
+      return new ProfileScreen(
+      );
+    }
+);
+
+var yourProfileHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+
+      return new YourProfileScreen(
+      );
+    }
+);
+
+var chatMediaHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      int id = int.tryParse(params['id']?.first) ?? null;
+
+      return new ChatMediaScreen();
+    }
+);
+
+var accountSettingsHandler  = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new AccountSettingsScreen();
+    }
+);
+var chatsSettingsHandler  = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new ChatsSettingsScreen();
+    }
+);
+var notificationsSettingsHandler  = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new NotificationsSettingsScreen();
+    }
+);
+var dataSettingsHandler  = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new DataSettingsScreen();
+    }
+);
+var helpSettingsHandler  = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new HelpSettingsScreen();
     }
 );

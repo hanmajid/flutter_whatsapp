@@ -1,4 +1,6 @@
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
 import 'package:flutter_whatsapp/src/services/chat_service.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
@@ -54,52 +56,6 @@ class _DetailChatScreen extends State<DetailChatScreen> {
             _messages = chat.messages.reversed.toList();
           });
         });
-    _actions = <Widget>[
-      IconButton(
-        icon: Icon(Icons.videocam),
-        onPressed: () {},
-      ),
-      IconButton(
-        icon: Icon(Icons.call),
-        onPressed: () {},
-      ),
-      PopupMenuButton<ChatDetailMenuOptions>(
-        tooltip: "More options",
-        onSelected: _onSelectMenuOption,
-        itemBuilder: (BuildContext context) {
-          return [
-            PopupMenuItem<ChatDetailMenuOptions>(
-              child: Text("View contact"),
-              value: ChatDetailMenuOptions.viewContact,
-            ),
-            PopupMenuItem<ChatDetailMenuOptions>(
-              child: Text("Media"),
-              value: ChatDetailMenuOptions.media,
-            ),
-            PopupMenuItem<ChatDetailMenuOptions>(
-              child: Text("Search"),
-              value: ChatDetailMenuOptions.search,
-            ),
-            PopupMenuItem<ChatDetailMenuOptions>(
-              child: Text("Mute notifications"),
-              value: ChatDetailMenuOptions.muteNotifications,
-            ),
-            PopupMenuItem<ChatDetailMenuOptions>(
-              child: Text("Wallpaper"),
-              value: ChatDetailMenuOptions.wallpaper,
-            ),
-            PopupMenuItem<ChatDetailMenuOptions>(
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(0.0),
-                title: Text("More"),
-                trailing: Icon(Icons.arrow_right),
-              ),
-              value: ChatDetailMenuOptions.more,
-            ),
-          ];
-        },
-      ),
-    ];
     _morePopMenu = PopupMenuButton<ChatDetailMoreMenuOptions>(
       onSelected: _onSelectMoreMenuOption,
       itemBuilder: (BuildContext context) {
@@ -165,7 +121,13 @@ class _DetailChatScreen extends State<DetailChatScreen> {
           child: InkWell(
             highlightColor: highlightColor,
             splashColor: secondaryColor,
-            onTap: () {},
+            onTap: () {
+              Application.router.navigateTo(
+                context,
+                "/profile?id=${_chat.id}",
+                transition: TransitionType.inFromRight,
+              );
+            },
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
@@ -189,7 +151,68 @@ class _DetailChatScreen extends State<DetailChatScreen> {
             ),
           ),
         ),
-        actions: _buildActions(),
+        actions: <Widget>[
+          Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: Icon(Icons.videocam),
+                onPressed: () {
+                  Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text('Video Call Button tapped'))
+                  );
+                },
+              );
+            },
+          ),
+          Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: Icon(Icons.call),
+                onPressed: () {
+                  Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text('Call Button tapped'))
+                  );
+                },
+              );
+            },
+          ),
+          PopupMenuButton<ChatDetailMenuOptions>(
+            tooltip: "More options",
+            onSelected: _onSelectMenuOption,
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem<ChatDetailMenuOptions>(
+                  child: Text("View contact"),
+                  value: ChatDetailMenuOptions.viewContact,
+                ),
+                PopupMenuItem<ChatDetailMenuOptions>(
+                  child: Text("Media"),
+                  value: ChatDetailMenuOptions.media,
+                ),
+                PopupMenuItem<ChatDetailMenuOptions>(
+                  child: Text("Search"),
+                  value: ChatDetailMenuOptions.search,
+                ),
+                PopupMenuItem<ChatDetailMenuOptions>(
+                  child: Text("Mute notifications"),
+                  value: ChatDetailMenuOptions.muteNotifications,
+                ),
+                PopupMenuItem<ChatDetailMenuOptions>(
+                  child: Text("Wallpaper"),
+                  value: ChatDetailMenuOptions.wallpaper,
+                ),
+                PopupMenuItem<ChatDetailMenuOptions>(
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(0.0),
+                    title: Text("More"),
+                    trailing: Icon(Icons.arrow_right),
+                  ),
+                  value: ChatDetailMenuOptions.more,
+                ),
+              ];
+            },
+          ),
+        ],
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
@@ -309,16 +332,22 @@ class _DetailChatScreen extends State<DetailChatScreen> {
     );
   }
 
-  _buildActions() {
-    return _actions;
-  }
-
   // TODO
   _onSelectMenuOption(ChatDetailMenuOptions option) {
     switch (option) {
       case ChatDetailMenuOptions.viewContact:
+        Application.router.navigateTo(
+          context,
+          "/profile?id=${_chat.id}",
+          transition: TransitionType.inFromRight,
+        );
         break;
       case ChatDetailMenuOptions.media:
+        Application.router.navigateTo(
+          context,
+          "/chat/media?id=${_chat.id}",
+          transition: TransitionType.inFromRight,
+        );
         break;
       case ChatDetailMenuOptions.search:
         break;
