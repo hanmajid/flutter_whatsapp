@@ -5,6 +5,8 @@ import 'package:flutter_whatsapp/src/models/status.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:intl/intl.dart';
 
+import 'dart:math';
+
 class StatusItem extends StatelessWidget {
   final Status status;
   final String title;
@@ -27,7 +29,7 @@ class StatusItem extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       leading: status != null
-          ? _getThumbnail()
+          ? _getThumbnail(status.isSeen, 5) // TODO: Change this
           : Stack(
         children: <Widget>[
           CircleAvatar(
@@ -85,30 +87,80 @@ class StatusItem extends StatelessWidget {
     );
   }
 
-  Widget _getThumbnail() {
+  Widget _getThumbnail(bool isSeen, int statusNum) {
     return Container(
       width: 60.0,
       height: 60.0,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: new BorderRadius.all(new Radius.circular(30.0)),
-          border: new Border.all(
-            color: status.isSeen ? Colors.grey : statusThumbnailBorderColor,
-            width: 2.0,
-          )),
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            image: DecorationImage(
-              image: CachedNetworkImageProvider(status.thumbnailUrl),
-              fit: BoxFit.cover,
-            ),
-            borderRadius: new BorderRadius.all(new Radius.circular(30.0)),
-            border: new Border.all(
+      child: CustomPaint(
+        painter: StatusBorderPainter(isSeen: isSeen, statusNum: statusNum),
+        child: Container(
+          decoration: BoxDecoration(
               color: Colors.white,
-              width: 2.0,
-            )),
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(status.thumbnailUrl),
+                fit: BoxFit.cover,
+              ),
+              borderRadius: new BorderRadius.all(new Radius.circular(30.0)),
+              border: new Border.all(
+                color: Colors.white,
+                width: 2.0,
+              )),
+        ),
       ),
     );
   }
+}
+
+degreeToRad(double degree) {
+  return degree * pi / 180;
+}
+
+class StatusBorderPainter extends CustomPainter {
+
+  bool isSeen;
+  int statusNum;
+
+  StatusBorderPainter({this.isSeen, this.statusNum});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = new Paint()
+      ..isAntiAlias = true
+      ..strokeWidth = 4.0
+      ..color = isSeen ? Colors.grey : statusThumbnailBorderColor
+      ..style = PaintingStyle.stroke;
+    drawArc(canvas, paint, size, statusNum);
+  }
+
+  void drawArc(Canvas canvas, Paint paint, Size size, int count) {
+    if(count == 1) {
+      canvas.drawArc(
+          new Rect.fromLTWH(0.0, 0.0, size.width, size.height),
+          degreeToRad(0),
+          degreeToRad(360),
+          false,
+          paint
+      );
+    }
+    else {
+      double degree = -90;
+      double arc = 360 / count;
+      for(int i = 0; i < count; i++) {
+        canvas.drawArc(
+            new Rect.fromLTWH(0.0, 0.0, size.width, size.height),
+            degreeToRad(degree+4),
+            degreeToRad(arc-8),
+            false,
+            paint
+        );
+        degree += arc;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+
 }
