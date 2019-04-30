@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// WhatsApp's signature green color.
+final Color darkColor = const Color(0xff102e30);
 final Color primaryColor = const Color(0xff075e54);
 /// Secondary green color.
 final Color secondaryColor = const Color(0xff00897b);

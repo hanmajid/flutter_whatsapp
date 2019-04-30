@@ -6,7 +6,7 @@ class ContactsHelpScreen extends StatelessWidget {
     List<String> _helpText = [
       'If some of your friends don\'t appear in the contacts list, we recommend the following steps:',
       'Make sure that your friend\'s phone number is in your address book',
-      'Make sure that your friend is using WhatsApp Messenger',
+      'Make sure that your friend is using WhatzApp Messenger',
     ];
 
     TextStyle _textStyle = const TextStyle(

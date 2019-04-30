@@ -152,7 +152,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           value: HomeOptions.newBroadcast,
         ),
         PopupMenuItem<HomeOptions>(
-          child: Text("WhatsApp Web"),
+          child: Text("WhatzApp Web"),
           value: HomeOptions.whatsappWeb,
         ),
         PopupMenuItem<HomeOptions>(
@@ -317,7 +317,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           title: _isSearching
               ? _searchBar
               : Text(
-                  'WhatsApp',
+                  'WhatzApp',
                   style: _textBold,
                 ),
           actions: _isSearching

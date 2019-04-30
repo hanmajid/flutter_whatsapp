@@ -16,7 +16,7 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
   Widget build(BuildContext context) {
     final String _firstText = 'Your messages and calls are secured with '
       'end-to-end encryption, which means '
-      'WhatsApp and third parties can\'t read or '
+      'WhatzApp and third parties can\'t read or '
       'listen to them. ';
     final String _lastText = 'Turn on this setting to receive '
       'notifications when a contact\'s security '

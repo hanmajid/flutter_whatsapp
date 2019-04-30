@@ -10,7 +10,7 @@ class AccountTwoStepSettingsScreen extends StatelessWidget {
     final String text = 'For added security, enable two-step '
       'verfication, which will require a PIN when '
       'registering your phone number with '
-      'WhatsApp again.';
+      'WhatzApp again.';
 
     return Scaffold(
       appBar: AppBar(

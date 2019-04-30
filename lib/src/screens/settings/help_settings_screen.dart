@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HelpSettingsScreen extends StatelessWidget {
   @override
@@ -16,7 +17,10 @@ class HelpSettingsScreen extends StatelessWidget {
           SettingItem(
             icon: Icons.help_outline,
             title: 'FAQ',
-            onTap: (){},
+            onTap: (){
+              String url = 'https://faq.whatsapp.com/';
+              _launchURL(url);
+              },
           ),
           SettingItem(
             icon: Icons.group,
@@ -34,7 +38,8 @@ class HelpSettingsScreen extends StatelessWidget {
             icon: Icons.insert_drive_file,
             title: 'Terms and Privacy Policy',
             onTap: () {
-
+              String url = 'https://whatsapp.com/legal';
+              _launchURL(url);
             }
           ),
           SettingItem(
@@ -53,4 +58,11 @@ class HelpSettingsScreen extends StatelessWidget {
     );
   }
 
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }

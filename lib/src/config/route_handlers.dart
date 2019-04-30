@@ -26,6 +26,7 @@ import 'package:flutter_whatsapp/src/screens/settings/chats_settings_screen.dart
 import 'package:flutter_whatsapp/src/screens/settings/data_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/help/help_appinfo_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/help/help_contact_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/help/licenses_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/help_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/notifications_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/your_profile_screen.dart';
@@ -291,5 +292,11 @@ var accountRequestSettingsHandler = new Handler(
 var accountDeleteSettingsHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       return new AccountDeleteSettingsScreen();
+    }
+);
+
+var licensesHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new LicensesScreen();
     }
 );

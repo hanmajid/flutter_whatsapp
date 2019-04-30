@@ -32,6 +32,7 @@ class Routes {
   static String helpSettings = '/settings/help';
   static String helpContactSettings = '/settings/help/contact';
   static String helpAppInfoSettings = '/settings/help/app_info';
+  static String licenses = '/licenses';
 
   static String statusDetail = '/status';
   static String newStatus = '/status/new';
@@ -81,6 +82,7 @@ class Routes {
     router.define(helpSettings, handler: helpSettingsHandler);
     router.define(helpContactSettings, handler: helpContactSettingsHandler);
     router.define(helpAppInfoSettings, handler: helpAppInfoSettingsHandler);
+    router.define(licenses, handler: licensesHandler);
 
     router.define(statusDetail, handler: statusDetailHandler);
     router.define(newStatus, handler: newStatusHandler);
