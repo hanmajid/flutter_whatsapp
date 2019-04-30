@@ -19,10 +19,19 @@ class Routes {
 
   static String settings = '/settings';
   static String accountSettings = '/settings/accounts';
+  static String accountPrivacySettings = '/settings/accounts/privacy';
+  static String accountSecuritySettings = '/settings/accounts/security';
+  static String accountTwoStepSettings = '/settings/accounts/two_step';
+  static String accountEnableTwoStepSettings = '/settings/accounts/two_step/enable';
+  static String accountChangeNumSettings = '/settings/accounts/change_num';
+  static String accountRequestSettings = '/settings/accounts/request';
+  static String accountDeleteSettings = '/settings/accounts/delete';
   static String chatsSettings = '/settings/chats';
   static String notificationsSettings = '/settings/notifications';
   static String dataSettings = '/settings/data';
   static String helpSettings = '/settings/help';
+  static String helpContactSettings = '/settings/help/contact';
+  static String helpAppInfoSettings = '/settings/help/app_info';
 
   static String statusDetail = '/status';
   static String newStatus = '/status/new';
@@ -58,10 +67,20 @@ class Routes {
 
     router.define(settings, handler: settingsHandler);
     router.define(accountSettings, handler: accountSettingsHandler);
+    router.define(accountPrivacySettings, handler: accountPrivacySettingsHandler);
+    router.define(accountSecuritySettings, handler: accountSecuritySettingsHandler);
+    router.define(accountTwoStepSettings, handler: accountTwoStepSettingsHandler);
+    router.define(accountEnableTwoStepSettings, handler: accountEnableTwoStepSettingsHandler);
+    router.define(accountChangeNumSettings, handler: accountChangeNumSettingsHandler);
+    router.define(accountRequestSettings, handler: accountRequestSettingsHandler);
+    router.define(accountDeleteSettings, handler: accountDeleteSettingsHandler);
+
     router.define(chatsSettings, handler: chatsSettingsHandler);
     router.define(notificationsSettings, handler: notificationsSettingsHandler);
     router.define(dataSettings, handler: dataSettingsHandler);
     router.define(helpSettings, handler: helpSettingsHandler);
+    router.define(helpContactSettings, handler: helpContactSettingsHandler);
+    router.define(helpAppInfoSettings, handler: helpAppInfoSettingsHandler);
 
     router.define(statusDetail, handler: statusDetailHandler);
     router.define(newStatus, handler: newStatusHandler);

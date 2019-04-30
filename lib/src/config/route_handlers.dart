@@ -14,9 +14,18 @@ import 'package:flutter_whatsapp/src/screens/new_chat_group_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_chat_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_text_status_screen.dart';
 import 'package:flutter_whatsapp/src/screens/profile_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/account/account_changenum_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/account/account_delete_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/account/account_enable_twostep_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/account/account_privacy_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/account/account_request_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/account/account_security_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/account/account_twostep_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/account_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/chats_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/data_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/help/help_appinfo_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/help/help_contact_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/help_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/notifications_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/your_profile_screen.dart';
@@ -237,5 +246,50 @@ var dataSettingsHandler  = new Handler(
 var helpSettingsHandler  = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       return new HelpSettingsScreen();
+    }
+);
+var helpContactSettingsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new HelpContactSettingsScreen();
+    }
+);
+var helpAppInfoSettingsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new HelpAppInfoSettingsScreen();
+    }
+);
+var accountPrivacySettingsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new AccountPrivacySettingsScreen();
+    }
+);
+var accountSecuritySettingsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new AccountSecuritySettingsScreen();
+    }
+);
+var accountTwoStepSettingsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new AccountTwoStepSettingsScreen();
+    }
+);
+var accountEnableTwoStepSettingsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new AccountEnableTwoStepSettingsScreen();
+    }
+);
+var accountChangeNumSettingsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new AccountChangeNumSettingsScreen();
+    }
+);
+var accountRequestSettingsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new AccountRequestSettingsScreen();
+    }
+);
+var accountDeleteSettingsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new AccountDeleteSettingsScreen();
     }
 );

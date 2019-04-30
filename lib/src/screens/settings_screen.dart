@@ -3,6 +3,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
+import 'package:flutter_whatsapp/src/widgets/setting_item.dart';
 
 class SettingsScreen extends StatelessWidget {
   @override
@@ -44,83 +45,70 @@ class SettingsScreen extends StatelessWidget {
             },
           ),
           Divider(height: 0.0,),
-          _buildSettingMenu(Icons.vpn_key, 'Account', 'Privacy, security, change number', (){
+          SettingItem(
+              icon: Icons.vpn_key,
+              title: 'Account',
+              subtitle: 'Privacy, security, change number',
+              onTap: (){
             Application.router.navigateTo(
               context,
               Routes.accountSettings,
               transition: TransitionType.inFromRight,
             );
           }),
-          _buildSettingMenu(Icons.chat, 'Chats', 'Backup, history, wallpaper', (){
-            Application.router.navigateTo(
-              context,
-              Routes.chatsSettings,
-              transition: TransitionType.inFromRight,
-            );
-          }),
-          _buildSettingMenu(Icons.notifications, 'Notifications', 'Message, group & call tones', (){
-            Application.router.navigateTo(
-              context,
-              Routes.notificationsSettings,
-              transition: TransitionType.inFromRight,
-            );
-          }),
-          _buildSettingMenu(Icons.data_usage, 'Data and storage usage', 'Network usage, auto-download', (){
-            Application.router.navigateTo(
-              context,
-              Routes.dataSettings,
-              transition: TransitionType.inFromRight,
-            );
-          }),
-          _buildSettingMenu(Icons.help_outline, 'Help', 'FAQ, contact us, privacy policy', (){
-            Application.router.navigateTo(
-              context,
-              Routes.helpSettings,
-              transition: TransitionType.inFromRight,
-            );
-          }),
+          SettingItem(
+              icon: Icons.chat,
+              title: 'Chats',
+              subtitle: 'Backup, history, wallpaper',
+              onTap: (){
+                Application.router.navigateTo(
+                  context,
+                  Routes.chatsSettings,
+                  transition: TransitionType.inFromRight,
+                );
+              }),
+          SettingItem(
+              icon: Icons.notifications,
+              title: 'Notifications',
+              subtitle: 'Message, group & call tones',
+              onTap: (){
+                Application.router.navigateTo(
+                  context,
+                  Routes.notificationsSettings,
+                  transition: TransitionType.inFromRight,
+                );
+              }),
+          SettingItem(
+              icon: Icons.data_usage,
+              title: 'Data and storage usage',
+              subtitle: 'Network usage, auto-download',
+              onTap: (){
+                Application.router.navigateTo(
+                  context,
+                  Routes.dataSettings,
+                  transition: TransitionType.inFromRight,
+                );
+              }),
+          SettingItem(
+              icon: Icons.help_outline,
+              title: 'Help',
+              subtitle: 'FAQ, contact us, privacy policy',
+              onTap: (){
+                Application.router.navigateTo(
+                  context,
+                  Routes.helpSettings,
+                  transition: TransitionType.inFromRight,
+                );
+              }),
           Divider(indent: 72.0, height: 0.0,),
-          ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            leading: Container(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.group,
-                color: Color.fromRGBO(7, 94, 84, 0.7),
-              ),
-            ),
-            title: Text(
-              'Invite a friend',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            onTap: (){},
-          )
+          SettingItem(
+              icon: Icons.group,
+              title: 'Invite a friend',
+              onTap: (){
+
+              }),
         ],
       )
-    );
-  }
-
-  Widget _buildSettingMenu(IconData icon, String title, String subtitle, Function onTap) {
-    return ListTile(
-      leading: Container(
-        padding: EdgeInsets.all(8.0),
-        child: Icon(
-          icon,
-          color: Color.fromRGBO(7, 94, 84, 0.7),
-        ),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      subtitle: Text(
-          subtitle
-      ),
-      onTap: onTap,
     );
   }
 }
