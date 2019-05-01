@@ -139,43 +139,28 @@ var clearCallLogHandler = new Handler(
       showDialog(
         context: context,
         builder: (context) {
-          return new AlertDialog(
-            title: Text(
-                'Do you want to clear your entire call log?',
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-            ),
-            actions: <Widget>[
-              Material(
-                child: FlatButton(
-                  child: Text(
-                    'CANCEL',
-                    style: TextStyle(
-                        color: secondaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                ),
-              ),
-              FlatButton(
-                child: Text(
-                    'OK',
-                  style: TextStyle(
-                      color: secondaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-              ),
-            ],
+          return OKCancelDialog(
+            title: 'Do you want to clear your entire call log?',
+            ok: 'OK',
+            cancel: 'CANCEL',
           );
         }
+      );
+    }
+);
+
+var logoutDeviceHandler = new Handler(
+    type: HandlerType.function,
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return OKCancelDialog(
+              title: 'Log out from this device?',
+              ok: 'LOG OUT',
+              cancel: 'CANCEL',
+            );
+          }
       );
     }
 );
@@ -190,6 +175,22 @@ var editImageHandler = new Handler(
       return new EditImageScreen(
         id: id,
         resource: Uri.decodeComponent(resource),
+      );
+    }
+);
+
+var logoutAllDevicesHandler = new Handler(
+    type: HandlerType.function,
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return OKCancelDialog(
+              title: 'Are you sure you want to log out from all devices?',
+              ok: 'LOG OUT',
+              cancel: 'CANCEL',
+            );
+          }
       );
     }
 );
@@ -307,3 +308,53 @@ var whatsappWebScanHandler = new Handler(
       return new WhatsappWebScanScreen();
     }
 );
+
+class OKCancelDialog extends StatelessWidget {
+
+  final String title;
+  final String ok;
+  final String cancel;
+
+  OKCancelDialog({this.title, this.ok, this.cancel});
+
+  @override
+  Widget build(BuildContext context) {
+    return new AlertDialog(
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 16.0,
+        ),
+      ),
+      actions: <Widget>[
+        Material(
+          child: FlatButton(
+            child: Text(
+              cancel,
+              style: TextStyle(
+                color: secondaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+          ),
+        ),
+        FlatButton(
+          child: Text(
+            ok,
+            style: TextStyle(
+              color: secondaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop(true);
+          },
+        ),
+      ],
+    );;
+  }
+
+}

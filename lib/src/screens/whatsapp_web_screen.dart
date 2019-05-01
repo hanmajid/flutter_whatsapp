@@ -70,7 +70,13 @@ class WhatsappWebScreen extends StatelessWidget {
                   subtitle: Text(
                     'Windows 10',
                   ),
-                  onTap: (){},
+                  onTap: (){
+                    Application.router.navigateTo(
+                      context,
+                      Routes.logoutDevice,
+                      transition: TransitionType.inFromRight,
+                    );
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -87,7 +93,13 @@ class WhatsappWebScreen extends StatelessWidget {
                       color: blueCheckColor,
                     ),
                   ),
-                  onTap: (){},
+                  onTap: (){
+                    Application.router.navigateTo(
+                      context,
+                      Routes.logoutAllDevices,
+                      transition: TransitionType.inFromRight,
+                    );
+                  },
                 ),
                 SizedBox(
                   height: 4.0,
