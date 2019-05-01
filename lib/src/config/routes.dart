@@ -10,6 +10,7 @@ class Routes {
   static String newChatGroup = '/chat/new/group';
   static String newChatBroadcast = '/chat/new/broadcast';
   static String whatsappWeb = '/web';
+  static String whatsappWebScan = '/web/scan';
   static String starredMessages = '/starred';
 
   static String contactsHelp = '/contacts/help';
@@ -59,6 +60,7 @@ class Routes {
     router.define(newChatGroup, handler: newChatGroupHandler);
     router.define(newChatBroadcast, handler: newChatBroadcastHandler);
     router.define(whatsappWeb, handler: whatsappWebHandler);
+    router.define(whatsappWebScan, handler: whatsappWebScanHandler);
     router.define(starredMessages, handler: starredMessagesHandler);
 
     router.define(contactsHelp, handler: contactsHelpHandler);

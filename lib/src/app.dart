@@ -1,3 +1,4 @@
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
@@ -30,7 +31,7 @@ class _FlutteredAppState extends State<FlutteredApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Fluttered WhatsApp',
+      title: 'Fluttered WhatzApp',
       theme: _defaultTheme,
       onGenerateRoute: Application.router.generator,
     );

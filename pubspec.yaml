@@ -30,6 +30,7 @@ dependencies:
   sliding_up_panel: ^0.3.4
   flutter_app_badger: ^1.0.2
   url_launcher: ^5.0.2
+#  fast_qr_reader_view: ^0.1.5
 
 dev_dependencies:
   flutter_test:

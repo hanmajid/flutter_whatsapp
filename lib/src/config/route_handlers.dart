@@ -33,6 +33,7 @@ import 'package:flutter_whatsapp/src/screens/settings/your_profile_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/starred_messages_screen.dart';
 import 'package:flutter_whatsapp/src/screens/status_privacy_screen.dart';
+import 'package:flutter_whatsapp/src/screens/whatsapp_web_scan_screen.dart';
 import 'package:flutter_whatsapp/src/screens/whatsapp_web_screen.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
@@ -298,5 +299,11 @@ var accountDeleteSettingsHandler = new Handler(
 var licensesHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       return new LicensesScreen();
+    }
+);
+
+var whatsappWebScanHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new WhatsappWebScanScreen();
     }
 );
