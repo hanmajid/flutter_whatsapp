@@ -6,14 +6,15 @@ class SettingItem extends StatelessWidget {
   final String title;
   final String subtitle;
   final Function onTap;
+  final padding;
 
-  SettingItem({this.icon, this.title, this.subtitle, this.onTap});
+  SettingItem({this.icon, this.title, this.subtitle, this.onTap, this.padding});
 
   @override
   Widget build(BuildContext context) {
     if(subtitle == null) {
       return ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        contentPadding: padding ?? EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         leading: Container(
           padding: EdgeInsets.all(8.0),
           child: Icon(
@@ -31,6 +32,7 @@ class SettingItem extends StatelessWidget {
       );
     }
     return ListTile(
+      contentPadding: padding ?? null,
       leading: Container(
         padding: EdgeInsets.all(8.0),
         child: Icon(
