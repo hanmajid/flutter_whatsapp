@@ -73,23 +73,27 @@ class _DetailCallScreen extends State<DetailCallScreen> {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      Dialog profileDialog = DialogHelpers.getProfileDialog(
-                        context: context,
-                        id: 1,
-                        imageUrl: call.avatarUrl,
-                        name: call.name,
+                  Builder(
+                    builder: (BuildContext context) {
+                      return GestureDetector(
+                        onTap: () {
+                          Dialog profileDialog = DialogHelpers.getProfileDialog(
+                            context: context,
+                            id: 1,
+                            imageUrl: call.avatarUrl,
+                            name: call.name,
+                          );
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) => profileDialog
+                          );
+                        },
+                        child: CircleAvatar(
+                          radius: 30.0,
+                          backgroundImage: NetworkImage(call.avatarUrl),
+                        ),
                       );
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) => profileDialog
-                      );
-                    },
-                    child: CircleAvatar(
-                      radius: 30.0,
-                      backgroundImage: NetworkImage(call.avatarUrl),
-                    ),
+                    }
                   ),
                   Expanded(
                     child: Padding(

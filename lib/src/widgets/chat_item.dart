@@ -63,9 +63,12 @@ class ChatItem extends StatelessWidget {
                 ? Container()
                 : Padding(
                     padding: EdgeInsets.only(right: 2.0), child: iconSubtitle),
-            Text(
-              chat.lastMessage.content,
-              maxLines: 1,
+            Flexible(
+              child: Text(
+                chat.lastMessage.content,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),

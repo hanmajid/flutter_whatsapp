@@ -285,6 +285,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                         Flexible(
                           child: TextField(
                             controller: textFieldController,
+                            textCapitalization: TextCapitalization.sentences,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.all(0.0),
