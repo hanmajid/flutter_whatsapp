@@ -23,6 +23,8 @@ class Routes {
   static String settings = '/settings';
   static String accountSettings = '/settings/accounts';
   static String accountPrivacySettings = '/settings/accounts/privacy';
+  static String privacyLiveLocation = '/settings/accounts/privacy/live_location';
+  static String privacyBlocked = '/settings/accounts/privacy/blocked';
   static String accountSecuritySettings = '/settings/accounts/security';
   static String accountTwoStepSettings = '/settings/accounts/two_step';
   static String accountEnableTwoStepSettings = '/settings/accounts/two_step/enable';
@@ -75,6 +77,8 @@ class Routes {
     router.define(settings, handler: settingsHandler);
     router.define(accountSettings, handler: accountSettingsHandler);
     router.define(accountPrivacySettings, handler: accountPrivacySettingsHandler);
+    router.define(privacyLiveLocation, handler: privacyLiveLocationHandler);
+    router.define(privacyBlocked, handler: privacyBlockedHandler);
     router.define(accountSecuritySettings, handler: accountSecuritySettingsHandler);
     router.define(accountTwoStepSettings, handler: accountTwoStepSettingsHandler);
     router.define(accountEnableTwoStepSettings, handler: accountEnableTwoStepSettingsHandler);

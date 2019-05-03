@@ -21,6 +21,8 @@ import 'package:flutter_whatsapp/src/screens/settings/account/account_privacy_se
 import 'package:flutter_whatsapp/src/screens/settings/account/account_request_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/account/account_security_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/account/account_twostep_settings_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/account/privacy/privacy_blocked_screen.dart';
+import 'package:flutter_whatsapp/src/screens/settings/account/privacy/privacy_livelocation_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/account_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/chats_settings_screen.dart';
 import 'package:flutter_whatsapp/src/screens/settings/data_settings_screen.dart';
@@ -306,6 +308,18 @@ var licensesHandler = new Handler(
 var whatsappWebScanHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       return new WhatsappWebScanScreen();
+    }
+);
+
+var privacyLiveLocationHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new PrivacyLiveLocationScreen();
+    }
+);
+
+var privacyBlockedHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new PrivacyBlockedScreen();
     }
 );
 

@@ -97,6 +97,44 @@ class DialogHelpers {
     );
   }
 
+  static showRadioDialog(List allOptions, String title, Function getText, BuildContext context, option, onChanged) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          List<Widget> widgets = [];
+          for(dynamic opt in allOptions) {
+            widgets.add(
+              ListTileTheme(
+                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: RadioListTile(
+                  value: opt,
+                  title: Text(getText(opt), style: TextStyle(fontSize: 18.0),),
+                  groupValue: option,
+                  onChanged: (value) {
+                    onChanged(value);
+                    Navigator.of(context).pop();
+                  },
+                  activeColor: secondaryColor,
+                ),
+              ),
+            );
+          }
+
+          return AlertDialog(
+            contentPadding: EdgeInsets.only(bottom: 8.0),
+            title: Padding(
+              padding: EdgeInsets.only(bottom: 8.0),
+              child: Text(title, style: TextStyle(fontWeight: FontWeight.w600),),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: widgets,
+            ),
+          );
+        }
+    );
+  }
+
   static _defOnTapMessage(BuildContext context, int id) {
     Application.router.navigateTo(
       context,

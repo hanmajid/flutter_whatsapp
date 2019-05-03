@@ -15,7 +15,7 @@ class SettingItem extends StatelessWidget {
     if(subtitle == null) {
       return ListTile(
         contentPadding: padding ?? EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        leading: Container(
+        leading: icon == null ? null : Container(
           padding: EdgeInsets.all(8.0),
           child: Icon(
             icon,
@@ -33,7 +33,7 @@ class SettingItem extends StatelessWidget {
     }
     return ListTile(
       contentPadding: padding ?? null,
-      leading: Container(
+      leading: icon == null ? null : Container(
         padding: EdgeInsets.all(8.0),
         child: Icon(
           icon,
