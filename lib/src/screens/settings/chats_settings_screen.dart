@@ -4,7 +4,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
-import 'package:flutter_whatsapp/src/config/shared_preferences.dart';
+import 'package:flutter_whatsapp/src/config/shared_preferences_helpers.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item.dart';
 import 'package:flutter_whatsapp/src/widgets/switch_setting_item.dart';
@@ -42,13 +42,13 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
 
     // initialize variables
     _enterIsSend = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getBool(SharedPreferenceName.enterIsSend) ?? SharedPreferenceName.defaultEnterIsSend);
+      return (prefs.getBool(SharedPreferencesHelpers.enterIsSend) ?? SharedPreferencesHelpers.defaultEnterIsSend);
     });
     _mediaVisibility = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getBool(SharedPreferenceName.mediaVisibility) ?? SharedPreferenceName.defaultMediaVisibility);
+      return (prefs.getBool(SharedPreferencesHelpers.mediaVisibility) ?? SharedPreferencesHelpers.defaultMediaVisibility);
     });
     _fontSize = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getInt(SharedPreferenceName.fontSize) != null ? fontSizeOptionsList[prefs.getInt(SharedPreferenceName.fontSize)] : defaultFontSize);
+      return (prefs.getInt(SharedPreferencesHelpers.fontSize) != null ? fontSizeOptionsList[prefs.getInt(SharedPreferencesHelpers.fontSize)] : defaultFontSize);
     });
   }
 
@@ -64,7 +64,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
             future: _enterIsSend,
             builder: (context, snapshot) {
               var onChanged;
-              bool enterIsSend = SharedPreferenceName.defaultEnterIsSend;
+              bool enterIsSend = SharedPreferencesHelpers.defaultEnterIsSend;
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.active:
@@ -94,7 +94,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
             future: _mediaVisibility,
             builder: (context, snapshot) {
               var onChanged;
-              bool mediaVisibility = SharedPreferenceName.defaultMediaVisibility;
+              bool mediaVisibility = SharedPreferencesHelpers.defaultMediaVisibility;
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.active:
@@ -205,7 +205,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _enterIsSend = prefs.setBool(SharedPreferenceName.enterIsSend, value).then((bool success) {
+      _enterIsSend = prefs.setBool(SharedPreferencesHelpers.enterIsSend, value).then((bool success) {
         return value;
       });
     });
@@ -215,7 +215,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _mediaVisibility = prefs.setBool(SharedPreferenceName.mediaVisibility, value).then((bool success) {
+      _mediaVisibility = prefs.setBool(SharedPreferencesHelpers.mediaVisibility, value).then((bool success) {
         return value;
       });
     });
@@ -225,7 +225,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _fontSize = prefs.setInt(SharedPreferenceName.fontSize, value).then((bool success) {
+      _fontSize = prefs.setInt(SharedPreferencesHelpers.fontSize, value).then((bool success) {
         return fontSizeOptionsList[value];
       });
     });

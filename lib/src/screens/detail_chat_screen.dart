@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
+import 'package:flutter_whatsapp/src/config/shared_preferences_helpers.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
 import 'package:flutter_whatsapp/src/services/chat_service.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/message_item.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum ChatDetailMenuOptions {
   viewContact,
@@ -44,9 +48,38 @@ class _DetailChatScreen extends State<DetailChatScreen> {
   List<Message> _messages;
   TextEditingController textFieldController;
 
+  double _fontSize = 15.0; // default = medium
+  TextInputAction _textInputAction = TextInputAction.newline;
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
   @override
   void initState() {
     super.initState();
+    _prefs.then((SharedPreferences prefs) {
+      int size = prefs.getInt(SharedPreferencesHelpers.fontSize);
+      setState(() {
+        if(size == 0) { // small
+          _fontSize = 13.0;
+        }
+        else if(size == 1) { // medium
+          _fontSize = 15.0;
+        }
+        else if(size == 2) { // large
+          _fontSize = 18.0;
+        }
+      });
+      bool enterIsSend = prefs.getBool(SharedPreferencesHelpers.enterIsSend);
+      setState(() {
+        if(enterIsSend) {
+          _textInputAction = TextInputAction.send;
+        }
+        else {
+          _textInputAction = TextInputAction.newline;
+        }
+      });
+    });
+
     _chat = widget.chat;
     int chatId = widget.chat?.id ?? widget.id;
     _fMessages =
@@ -254,6 +287,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                               isYou: _messages[i].isYou,
                               isRead: _messages[i].isRead,
                               isSent: _messages[i].isSent,
+                              fontSize: _fontSize,
                             );
                           });
                   }
@@ -286,6 +320,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                           child: TextField(
                             controller: textFieldController,
                             textCapitalization: TextCapitalization.sentences,
+                            textInputAction: _textInputAction,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.all(0.0),
@@ -294,7 +329,16 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                                 color: textFieldHintColor,
                                 fontSize: 16.0,
                               ),
+                              counterText: '',
                             ),
+                            onSubmitted: (String text) {
+                              if(_textInputAction == TextInputAction.send) {
+                                _sendMessage();
+                              }
+                            },
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            maxLength: 100,
                           ),
                         ),
                         IconButton(

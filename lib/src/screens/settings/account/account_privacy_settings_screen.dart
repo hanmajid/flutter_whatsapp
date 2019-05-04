@@ -4,7 +4,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
-import 'package:flutter_whatsapp/src/config/shared_preferences.dart';
+import 'package:flutter_whatsapp/src/config/shared_preferences_helpers.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item.dart';
@@ -49,16 +49,16 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
 
     // initialize variables
     _lastSeen = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getInt(SharedPreferenceName.lastSeen) != null ? privacyOptionList[prefs.getInt(SharedPreferenceName.lastSeen)] : defaultLastSeen);
+      return (prefs.getInt(SharedPreferencesHelpers.lastSeen) != null ? privacyOptionList[prefs.getInt(SharedPreferencesHelpers.lastSeen)] : defaultLastSeen);
     });
     _profilePhoto = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getInt(SharedPreferenceName.profilePhoto) != null ? privacyOptionList[prefs.getInt(SharedPreferenceName.profilePhoto)] : defaultProfilePhoto);
+      return (prefs.getInt(SharedPreferencesHelpers.profilePhoto) != null ? privacyOptionList[prefs.getInt(SharedPreferencesHelpers.profilePhoto)] : defaultProfilePhoto);
     });
     _about = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getInt(SharedPreferenceName.about) != null ? privacyOptionList[prefs.getInt(SharedPreferenceName.about)] : defaultAbout);
+      return (prefs.getInt(SharedPreferencesHelpers.about) != null ? privacyOptionList[prefs.getInt(SharedPreferencesHelpers.about)] : defaultAbout);
     });
     _readReceipts = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getBool(SharedPreferenceName.readReceipts) ?? defaultReadReceipts);
+      return (prefs.getBool(SharedPreferencesHelpers.readReceipts) ?? defaultReadReceipts);
     });
   }
 
@@ -173,21 +173,21 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
     return FutureBuilder(
       future: future,
       builder: (context, snapshot) {
-        String lastSeen = '-';
+        String subtitle = '-';
         var onTap;
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.active:
           case ConnectionState.waiting:
-            lastSeen = '-';
+            subtitle = '-';
             break;
           case ConnectionState.done:
             if (snapshot.hasError) {
-              lastSeen = 'Error: ${snapshot.error}';
+              subtitle = 'Error: ${snapshot.error}';
               print(snapshot.error);
             }
             else {
-              lastSeen = getText(snapshot.data);
+              subtitle = getText(snapshot.data);
               onTap = (){
                 DialogHelpers.showRadioDialog(privacyOptionList, title, getText, context, snapshot.data, onChanged);
               };
@@ -195,7 +195,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
         }
         return SettingItem(
             title: title,
-            subtitle: lastSeen,
+            subtitle: subtitle,
             onTap: onTap,
             padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 24.0)
         );
@@ -207,7 +207,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _lastSeen = prefs.setInt(SharedPreferenceName.lastSeen, value).then((bool success) {
+      _lastSeen = prefs.setInt(SharedPreferencesHelpers.lastSeen, value).then((bool success) {
         return privacyOptionList[value];
       });
     });
@@ -217,7 +217,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _profilePhoto = prefs.setInt(SharedPreferenceName.profilePhoto, value).then((bool success) {
+      _profilePhoto = prefs.setInt(SharedPreferencesHelpers.profilePhoto, value).then((bool success) {
         return privacyOptionList[value];
       });
     });
@@ -227,7 +227,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _about = prefs.setInt(SharedPreferenceName.about, value).then((bool success) {
+      _about = prefs.setInt(SharedPreferencesHelpers.about, value).then((bool success) {
         return privacyOptionList[value];
       });
     });
@@ -237,7 +237,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _readReceipts = prefs.setBool(SharedPreferenceName.readReceipts, value).then((bool success) {
+      _readReceipts = prefs.setBool(SharedPreferencesHelpers.readReceipts, value).then((bool success) {
         return value;
       });
     });

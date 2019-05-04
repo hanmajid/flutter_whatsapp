@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/config/shared_preferences_helpers.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item_header.dart';
 import 'package:flutter_whatsapp/src/widgets/switch_setting_item.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum NotificationsOptions {
   resetNotificationSettings,
@@ -34,7 +38,7 @@ enum NotificationToneOptions {
   whistle,
 }
 
-var NotificationToneOptionsList = [
+var notificationToneOptionsList = [
   NotificationToneOptions.defaultNotificationSound,
   NotificationToneOptions.none,
   NotificationToneOptions.birdOut,
@@ -67,7 +71,7 @@ enum VibrateOptions {
   long,
 }
 
-var VibrateOptionsList = [
+var vibrateOptionsList = [
   VibrateOptions.off,
   VibrateOptions.ddefault,
   VibrateOptions.short,
@@ -81,7 +85,7 @@ enum PopupNotificationOptions {
   alwaysShowPopup,
 }
 
-var PopupNotificationOptionsList = [
+var popupNotificationOptionsList = [
   PopupNotificationOptions.noPopup,
   PopupNotificationOptions.onlyScreenOn,
   PopupNotificationOptions.onlyScreenOff,
@@ -99,7 +103,7 @@ enum LightOptions {
   purple,
 }
 
-var LightOptionsList = [
+var lightOptionsList = [
   LightOptions.none,
   LightOptions.white,
   LightOptions.red,
@@ -142,7 +146,7 @@ enum RingtoneOptions {
   xtremeTone,
 }
 
-var RingtoneOptionsList = [
+var ringtoneOptionsList = [
   RingtoneOptions.defaultRingtone,
   RingtoneOptions.none,
   RingtoneOptions.anneStellaDance,
@@ -180,21 +184,67 @@ class NotificationsSettingsScreen extends StatefulWidget {
 }
 
 class _NotificationsSettingsScreenState extends State<NotificationsSettingsScreen> {
-  bool _conversationTones = false;
+  VibrateOptions defaultVibrate = VibrateOptions.off;
+  PopupNotificationOptions defaultPopupNotification = PopupNotificationOptions.noPopup;
+  LightOptions defaultLight = LightOptions.white;
+  VibrateOptions defaultGroupVibrate = VibrateOptions.off;
+  PopupNotificationOptions defaultGroupPopupNotification = PopupNotificationOptions.noPopup;
+  LightOptions defaultGroupLight = LightOptions.white;
+  VibrateOptions defaultCallsVibrate = VibrateOptions.off;
+
+  Future<bool> _conversationTones;
+  NotificationToneOptions _notificationToneOptions;
+  Future<VibrateOptions> _vibrate;
+  Future<PopupNotificationOptions> _popupNotification;
+  Future<LightOptions> _light;
+
+  NotificationToneOptions _groupNotificationToneOptions;
+  Future<VibrateOptions> _groupVibrate;
+  Future<PopupNotificationOptions> _groupPopupNotification;
+  Future<LightOptions> _groupLight;
+
+  Future<VibrateOptions> _callsVibrate;
+
   bool _highPriorityNotifications = true;
   bool _groupHighPriorityNotifications = false;
 
-  NotificationToneOptions _notificationToneOptions;
-  VibrateOptions _vibrate = VibrateOptions.off;
-  PopupNotificationOptions _popupNotification = PopupNotificationOptions.noPopup;
-  LightOptions _light = LightOptions.white;
 
-  NotificationToneOptions _groupNotificationToneOptions;
-  VibrateOptions _groupVibrate = VibrateOptions.off;
-  PopupNotificationOptions _groupPopupNotification = PopupNotificationOptions.noPopup;
-  LightOptions _groupLight = LightOptions.white;
 
-  VibrateOptions _callVibrate = VibrateOptions.off;
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // initialize variables
+    _conversationTones = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getBool(SharedPreferencesHelpers.conversationTones) ?? SharedPreferencesHelpers.defaultConversationTones);
+    });
+    _vibrate = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt(SharedPreferencesHelpers.vibrate) != null ? vibrateOptionsList[prefs.getInt(SharedPreferencesHelpers.vibrate)] : defaultVibrate);
+    });
+    _popupNotification = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt(SharedPreferencesHelpers.popupNotification) != null ? popupNotificationOptionsList[prefs.getInt(SharedPreferencesHelpers.popupNotification)] : defaultPopupNotification);
+    });
+    _light = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt(SharedPreferencesHelpers.light) != null ? lightOptionsList[prefs.getInt(SharedPreferencesHelpers.light)] : defaultLight);
+    });
+
+    _groupVibrate = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt(SharedPreferencesHelpers.groupVibrate) != null ? vibrateOptionsList[prefs.getInt(SharedPreferencesHelpers.groupVibrate)] : defaultGroupVibrate);
+    });
+    _groupPopupNotification = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt(SharedPreferencesHelpers.groupPopupNotification) != null ? popupNotificationOptionsList[prefs.getInt(SharedPreferencesHelpers.groupPopupNotification)] : defaultGroupPopupNotification);
+    });
+    _groupLight = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt(SharedPreferencesHelpers.groupLight) != null ? lightOptionsList[prefs.getInt(SharedPreferencesHelpers.groupLight)] : defaultGroupLight);
+    });
+
+    _callsVibrate = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt(SharedPreferencesHelpers.callsVibrate) != null ? vibrateOptionsList[prefs.getInt(SharedPreferencesHelpers.callsVibrate)] : defaultCallsVibrate);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -218,14 +268,33 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
       ),
       body: ListView(
         children: <Widget>[
-          SwitchSettingItem(
-            title: 'Conversation tones',
-            subtitle: 'Play sounds for incoming and outgoing messages.',
-            value: _conversationTones,
-            onChanged: (bool value) {
-              setState((){
-                _conversationTones = value;
-              });
+          FutureBuilder(
+            future: _conversationTones,
+            builder: (context, snapshot) {
+              var onChanged;
+              bool conversationTones = SharedPreferencesHelpers.defaultConversationTones;
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  break;
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                  }
+                  else {
+                    conversationTones = snapshot.data;
+                    onChanged = (bool value) {
+                      _setConversationTones(value);
+                    };
+                  }
+              }
+              return SwitchSettingItem(
+                title: 'Conversation tones',
+                subtitle: 'Play sounds for incoming and outgoing messages.',
+                value: conversationTones,
+                onChanged: onChanged,
+              );
             },
           ),
           Divider(),
@@ -241,42 +310,15 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
 
             },
           ),
-          SettingItem(
-            title: 'Vibrate',
-            subtitle: _getVibrateText(_vibrate),
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 24.0),
-            onTap: (){
-              DialogHelpers.showRadioDialog(VibrateOptionsList, 'Vibrate', _getVibrateText, context, _vibrate, (value) {
-                setState(() {
-                  _vibrate = value;
-                });
-              });
-            },
-          ),
-          SettingItem(
-            title: 'Popup notification',
-            subtitle: _getPopupNotificationText(_popupNotification),
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 24.0),
-            onTap: (){
-              DialogHelpers.showRadioDialog(PopupNotificationOptionsList, 'Popup notification', _getPopupNotificationText, context, _popupNotification, (value) {
-                setState(() {
-                  _popupNotification = value;
-                });
-              });
-            },
-          ),
-          SettingItem(
-            title: 'Light',
-            subtitle: _getLightText(_light),
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 24.0),
-            onTap: (){
-              DialogHelpers.showRadioDialog(LightOptionsList, 'Light', _getLightText, context, _light, (value) {
-                setState(() {
-                  _light= value;
-                });
-              });
-            },
-          ),
+          _buildFutureSettingItem(context, 'Vibrate', vibrateOptionsList, _vibrate, _getVibrateText, (VibrateOptions value) {
+            _setVibrate(value.index);
+          }),
+          _buildFutureSettingItem(context, 'Popup notification', popupNotificationOptionsList, _popupNotification, _getPopupNotificationText, (PopupNotificationOptions value) {
+            _setPopupNotification(value.index);
+          }),
+          _buildFutureSettingItem(context, 'Light', lightOptionsList, _light, _getLightText, (LightOptions value) {
+            _setLight(value.index);
+          }),
           SwitchSettingItem(
             title: 'Use high priority notifications',
             subtitle: 'Show previews of notifications at the top of the screen.',
@@ -298,42 +340,15 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
             padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 24.0),
             onTap: (){},
           ),
-          SettingItem(
-            title: 'Vibrate',
-            subtitle: _getVibrateText(_groupVibrate),
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 24.0),
-            onTap: (){
-              DialogHelpers.showRadioDialog(VibrateOptionsList, 'Vibrate', _getVibrateText, context, _groupVibrate, (value) {
-                setState(() {
-                  _groupVibrate = value;
-                });
-              });
-            },
-          ),
-          SettingItem(
-            title: 'Popup notification',
-            subtitle: _getPopupNotificationText(_groupPopupNotification),
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 24.0),
-            onTap: (){
-              DialogHelpers.showRadioDialog(PopupNotificationOptionsList, 'Popup notification', _getPopupNotificationText, context, _groupPopupNotification, (value) {
-                setState(() {
-                  _groupPopupNotification = value;
-                });
-              });
-            },
-          ),
-          SettingItem(
-            title: 'Light',
-            subtitle: _getLightText(_groupLight),
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 24.0),
-            onTap: (){
-              DialogHelpers.showRadioDialog(LightOptionsList, 'Light', _getLightText, context, _groupLight, (value) {
-                setState(() {
-                  _groupLight = value;
-                });
-              });
-            },
-          ),
+          _buildFutureSettingItem(context, 'Vibrate', vibrateOptionsList, _groupVibrate, _getVibrateText, (VibrateOptions value) {
+            _setGroupVibrate(value.index);
+          }),
+          _buildFutureSettingItem(context, 'Popup notification', popupNotificationOptionsList, _groupPopupNotification, _getPopupNotificationText, (PopupNotificationOptions value) {
+            _setGroupPopupNotification(value.index);
+          }),
+          _buildFutureSettingItem(context, 'Light', lightOptionsList, _groupLight, _getLightText, (LightOptions value) {
+            _setGroupLight(value.index);
+          }),
           SwitchSettingItem(
             title: 'Use high priority notifications',
             subtitle: 'Show previews of notifications at the top of the screen.',
@@ -355,23 +370,48 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
             padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 24.0),
             onTap: (){},
           ),
-          SettingItem(
-            title: 'Vibrate',
-            subtitle: _getVibrateText(_callVibrate),
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 24.0),
-            onTap: (){
-              DialogHelpers.showRadioDialog(VibrateOptionsList, 'Vibrate', _getVibrateText, context, _callVibrate, (value) {
-                setState(() {
-                  _callVibrate = value;
-                });
-              });
-            },
-          ),
+          _buildFutureSettingItem(context, 'Vibrate', vibrateOptionsList, _callsVibrate, _getVibrateText, (VibrateOptions value) {
+            _setCallsVibrate(value.index);
+          }),
           SizedBox(
             height: 8.0,
           )
         ],
       ),
+    );
+  }
+
+  _buildFutureSettingItem(BuildContext context, String title, allOptions, future, getText, onChanged) {
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        String subtitle = '-';
+        var onTap;
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.active:
+          case ConnectionState.waiting:
+            subtitle = '-';
+            break;
+          case ConnectionState.done:
+            if (snapshot.hasError) {
+              subtitle = 'Error: ${snapshot.error}';
+              print(snapshot.error);
+            }
+            else {
+              subtitle = getText(snapshot.data);
+              onTap = (){
+                DialogHelpers.showRadioDialog(allOptions, title, getText, context, snapshot.data, onChanged);
+              };
+            }
+        }
+        return SettingItem(
+            title: title,
+            subtitle: subtitle,
+            onTap: onTap,
+            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 24.0),
+        );
+      },
     );
   }
 
@@ -427,5 +467,85 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
       case LightOptions.purple:
         return 'Purple';
     }
+  }
+
+  _setConversationTones(bool value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _conversationTones = prefs.setBool(SharedPreferencesHelpers.conversationTones, value).then((bool success) {
+        return value;
+      });
+    });
+  }
+
+  _setVibrate(int value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _vibrate = prefs.setInt(SharedPreferencesHelpers.vibrate, value).then((bool success) {
+        return vibrateOptionsList[value];
+      });
+    });
+  }
+
+  _setPopupNotification(int value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _popupNotification = prefs.setInt(SharedPreferencesHelpers.popupNotification, value).then((bool success) {
+        return popupNotificationOptionsList[value];
+      });
+    });
+  }
+
+  _setLight(int value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _light = prefs.setInt(SharedPreferencesHelpers.light, value).then((bool success) {
+        return lightOptionsList[value];
+      });
+    });
+  }
+
+  _setGroupVibrate(int value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _groupVibrate = prefs.setInt(SharedPreferencesHelpers.groupVibrate, value).then((bool success) {
+        return vibrateOptionsList[value];
+      });
+    });
+  }
+
+  _setGroupPopupNotification(int value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _groupPopupNotification = prefs.setInt(SharedPreferencesHelpers.groupPopupNotification, value).then((bool success) {
+        return popupNotificationOptionsList[value];
+      });
+    });
+  }
+
+  _setGroupLight(int value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _groupLight = prefs.setInt(SharedPreferencesHelpers.groupLight, value).then((bool success) {
+        return lightOptionsList[value];
+      });
+    });
+  }
+
+  _setCallsVibrate(int value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _callsVibrate = prefs.setInt(SharedPreferencesHelpers.callsVibrate, value).then((bool success) {
+        return vibrateOptionsList[value];
+      });
+    });
   }
 }

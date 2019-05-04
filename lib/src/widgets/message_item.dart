@@ -8,6 +8,7 @@ class MessageItem extends StatelessWidget {
   final bool isYou;
   final bool isRead;
   final bool isSent;
+  final double fontSize;
 
   MessageItem({
     this.content,
@@ -15,6 +16,7 @@ class MessageItem extends StatelessWidget {
     this.isYou,
     this.isRead = false,
     this.isSent = true,
+    this.fontSize,
   });
 
   @override
@@ -58,7 +60,7 @@ class MessageItem extends StatelessWidget {
                       content,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 15.0,
+                        fontSize: fontSize,
                       ),
                     ),
                   ),

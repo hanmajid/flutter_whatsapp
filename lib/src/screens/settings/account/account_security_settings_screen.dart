@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_whatsapp/src/config/shared_preferences.dart';
+import 'package:flutter_whatsapp/src/config/shared_preferences_helpers.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,7 +26,7 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
 
     // initialize variables
     _showSecurityNotifications = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getBool(SharedPreferenceName.showSecurityNotifications) ?? SharedPreferenceName.defaultShowSecurityNotifications);
+      return (prefs.getBool(SharedPreferencesHelpers.showSecurityNotifications) ?? SharedPreferencesHelpers.defaultShowSecurityNotifications);
     });
   }
 
@@ -95,7 +95,7 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
             future: _showSecurityNotifications,
             builder: (context, snapshot) {
               var onChanged;
-              bool showSecurityNotifications = SharedPreferenceName.defaultShowSecurityNotifications;
+              bool showSecurityNotifications = SharedPreferencesHelpers.defaultShowSecurityNotifications;
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.active:
@@ -140,7 +140,7 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _showSecurityNotifications = prefs.setBool(SharedPreferenceName.showSecurityNotifications, value).then((bool success) {
+      _showSecurityNotifications = prefs.setBool(SharedPreferencesHelpers.showSecurityNotifications, value).then((bool success) {
         return value;
       });
     });
