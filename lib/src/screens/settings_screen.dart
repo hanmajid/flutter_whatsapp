@@ -85,7 +85,8 @@ class SettingsScreen extends StatelessWidget {
               onTap: (){
                 Application.router.navigateTo(
                   context,
-                  Routes.dataSettings,
+                  //Routes.dataSettings,
+                  Routes.futureTodo,
                   transition: TransitionType.inFromRight,
                 );
               }),

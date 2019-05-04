@@ -8,6 +8,7 @@ import 'package:flutter_whatsapp/src/screens/detail_call_screen.dart';
 import 'package:flutter_whatsapp/src/screens/detail_chat_screen.dart';
 import 'package:flutter_whatsapp/src/screens/detail_status_screen.dart';
 import 'package:flutter_whatsapp/src/screens/edit_image_screen.dart';
+import 'package:flutter_whatsapp/src/screens/future_todo_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_call_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_chat_broadcast_screen.dart';
 import 'package:flutter_whatsapp/src/screens/new_chat_group_screen.dart';
@@ -302,6 +303,12 @@ var accountDeleteSettingsHandler = new Handler(
 var licensesHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       return new LicensesScreen();
+    }
+);
+
+var futureTodoHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      return new FutureTodoScreen();
     }
 );
 

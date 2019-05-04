@@ -61,7 +61,8 @@ class AccountTwoStepSettingsScreen extends StatelessWidget {
               onPressed: (){
                 Application.router.navigateTo(
                   context,
-                  Routes.accountEnableTwoStepSettings,
+                  //Routes.accountEnableTwoStepSettings,
+                  Routes.futureTodo,
                   transition: TransitionType.inFromRight,
                 );
               },

@@ -485,7 +485,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       case HomeOptions.statusPrivacy:
         Application.router.navigateTo(
           context,
-          Routes.statusPrivacy,
+          //Routes.statusPrivacy,
+          Routes.futureTodo,
           transition: TransitionType.inFromRight,
         );
         break;

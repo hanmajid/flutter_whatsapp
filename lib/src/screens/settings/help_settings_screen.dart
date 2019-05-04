@@ -29,7 +29,8 @@ class HelpSettingsScreen extends StatelessWidget {
             onTap: () {
               Application.router.navigateTo(
                 context,
-                Routes.helpContactSettings,
+                //Routes.helpContactSettings,
+                Routes.futureTodo,
                 transition: TransitionType.inFromRight,
               );
             },

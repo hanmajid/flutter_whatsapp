@@ -90,7 +90,8 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
             onTap: (){
               Application.router.navigateTo(
                 context,
-                Routes.statusPrivacy,
+                //Routes.statusPrivacy,
+                Routes.futureTodo,
                 transition: TransitionType.inFromRight,
               );
             },
@@ -132,7 +133,8 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
             onTap: (){
               Application.router.navigateTo(
                 context,
-                Routes.privacyLiveLocation,
+                //Routes.privacyLiveLocation,
+                Routes.futureTodo,
                 transition: TransitionType.inFromRight,
               );
             },
@@ -144,7 +146,8 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
             onTap: (){
               Application.router.navigateTo(
                 context,
-                Routes.privacyBlocked,
+                //Routes.privacyBlocked,
+                Routes.futureTodo,
                 transition: TransitionType.inFromRight,
               );
             },
@@ -191,7 +194,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
             }
         }
         return SettingItem(
-            title: 'Last seen',
+            title: title,
             subtitle: lastSeen,
             onTap: onTap,
             padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 24.0)

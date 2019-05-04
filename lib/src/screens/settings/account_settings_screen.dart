@@ -52,7 +52,8 @@ class AccountSettingsScreen extends StatelessWidget {
             onTap: (){
               Application.router.navigateTo(
                 context,
-                Routes.accountChangeNumSettings,
+                //Routes.accountChangeNumSettings,
+                Routes.futureTodo,
                 transition: TransitionType.inFromRight,
               );
             },
@@ -63,7 +64,8 @@ class AccountSettingsScreen extends StatelessWidget {
             onTap: (){
               Application.router.navigateTo(
                 context,
-                Routes.accountRequestSettings,
+                //Routes.accountRequestSettings,
+                Routes.futureTodo,
                 transition: TransitionType.inFromRight,
               );
             },
@@ -74,7 +76,8 @@ class AccountSettingsScreen extends StatelessWidget {
             onTap: (){
               Application.router.navigateTo(
                 context,
-                Routes.accountDeleteSettings,
+                //Routes.accountDeleteSettings,
+                Routes.futureTodo,
                 transition: TransitionType.inFromRight,
               );
             },

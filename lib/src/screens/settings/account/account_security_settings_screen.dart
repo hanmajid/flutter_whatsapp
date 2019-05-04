@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/shared_preferences.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AccountSecuritySettingsScreen extends StatefulWidget {
   @override
@@ -79,7 +80,8 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-
+                        String url = 'https://www.whatsapp.com/security?lg=en&lc=US&eea=0';
+                        _launchURL(url);
                       }
                   ),
                 ]
@@ -93,7 +95,7 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
             future: _showSecurityNotifications,
             builder: (context, snapshot) {
               var onChanged;
-              bool showSecurityNotifications = false;
+              bool showSecurityNotifications = SharedPreferenceName.defaultShowSecurityNotifications;
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.active:
@@ -142,5 +144,13 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
         return value;
       });
     });
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

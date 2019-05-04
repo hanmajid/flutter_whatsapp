@@ -50,6 +50,8 @@ class Routes {
 
   static String editImage = '/edit/image';
 
+  static String futureTodo = '/future';
+
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
       handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -104,5 +106,7 @@ class Routes {
     router.define(clearCallLog, handler: clearCallLogHandler);
 
     router.define(editImage, handler: editImageHandler);
+
+    router.define(futureTodo, handler: futureTodoHandler);
   }
 }
