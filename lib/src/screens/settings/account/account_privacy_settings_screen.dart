@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
+import 'package:flutter_whatsapp/src/config/shared_preferences.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item_header.dart';
 import 'package:flutter_whatsapp/src/widgets/switch_setting_item.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum PrivacyOptions {
   everyone,
@@ -14,7 +18,7 @@ enum PrivacyOptions {
   nobody,
 }
 
-var PrivacyOptionList = [
+var privacyOptionList = [
   PrivacyOptions.everyone,
   PrivacyOptions.myContacts,
   PrivacyOptions.nobody,
@@ -26,10 +30,37 @@ class AccountPrivacySettingsScreen extends StatefulWidget {
 }
 
 class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScreen> {
-  bool _readReceipts = false;
-  PrivacyOptions _lastSeen = PrivacyOptions.nobody;
-  PrivacyOptions _profilePhoto = PrivacyOptions.myContacts;
-  PrivacyOptions _about = PrivacyOptions.everyone;
+
+  PrivacyOptions defaultLastSeen = PrivacyOptions.nobody;
+  PrivacyOptions defaultProfilePhoto = PrivacyOptions.myContacts;
+  PrivacyOptions defaultAbout = PrivacyOptions.everyone;
+  bool defaultReadReceipts = false;
+
+  Future<PrivacyOptions> _lastSeen;
+  Future<PrivacyOptions> _profilePhoto;
+  Future<PrivacyOptions> _about;
+  Future<bool> _readReceipts;
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // initialize variables
+    _lastSeen = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt(SharedPreferenceName.lastSeen) != null ? privacyOptionList[prefs.getInt(SharedPreferenceName.lastSeen)] : defaultLastSeen);
+    });
+    _profilePhoto = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt(SharedPreferenceName.profilePhoto) != null ? privacyOptionList[prefs.getInt(SharedPreferenceName.profilePhoto)] : defaultProfilePhoto);
+    });
+    _about = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt(SharedPreferenceName.about) != null ? privacyOptionList[prefs.getInt(SharedPreferenceName.about)] : defaultAbout);
+    });
+    _readReceipts = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getBool(SharedPreferenceName.readReceipts) ?? defaultReadReceipts);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,45 +75,18 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
             subtitle: 'If you don\'t share your Last Seen, you won\'t be able to see other people\'s Last Seen',
             padding: EdgeInsets.only(top: 16.0, left: 24.0, right: 24.0, bottom: 4.0),
           ),
-          SettingItem(
-            title: 'Last seen',
-            subtitle: _getPrivacyText(_lastSeen),
-            onTap: (){
-              DialogHelpers.showRadioDialog(PrivacyOptionList, 'Last seen', _getPrivacyText, context, _lastSeen, (value) {
-                setState(() {
-                  _lastSeen = value;
-                });
-              });
-            },
-              padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 24.0)
-          ),
-          SettingItem(
-            title: 'Profile photo',
-            subtitle: _getPrivacyText(_profilePhoto),
-            onTap: (){
-              DialogHelpers.showRadioDialog(PrivacyOptionList, 'Profile photo', _getPrivacyText, context, _profilePhoto, (value) {
-                setState(() {
-                  _profilePhoto = value;
-                });
-              });
-            },
-              padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 24.0)
-          ),
-          SettingItem(
-            title: 'About',
-            subtitle: _getPrivacyText(_about),
-            onTap: (){
-              DialogHelpers.showRadioDialog(PrivacyOptionList, 'About', _getPrivacyText, context, _about, (value) {
-                setState(() {
-                  _about = value;
-                });
-              });
-            },
-              padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 24.0)
-          ),
+          _buildFutureSettingItem(context, 'Last seen', _lastSeen, _getPrivacyText, (PrivacyOptions value) {
+            _setLastSeen(value.index);
+          }),
+          _buildFutureSettingItem(context, 'Profile photo', _profilePhoto, _getPrivacyText, (PrivacyOptions value) {
+            _setProfilePhoto(value.index);
+          }),
+          _buildFutureSettingItem(context, 'About', _about, _getPrivacyText, (PrivacyOptions value) {
+            _setAbout(value.index);
+          }),
           SettingItem(
             title: 'Status',
-            subtitle: 'No contacs selected',
+            subtitle: 'No contacts selected',
             onTap: (){
               Application.router.navigateTo(
                 context,
@@ -92,14 +96,33 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
             },
             padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 24.0)
           ),
-          SwitchSettingItem(
-            title: 'Read receipts',
-            subtitle: 'If turned off, you won\'t send or receive Read receipts. Read receipts are always sent for group chats.',
-            value: _readReceipts,
-            onChanged: (bool value) {
-              setState(() {
-                _readReceipts = value;
-              });
+          FutureBuilder(
+            future: _readReceipts,
+            builder: (context, snapshot) {
+              var onChanged;
+              bool readReceipts = false;
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  break;
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                  }
+                  else {
+                    readReceipts = snapshot.data;
+                    onChanged = (bool value) {
+                      _setReadReceipts(value);
+                    };
+                  }
+              }
+              return SwitchSettingItem(
+                title: 'Read receipts',
+                subtitle: 'If turned off, you won\'t send or receive Read receipts. Read receipts are always sent for group chats.',
+                value: readReceipts,
+                onChanged: onChanged,
+              );
             },
           ),
           Divider(),
@@ -142,4 +165,80 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
         return 'Nobody';
     }
   }
+
+  _buildFutureSettingItem(BuildContext context, String title, future, getText, onChanged) {
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        String lastSeen = '-';
+        var onTap;
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.active:
+          case ConnectionState.waiting:
+            lastSeen = '-';
+            break;
+          case ConnectionState.done:
+            if (snapshot.hasError) {
+              lastSeen = 'Error: ${snapshot.error}';
+              print(snapshot.error);
+            }
+            else {
+              lastSeen = getText(snapshot.data);
+              onTap = (){
+                DialogHelpers.showRadioDialog(privacyOptionList, title, getText, context, snapshot.data, onChanged);
+              };
+            }
+        }
+        return SettingItem(
+            title: 'Last seen',
+            subtitle: lastSeen,
+            onTap: onTap,
+            padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 24.0)
+        );
+      },
+    );
+  }
+
+  _setLastSeen(int value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _lastSeen = prefs.setInt(SharedPreferenceName.lastSeen, value).then((bool success) {
+        return privacyOptionList[value];
+      });
+    });
+  }
+
+  _setProfilePhoto(int value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _profilePhoto = prefs.setInt(SharedPreferenceName.profilePhoto, value).then((bool success) {
+        return privacyOptionList[value];
+      });
+    });
+  }
+
+  _setAbout(int value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _about = prefs.setInt(SharedPreferenceName.about, value).then((bool success) {
+        return privacyOptionList[value];
+      });
+    });
+  }
+
+  _setReadReceipts(bool value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _readReceipts = prefs.setBool(SharedPreferenceName.readReceipts, value).then((bool success) {
+        return value;
+      });
+    });
+  }
+
+
 }

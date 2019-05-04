@@ -45,6 +45,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
             title: 'Font size',
             subtitle: 'Medium',
             onTap: (){},
+            padding: EdgeInsets.only(right: 16.0, left: 70.0,),
           ),
           Divider(),
           SettingItem(

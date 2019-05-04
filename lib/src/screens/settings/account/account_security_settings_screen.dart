@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_whatsapp/src/config/shared_preferences.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountSecuritySettingsScreen extends StatefulWidget {
   @override
@@ -10,7 +14,20 @@ class AccountSecuritySettingsScreen extends StatefulWidget {
 }
 
 class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsScreen> {
-  bool _showSecurityNotifications = false;
+
+  Future<bool> _showSecurityNotifications;
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // initialize variables
+    _showSecurityNotifications = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getBool(SharedPreferenceName.showSecurityNotifications) ?? SharedPreferenceName.defaultShowSecurityNotifications);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,30 +89,58 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
           Divider(
             height: 16.0,
           ),
-          ListTileTheme(
-            contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-            child: SwitchListTile(
-              title: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Text(
-                  'Show security notifications',
+          FutureBuilder(
+            future: _showSecurityNotifications,
+            builder: (context, snapshot) {
+              var onChanged;
+              bool showSecurityNotifications = false;
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  break;
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                  }
+                  else {
+                    showSecurityNotifications = snapshot.data;
+                    onChanged = (bool value) {
+                      _setShowSecurityNotifications(value);
+                    };
+                  }
+              }
+              return ListTileTheme(
+                contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                child: SwitchListTile(
+                  title: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      'Show security notifications',
+                    ),
+                  ),
+                  subtitle: Text(
+                    _lastText,
+                  ),
+                  value: showSecurityNotifications,
+                  activeColor: secondaryColor,
+                  onChanged: onChanged,
                 ),
-              ),
-              subtitle: Text(
-                _lastText,
-              ),
-              value: _showSecurityNotifications,
-              activeColor: secondaryColor,
-              onChanged: (bool value) {
-                setState(() {
-                  _showSecurityNotifications = value;
-                });
-              },
-            ),
-          )
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
+  _setShowSecurityNotifications(bool value) async {
+    final SharedPreferences prefs = await _prefs;
+
+    setState(() {
+      _showSecurityNotifications = prefs.setBool(SharedPreferenceName.showSecurityNotifications, value).then((bool success) {
+        return value;
+      });
+    });
+  }
 }
