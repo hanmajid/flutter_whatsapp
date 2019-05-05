@@ -189,7 +189,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
             else {
               subtitle = getText(snapshot.data);
               onTap = (){
-                DialogHelpers.showRadioDialog(privacyOptionList, title, getText, context, snapshot.data, onChanged);
+                DialogHelpers.showRadioDialog(privacyOptionList, title, getText, context, snapshot.data, false, onChanged);
               };
             }
         }

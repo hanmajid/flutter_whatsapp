@@ -97,8 +97,9 @@ class DialogHelpers {
     );
   }
 
-  static showRadioDialog(List allOptions, String title, Function getText, BuildContext context, option, onChanged) {
+  static showRadioDialog(List allOptions, String title, Function getText, BuildContext context, option, bool isActions, onChanged) {
     showDialog(
+        barrierDismissible: !isActions,
         context: context,
         builder: (context) {
           List<Widget> widgets = [];
@@ -128,8 +129,49 @@ class DialogHelpers {
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: widgets,
+              children: <Widget>[
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: widgets,
+                    ),
+                  ),
+                ),
+              ],
             ),
+            actions: !isActions ? null : <Widget>[
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                  child: Text(
+                    'CANCEL',
+                    style: TextStyle(
+                      color: secondaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                  child: Text(
+                    'OK',
+                    style: TextStyle(
+                      color: secondaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
           );
         }
     );

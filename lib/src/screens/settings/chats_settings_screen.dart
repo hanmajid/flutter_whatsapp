@@ -139,7 +139,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
                   else {
                     fontSize = _getFontSizeText(snapshot.data);
                     onTap = (){
-                      DialogHelpers.showRadioDialog(fontSizeOptionsList, 'Font size', _getFontSizeText, context, snapshot.data, (FontSizeOptions value) {
+                      DialogHelpers.showRadioDialog(fontSizeOptionsList, 'Font size', _getFontSizeText, context, snapshot.data, false, (FontSizeOptions value) {
                         _setFontSize(value.index);
                       });
                     };
