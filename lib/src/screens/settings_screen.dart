@@ -3,6 +3,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
+import 'package:flutter_whatsapp/src/screens/settings/help/android_intent_helpers.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -102,12 +103,16 @@ class SettingsScreen extends StatelessWidget {
                 );
               }),
           Divider(indent: 72.0, height: 0.0,),
-          SettingItem(
-              icon: Icons.group,
-              title: 'Invite a friend',
-              onTap: (){
-
-              }),
+          Builder(
+            builder:(context) {
+              return SettingItem(
+                  icon: Icons.group,
+                  title: 'Invite a friend',
+                  onTap: (){
+                    AndroidIntentHelpers.inviteFriend(context);
+                  });
+            }
+          ),
         ],
       )
     );

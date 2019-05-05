@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
+import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_whatsapp/src/config/shared_preferences_helpers.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
 import 'package:flutter_whatsapp/src/services/chat_service.dart';
@@ -390,7 +391,8 @@ class _DetailChatScreen extends State<DetailChatScreen> {
       case ChatDetailMenuOptions.media:
         Application.router.navigateTo(
           context,
-          "/chat/media?id=${_chat.id}",
+          //"/chat/media?id=${_chat.id}",
+          Routes.futureTodo,
           transition: TransitionType.inFromRight,
         );
         break;

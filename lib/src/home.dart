@@ -24,6 +24,7 @@ enum HomeOptions {
   statusPrivacy,
   // Calls Tab
   clearCallLog,
+  readMe,
 }
 
 class Home extends StatefulWidget {
@@ -163,6 +164,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           child: Text("Settings"),
           value: HomeOptions.settings,
         ),
+        PopupMenuItem<HomeOptions>(
+          child: Text("README", style: TextStyle(color: Colors.red)),
+          value: HomeOptions.readMe,
+        ),
       ],
       [
         PopupMenuItem<HomeOptions>(
@@ -173,6 +178,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           child: Text("Settings"),
           value: HomeOptions.settings,
         ),
+        PopupMenuItem<HomeOptions>(
+          child: Text("README", style: TextStyle(color: Colors.red)),
+          value: HomeOptions.readMe,
+        ),
       ],
       [
         PopupMenuItem<HomeOptions>(
@@ -182,6 +191,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         PopupMenuItem<HomeOptions>(
           child: Text("Settings"),
           value: HomeOptions.settings,
+        ),
+        PopupMenuItem<HomeOptions>(
+          child: Text("README", style: TextStyle(color: Colors.red)),
+          value: HomeOptions.readMe,
         ),
       ],
     ];
@@ -450,14 +463,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       case HomeOptions.newGroup:
         Application.router.navigateTo(
           context,
-          Routes.newChatGroup,
+          //Routes.newChatGroup,
+          Routes.futureTodo,
           transition: TransitionType.inFromRight,
         );
         break;
       case HomeOptions.newBroadcast:
         Application.router.navigateTo(
           context,
-          Routes.newChatBroadcast,
+          //Routes.newChatBroadcast,
+          Routes.futureTodo,
           transition: TransitionType.inFromRight,
         );
         break;
@@ -494,6 +509,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         Application.router.navigateTo(
           context,
           Routes.clearCallLog,
+          transition: TransitionType.inFromRight,
+        );
+        break;
+      case HomeOptions.readMe:
+        Application.router.navigateTo(
+          context,
+          Routes.futureTodo,
           transition: TransitionType.inFromRight,
         );
         break;

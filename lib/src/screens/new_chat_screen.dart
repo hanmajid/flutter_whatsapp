@@ -4,8 +4,11 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
+import 'package:flutter_whatsapp/src/screens/settings/help/android_intent_helpers.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/contact_item.dart';
+import 'package:android_intent/android_intent.dart';
+import 'package:platform/platform.dart';
 
 enum NewChatOptions {
   inviteAFriend,
@@ -158,7 +161,8 @@ class _SelectContact extends State<SelectContact> {
                 onTap: (){
                   Application.router.navigateTo(
                     context,
-                    Routes.newChatBroadcast,
+                    //Routes.newChatGroup,
+                    Routes.futureTodo,
                     transition: TransitionType.inFromRight,
                   );
                 },
@@ -181,7 +185,9 @@ class _SelectContact extends State<SelectContact> {
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     )),
-                onTap: (){},
+                onTap: (){
+                  AndroidIntentHelpers.createContact(context);
+                },
               ));
               data.addAll(snapshot.data);
               data.add(ListTile(
@@ -194,7 +200,9 @@ class _SelectContact extends State<SelectContact> {
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     )),
-                onTap: (){},
+                onTap: () {
+                  AndroidIntentHelpers.inviteFriend(context);
+                },
               ));
               data.add(ListTile(
                 leading: Container(
@@ -256,8 +264,10 @@ class _SelectContact extends State<SelectContact> {
   void _onSelectOption(NewChatOptions option) {
     switch(option) {
       case NewChatOptions.inviteAFriend:
+        AndroidIntentHelpers.inviteFriend(context);
         break;
       case NewChatOptions.contacts:
+        AndroidIntentHelpers.openContactApp(context);
         break;
       case NewChatOptions.refresh:
         break;
