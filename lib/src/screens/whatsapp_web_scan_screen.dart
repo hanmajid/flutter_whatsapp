@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
+import 'package:fast_qr_reader_view/fast_qr_reader_view.dart';
+
+List<CameraDescription> qrCameras;
 
 class WhatsappWebScanScreen extends StatefulWidget {
   @override
@@ -7,6 +10,7 @@ class WhatsappWebScanScreen extends StatefulWidget {
 }
 
 class _WhatsappWebScanScreenState extends State<WhatsappWebScanScreen> with SingleTickerProviderStateMixin {
+  QRReaderController controller;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   AnimationController animationController;
 
@@ -34,7 +38,7 @@ class _WhatsappWebScanScreenState extends State<WhatsappWebScanScreen> with Sing
       });
 
     // pick the first available camera
-//    onNewCameraSelected(Application.cameras[0]);
+    onNewCameraSelected(0);
   }
 
   @override
@@ -50,6 +54,7 @@ class _WhatsappWebScanScreenState extends State<WhatsappWebScanScreen> with Sing
     double _fontSize = 19.0;
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Scan code'),
@@ -97,8 +102,7 @@ class _WhatsappWebScanScreenState extends State<WhatsappWebScanScreen> with Sing
                   child: new Padding(
                     padding: const EdgeInsets.all(0.0),
                     child: new Center(
-                      child: Container(
-                      ),
+                      child: _cameraPreviewWidget(),
                     ),
                   ),
                 ),
@@ -139,40 +143,60 @@ class _WhatsappWebScanScreenState extends State<WhatsappWebScanScreen> with Sing
     );
   }
 
-//  void onCodeRead(dynamic value) {
-//    showInSnackBar(value.toString());
-//    // ... do something
-//    // wait 5 seconds then start scanning again.
-//    new Future.delayed(const Duration(seconds: 5), controller.startScanning);
-//  }
+  /// Display the preview from the camera (or a message if the preview is not available).
+  Widget _cameraPreviewWidget() {
+    if (controller == null || !controller.value.isInitialized) {
+      return const Text(
+        'No camera selected',
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 24.0,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+    } else {
+      return new AspectRatio(
+        aspectRatio: controller.value.aspectRatio,
+        child: new QRReaderPreview(controller),
+      );
+    }
+  }
 
-//  void onNewCameraSelected(CameraDescription cameraDescription) async {
-//    if (controller != null) {
-//      await controller.dispose();
-//    }
-//    controller = new QRReaderController(cameraDescription, ResolutionPreset.low,
-//        [CodeFormat.qr, CodeFormat.pdf417], onCodeRead);
-//
-//    // If the controller is updated then update the UI.
-//    controller.addListener(() {
-//      if (mounted) setState(() {});
-//      if (controller.value.hasError) {
-//        showInSnackBar('Camera error ${controller.value.errorDescription}');
-//      }
-//    });
-//
-//    try {
-//      await controller.initialize();
-//    } on QRReaderException catch (e) {
-//      print('${e.code}, ${e.description}');
-//      showInSnackBar('Error: ${e.code}\n${e.description}');
-//    }
-//
-//    if (mounted) {
-//      setState(() {});
-//      controller.startScanning();
-//    }
-//  }
+  void onCodeRead(dynamic value) {
+    Navigator.of(context).pop();
+    //showInSnackBar(value.toString());
+    // ... do something
+    // wait 5 seconds then start scanning again.
+    //new Future.delayed(const Duration(seconds: 5), controller.startScanning);
+  }
+
+  void onNewCameraSelected(int index) async {
+    if (controller != null) {
+      await controller.dispose();
+    }
+    controller = new QRReaderController(qrCameras[index], ResolutionPreset.low,
+        [CodeFormat.qr, CodeFormat.pdf417], onCodeRead);
+
+    // If the controller is updated then update the UI.
+    controller.addListener(() {
+      if (mounted) setState(() {});
+      if (controller.value.hasError) {
+        showInSnackBar('Camera error ${controller.value.errorDescription}');
+      }
+    });
+
+    try {
+      await controller.initialize();
+    } on QRReaderException catch (e) {
+      print('${e.code}, ${e.description}');
+      showInSnackBar('Error: ${e.code}\n${e.description}');
+    }
+
+    if (mounted) {
+      setState(() {});
+      controller.startScanning();
+    }
+  }
 
   void showInSnackBar(String message) {
     _scaffoldKey.currentState
