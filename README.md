@@ -10,6 +10,10 @@ I made this for my study/exercise on Flutter. I only make the client-side app, t
 
 It's still work in progress. Check out Trello below for more info.
 
+## Development
+
+**Note**: Create your own Firebase project and add the `google-services.json` to the project to use QR code reader.
+
 ## Others
 
 - [Trello board](https://trello.com/b/xg3PHKxO/fluttered-whatsapp)
