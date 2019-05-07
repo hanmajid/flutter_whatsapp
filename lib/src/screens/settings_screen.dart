@@ -21,7 +21,7 @@ class SettingsScreen extends StatelessWidget {
               tag: 'profile-pic',
               child: CircleAvatar(
                 radius: 32.0,
-                backgroundImage: CachedNetworkImageProvider('https://via.placeholder.com/200x200'),
+                backgroundImage: CachedNetworkImageProvider('https://via.placeholder.com/300x300'),
               ),
             ),
             title: Text(
@@ -41,7 +41,7 @@ class SettingsScreen extends StatelessWidget {
               Application.router.navigateTo(
                 context,
                 Routes.yourProfile,
-                transition: TransitionType.inFromRight,
+                transition: TransitionType.fadeIn,
               );
             },
           ),

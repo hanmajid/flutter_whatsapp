@@ -61,7 +61,14 @@ class _CameraHomeState extends State<CameraHome> {
   @override
   void dispose() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    _disposeCamera();
     super.dispose();
+  }
+
+  _disposeCamera() async {
+    if (controller != null) {
+      await controller.dispose();
+    }
   }
 
   _initCamera(int index) async {
@@ -343,7 +350,7 @@ class _CameraHomeState extends State<CameraHome> {
                   itemCount: snapshot.data.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, i) {
-                    print(snapshot.data[i]);
+                    //print(snapshot.data[i]);
                     return GalleryItemThumbnail(
                       heroId: 'item-$i',
                       margin: const EdgeInsets.symmetric(horizontal: 1.0),
