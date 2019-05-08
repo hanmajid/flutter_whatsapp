@@ -21,7 +21,7 @@ class SettingsScreen extends StatelessWidget {
               tag: 'profile-pic',
               child: CircleAvatar(
                 radius: 32.0,
-                backgroundImage: CachedNetworkImageProvider('https://via.placeholder.com/300x300'),
+                backgroundImage: CachedNetworkImageProvider('https://api.adorable.io/avatars/285/circle@adorable.png'),
               ),
             ),
             title: Text(
