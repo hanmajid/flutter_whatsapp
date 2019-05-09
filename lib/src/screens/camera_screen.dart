@@ -287,6 +287,49 @@ class _CameraHomeState extends State<CameraHome> {
     );
   }
 
+  String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
+
+  Future<String> _takePicture() async {
+    if(!controller.value.isInitialized) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(content: Text('Error: camera is not initialized'))
+      );
+    }
+//    final Directory extDir = await getApplicationDocumentsDirectory();
+    final Directory extDir = await getExternalStorageDirectory();
+    final String dirPath = '${extDir.path}/DCIM/Camera';
+    //await Directory(dirPath).create(recursive: true);
+    final String filePath = '$dirPath/${timestamp()}.jpeg';
+
+    if(controller.value.isTakingPicture) {
+      return null;
+    }
+
+    try {
+      await controller.takePicture(filePath);
+    } on CameraException catch(e) {
+      Scaffold.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${e.description}'))
+      );
+    }
+    return filePath;
+  }
+
+  void onTakePictureButtonPressed() {
+    _takePicture().then((String filePath) {
+      if(mounted) {
+        setState(() {
+
+        });
+        if(filePath != null) {
+          Scaffold.of(context).showSnackBar(
+              SnackBar(content: Text('Picture saved to $filePath'))
+          );
+        }
+      }
+    });
+  }
+
   Widget _buildCameraControls() {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -299,11 +342,19 @@ class _CameraHomeState extends State<CameraHome> {
             color: Colors.white,
             onPressed: () {},
           ),
-          IconButton(
-            icon: Icon(Icons.panorama_fish_eye),
-            iconSize: 70.0,
-            color: Colors.white,
-            onPressed: () {},
+          GestureDetector(
+            child: Icon(
+              Icons.panorama_fish_eye,
+              size: 70.0,
+              color: Colors.white,
+            ),
+            onTap: () {
+              if(controller == null || !controller.value.isInitialized || controller.value.isRecordingVideo) return;
+              onTakePictureButtonPressed();
+            },
+            onLongPress: () {
+
+            },
           ),
           IconButton(
             icon: Icon(Icons.switch_camera),
