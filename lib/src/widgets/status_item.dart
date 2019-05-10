@@ -29,7 +29,7 @@ class StatusItem extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       leading: status != null
-          ? _getThumbnail(status.isSeen, 5) // TODO: Change this
+          ? _getThumbnail(status.isSeen, status.numImages)
           : Stack(
         children: <Widget>[
           CircleAvatar(

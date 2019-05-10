@@ -66,7 +66,6 @@ class Chat {
   factory Chat.fromJsonFull(Map<String, dynamic> json) {
     List<Message> messages = new List<Message>();
     messages = json["messages"].map<Message>((i) => Message.fromJson(i)).toList();
-    print(messages);
 
     return new Chat(
       id: json["id"],
