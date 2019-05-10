@@ -32,7 +32,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   List<Widget> _actionButtons;
   List<List<PopupMenuItem<HomeOptions>>> _popupMenus;
@@ -59,6 +59,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   AsyncMemoizer _memoizerCalls = AsyncMemoizer();
 
   int _unreadMessages = 0;
+  AnimationController unreadChatsBadgeAnimationController;
+  Animation unreadChatsBadgeAnimation;
 
   Future<dynamic> _getChatList() {
     return _memoizerChats.runOnce(() {
@@ -89,6 +91,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _tabIndex = 1; // Start at second tab.
     _isSearching = false;
 
+    unreadChatsBadgeAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1),
+    );
+    unreadChatsBadgeAnimation = Tween(
+      begin: 1.0,
+      end: 0.7,
+    ).animate(unreadChatsBadgeAnimationController);
+
     _searchBarController = new TextEditingController();
     _searchBarController.addListener(() {
       setState(() {
@@ -116,6 +127,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         _searchBarController?.text = "";
         if(_tabController.index == 2) {
           isNewStatus = false;
+        }
+
+        if(_tabController.index != 1) {
+          unreadChatsBadgeAnimationController.forward();
+        }
+        else {
+          unreadChatsBadgeAnimationController.reverse();
         }
       });
     });
@@ -265,6 +283,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    unreadChatsBadgeAnimationController.dispose();
     _tabController.dispose();
     _searchBarController.dispose();
     super.dispose();
@@ -359,21 +378,24 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             if(snapshot.data == null) return Container();
                             if(snapshot.data.unreadMessages <= 0) return Container();
 
-                            return Container(
-                              margin: const EdgeInsets.only(left: 4.0),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(Radius.circular(9.0))
-                              ),
-                              alignment: Alignment.center,
-                              height: 18.0,
-                              width: 18.0,
-                              child: Text(
-                                '${snapshot.data.unreadMessages}',
-                                style: TextStyle(
-                                  fontSize: 9.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: primaryColor,
+                            return FadeTransition(
+                              opacity: unreadChatsBadgeAnimation,
+                              child: Container(
+                                margin: const EdgeInsets.only(left: 4.0),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(9.0))
+                                ),
+                                alignment: Alignment.center,
+                                height: 18.0,
+                                width: 18.0,
+                                child: Text(
+                                  '${snapshot.data.unreadMessages}',
+                                  style: TextStyle(
+                                    fontSize: 9.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: primaryColor,
+                                  ),
                                 ),
                               ),
                             );
