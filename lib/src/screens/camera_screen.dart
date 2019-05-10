@@ -20,7 +20,6 @@ class CameraScreen extends StatelessWidget {
 }
 
 class CameraHome extends StatefulWidget {
-
   @override
   _CameraHomeState createState() => _CameraHomeState();
 }
@@ -31,6 +30,7 @@ class _CameraHomeState extends State<CameraHome> {
   bool isShowGallery = true;
   Future<List<String>> _images;
   PanelController _panelController;
+  String videoPath;
 
   @override
   void initState() {
@@ -162,19 +162,22 @@ class _CameraHomeState extends State<CameraHome> {
                     color: Colors.white,
                     child: FutureBuilder<List<String>>(
                         future: _images,
-                        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<String>> snapshot) {
                           switch (snapshot.connectionState) {
                             case ConnectionState.none:
                               return Center(
                                 child: CircularProgressIndicator(
-                                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+                                  valueColor: new AlwaysStoppedAnimation<Color>(
+                                      Colors.grey),
                                 ),
                               );
                             case ConnectionState.active:
                             case ConnectionState.waiting:
                               return Center(
                                 child: CircularProgressIndicator(
-                                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.grey),
+                                  valueColor: new AlwaysStoppedAnimation<Color>(
+                                      Colors.grey),
                                 ),
                               );
                             case ConnectionState.done:
@@ -189,18 +192,18 @@ class _CameraHomeState extends State<CameraHome> {
                                   SliverPersistentHeader(
                                     pinned: true,
                                     floating: false,
-                                    delegate: _SliverAppBarDelegate(
-                                        text:'RECENTLY'
-                                    ),
+                                    delegate:
+                                        _SliverAppBarDelegate(text: 'RECENTLY'),
                                   ),
                                   SliverGrid(
-                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 3,
                                       mainAxisSpacing: 2.0,
                                       crossAxisSpacing: 2.0,
                                     ),
                                     delegate: SliverChildBuilderDelegate(
-                                          (context, index) {
+                                      (context, index) {
                                         return GalleryItemThumbnail(
                                           heroId: 'itemPanel-$index',
                                           height: 150,
@@ -221,15 +224,23 @@ class _CameraHomeState extends State<CameraHome> {
                               );
                           }
                           return null;
-                        }
-                    ),
+                        }),
                   ),
                 ),
               ),
               color: Color.fromARGB(0, 0, 0, 0),
               collapsed: isShowGallery ? _buildCollapsedPanel() : Container(),
               body: Container(
-                color: Colors.black,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color:
+                        controller != null && controller.value.isRecordingVideo
+                            ? Colors.red
+                            : Colors.black,
+                    width: 2.0,
+                  ),
+                  color: Colors.black,
+                ),
                 child: _cameraPreviewWidget(),
               ),
               onPanelSlide: (double pos) {
@@ -241,21 +252,20 @@ class _CameraHomeState extends State<CameraHome> {
             Positioned(
               bottom: 2.0,
               child: Opacity(
-                opacity: 1 - _opacity,
-                child: Column(
-                  children: <Widget>[
-                    _buildCameraControls(),
-                    Container(
-                        child: Text(
-                          'Hold for video, tap for photo',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ))
-                  ],
-                )
-              ),
+                  opacity: 1 - _opacity,
+                  child: Column(
+                    children: <Widget>[
+                      _buildCameraControls(),
+                      Container(
+                          child: Text(
+                        'Hold for video, tap for photo',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ))
+                    ],
+                  )),
             )
           ],
         ),
@@ -290,10 +300,9 @@ class _CameraHomeState extends State<CameraHome> {
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
   Future<String> _takePicture() async {
-    if(!controller.value.isInitialized) {
+    if (!controller.value.isInitialized) {
       Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text('Error: camera is not initialized'))
-      );
+          SnackBar(content: Text('Error: camera is not initialized')));
     }
 //    final Directory extDir = await getApplicationDocumentsDirectory();
     final Directory extDir = await getExternalStorageDirectory();
@@ -301,32 +310,94 @@ class _CameraHomeState extends State<CameraHome> {
     //await Directory(dirPath).create(recursive: true);
     final String filePath = '$dirPath/${timestamp()}.jpeg';
 
-    if(controller.value.isTakingPicture) {
+    if (controller.value.isTakingPicture) {
       return null;
     }
 
     try {
       await controller.takePicture(filePath);
-    } on CameraException catch(e) {
-      Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.description}'))
-      );
+    } on CameraException catch (e) {
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text('Error: ${e.description}')));
     }
     return filePath;
   }
 
+  Future<String> startVideoRecording() async {
+    if (!controller.value.isInitialized) {
+      Scaffold.of(context).showSnackBar(
+          SnackBar(content: Text('Error: camera is not initialized')));
+      return null;
+    }
+
+    final Directory extDir = await getExternalStorageDirectory();
+    final String dirPath = '${extDir.path}/DCIM/Camera';
+    //await Directory(dirPath).create(recursive: true);
+    final String filePath = '$dirPath/${timestamp()}.mp4';
+
+    if (controller.value.isRecordingVideo) {
+      return null;
+    }
+
+    try {
+      videoPath = filePath;
+      await controller.startVideoRecording(filePath);
+    } on CameraException catch (e) {
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text('Error: ${e.description}')));
+      return null;
+    }
+    return filePath;
+  }
+
+  Future<void> stopVideoRecording() async {
+    if (!controller.value.isRecordingVideo) {
+      return null;
+    }
+
+    try {
+      await controller.stopVideoRecording();
+    } on CameraException catch (e) {
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text('Error: ${e.description}')));
+      return null;
+    }
+
+    // await _startVideoPlayer();
+  }
+
   void onTakePictureButtonPressed() {
     _takePicture().then((String filePath) {
-      if(mounted) {
-        setState(() {
-
-        });
-        if(filePath != null) {
+      if (mounted) {
+        setState(() {});
+        if (filePath != null) {
           Scaffold.of(context).showSnackBar(
-              SnackBar(content: Text('Picture saved to $filePath'))
-          );
+              SnackBar(content: Text('Picture saved to $filePath')));
         }
       }
+    });
+  }
+
+  void onVideoRecordButtonPressed() {
+    startVideoRecording().then((String filePath) {
+      if (mounted) {
+        setState(() {});
+      }
+      if (filePath != null) {
+//        Scaffold.of(context).showSnackBar(
+//            SnackBar(content: Text('Saving video to $filePath'))
+//        );
+      }
+    });
+  }
+
+  void onStopButtonPressed() {
+    stopVideoRecording().then((_) {
+      if (mounted) {
+        setState(() {});
+      }
+      Scaffold.of(context).showSnackBar(
+          SnackBar(content: Text('Video recorded to $videoPath')));
     });
   }
 
@@ -349,11 +420,22 @@ class _CameraHomeState extends State<CameraHome> {
               color: Colors.white,
             ),
             onTap: () {
-              if(controller == null || !controller.value.isInitialized || controller.value.isRecordingVideo) return;
+              if (controller == null ||
+                  !controller.value.isInitialized ||
+                  controller.value.isRecordingVideo) return;
               onTakePictureButtonPressed();
             },
             onLongPress: () {
-
+              if (controller == null ||
+                  !controller.value.isInitialized ||
+                  controller.value.isRecordingVideo) return;
+              onVideoRecordButtonPressed();
+            },
+            onLongPressUp: () {
+              if (controller == null ||
+                  !controller.value.isInitialized ||
+                  !controller.value.isRecordingVideo) return;
+              onStopButtonPressed();
             },
           ),
           IconButton(
@@ -467,7 +549,6 @@ class GalleryItemThumbnail extends StatelessWidget {
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-
   _SliverAppBarDelegate({
     @required this.text,
   });
@@ -476,22 +557,15 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context,
-      double shrinkOffset,
-      bool overlapsContent)
-  {
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return new Container(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
         color: Colors.white,
         child: Text(
           text,
           style: TextStyle(
-            fontSize: 14.0,
-            color: Colors.grey,
-            fontWeight: FontWeight.bold
-          ),
-        )
-    );
+              fontSize: 14.0, color: Colors.grey, fontWeight: FontWeight.bold),
+        ));
   }
 
   @override
