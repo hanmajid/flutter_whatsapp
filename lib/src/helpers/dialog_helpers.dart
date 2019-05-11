@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
+import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class DialogHelpers {
@@ -208,7 +209,8 @@ class DialogHelpers {
   static _defOnTapInfo(BuildContext context, int id) {
     Application.router.navigateTo(
       context,
-      "/profile?id=$id",
+      //"/profile?id=$id",
+      Routes.futureTodo,
       transition: TransitionType.inFromRight,
     ).then((result) {
       Navigator.of(context).pop();

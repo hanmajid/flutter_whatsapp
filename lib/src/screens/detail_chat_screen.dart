@@ -158,7 +158,8 @@ class _DetailChatScreen extends State<DetailChatScreen> {
             onTap: () {
               Application.router.navigateTo(
                 context,
-                "/profile?id=${_chat.id}",
+                //"/profile?id=${_chat.id}",
+                Routes.futureTodo,
                 transition: TransitionType.inFromRight,
               );
             },
@@ -384,7 +385,8 @@ class _DetailChatScreen extends State<DetailChatScreen> {
       case ChatDetailMenuOptions.viewContact:
         Application.router.navigateTo(
           context,
-          "/profile?id=${_chat.id}",
+          //"/profile?id=${_chat.id}",
+          Routes.futureTodo,
           transition: TransitionType.inFromRight,
         );
         break;

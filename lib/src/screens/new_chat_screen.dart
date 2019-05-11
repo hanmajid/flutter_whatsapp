@@ -232,11 +232,6 @@ class _SelectContact extends State<SelectContact> {
                         contact: data.elementAt(i),
                         onProfileTap: () => onTapProfileContactItem(context, snapshot.data.elementAt(i)),
                         onTap:() {
-                          Application.router.navigateTo(
-                            context,
-                            '/chat?profileId=1',
-                            transition: TransitionType.inFromRight,
-                          );
                         }
                         );
                   });
