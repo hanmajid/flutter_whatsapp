@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class AccountChangeNumSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final String text1 = 'Changing your phone number will migrate '
-        'your account info, groups & settings.';
+    // final String text1 = 'Changing your phone number will migrate '
+    //     'your account info, groups & settings.';
 
-    final String text2 = 'Before proceeding, please confirm that you are '
-        'able to receive SMS or calls at your new number.';
+    // final String text2 = 'Before proceeding, please confirm that you are '
+    //     'able to receive SMS or calls at your new number.';
 
-    final String text3 = 'If you have both a new phone & a new number, '
-        'first change your number on your old phone.';
+    // final String text3 = 'If you have both a new phone & a new number, '
+    //     'first change your number on your old phone.';
 
     return Scaffold(
       appBar: AppBar(

@@ -149,6 +149,7 @@ var clearCallLogHandler = new Handler(
           );
         }
       );
+      return null;
     }
 );
 
@@ -165,6 +166,7 @@ var logoutDeviceHandler = new Handler(
             );
           }
       );
+      return null;
     }
 );
 
@@ -195,6 +197,7 @@ var logoutAllDevicesHandler = new Handler(
             );
           }
       );
+      return null;
     }
 );
 
@@ -206,7 +209,7 @@ var contactsHelpHandler  = new Handler(
 
 var profileHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      int id = int.tryParse(params['id']?.first) ?? null;
+      // int id = int.tryParse(params['id']?.first) ?? null;
 
       return new ProfileScreen(
       );
@@ -223,7 +226,7 @@ var yourProfileHandler = new Handler(
 
 var chatMediaHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      int id = int.tryParse(params['id']?.first) ?? null;
+      // int id = int.tryParse(params['id']?.first) ?? null;
 
       return new ChatMediaScreen();
     }
@@ -375,7 +378,7 @@ class OKCancelDialog extends StatelessWidget {
           },
         ),
       ],
-    );;
+    );
   }
 
 }

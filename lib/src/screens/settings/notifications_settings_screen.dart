@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_whatsapp/src/config/application.dart';
-import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_whatsapp/src/config/shared_preferences_helpers.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item.dart';

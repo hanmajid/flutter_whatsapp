@@ -6,7 +6,6 @@ import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_whatsapp/src/config/shared_preferences_helpers.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
-import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item.dart';
 import 'package:flutter_whatsapp/src/widgets/setting_item_header.dart';
 import 'package:flutter_whatsapp/src/widgets/switch_setting_item.dart';
@@ -166,6 +165,8 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
         return 'My contacts';
       case PrivacyOptions.nobody:
         return 'Nobody';
+      default:
+        return '';
     }
   }
 

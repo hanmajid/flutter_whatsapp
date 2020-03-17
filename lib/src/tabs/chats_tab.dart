@@ -1,12 +1,9 @@
-import 'package:async/async.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/models/chat_list.dart';
 import 'package:flutter_whatsapp/src/models/chat.dart';
-import 'package:flutter_whatsapp/src/screens/detail_chat_screen.dart';
-import 'package:flutter_whatsapp/src/services/chat_service.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/chat_item.dart';
 

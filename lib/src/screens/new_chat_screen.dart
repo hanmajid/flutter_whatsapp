@@ -7,8 +7,6 @@ import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/screens/settings/help/android_intent_helpers.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/contact_item.dart';
-import 'package:android_intent/android_intent.dart';
-import 'package:platform/platform.dart';
 
 enum NewChatOptions {
   inviteAFriend,
@@ -76,7 +74,7 @@ class _SelectContact extends State<SelectContact> {
               child: numContacts == null
                ? null
               : Text(
-                  '${numContacts} contacts',
+                  '$numContacts contacts',
                 style: TextStyle(
                   fontSize: 12.0,
                 ),

@@ -1,11 +1,8 @@
-import 'package:async/async.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
-import 'package:flutter_whatsapp/src/models/status.dart';
 import 'package:flutter_whatsapp/src/models/status_list.dart';
-import 'package:flutter_whatsapp/src/services/status_service.dart';
 import 'package:flutter_whatsapp/src/widgets/status_item.dart';
 
 class StatusTab extends StatelessWidget {

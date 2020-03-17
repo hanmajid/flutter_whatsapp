@@ -3,10 +3,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
-import 'package:flutter_whatsapp/src/models/call.dart';
 import 'package:flutter_whatsapp/src/models/call_list.dart';
-import 'package:flutter_whatsapp/src/screens/detail_call_screen.dart';
-import 'package:flutter_whatsapp/src/screens/detail_chat_screen.dart';
 import 'package:flutter_whatsapp/src/services/call_service.dart';
 import 'package:flutter_whatsapp/src/widgets/call_item.dart';
 

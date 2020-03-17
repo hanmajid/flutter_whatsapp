@@ -42,9 +42,8 @@ class DetailChatScreen extends StatefulWidget {
 
 class _DetailChatScreen extends State<DetailChatScreen> {
   Chat _chat;
-  List<Widget> _actions;
   String _message = '';
-  PopupMenuButton<ChatDetailMoreMenuOptions> _morePopMenu;
+  // PopupMenuButton<ChatDetailMoreMenuOptions> _morePopMenu;
   Future<List<Message>> _fMessages;
   List<Message> _messages;
   TextEditingController textFieldController;
@@ -70,7 +69,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
           _fontSize = 18.0;
         }
       });
-      bool enterIsSend = prefs.getBool(SharedPreferencesHelpers.enterIsSend);
+      bool enterIsSend = prefs.getBool(SharedPreferencesHelpers.enterIsSend) ?? SharedPreferencesHelpers.defaultEnterIsSend;
       setState(() {
         if(enterIsSend) {
           _textInputAction = TextInputAction.send;
@@ -89,34 +88,35 @@ class _DetailChatScreen extends State<DetailChatScreen> {
             _chat = chat;
             _messages = chat.messages.reversed.toList();
           });
+          return null;
         });
-    _morePopMenu = PopupMenuButton<ChatDetailMoreMenuOptions>(
-      onSelected: _onSelectMoreMenuOption,
-      itemBuilder: (BuildContext context) {
-        return [
-          PopupMenuItem<ChatDetailMoreMenuOptions>(
-            child: Text('Report'),
-            value: ChatDetailMoreMenuOptions.report,
-          ),
-          PopupMenuItem<ChatDetailMoreMenuOptions>(
-            child: Text('Block'),
-            value: ChatDetailMoreMenuOptions.block,
-          ),
-          PopupMenuItem<ChatDetailMoreMenuOptions>(
-            child: Text('Clear chat'),
-            value: ChatDetailMoreMenuOptions.clearChat,
-          ),
-          PopupMenuItem<ChatDetailMoreMenuOptions>(
-            child: Text('Export chat'),
-            value: ChatDetailMoreMenuOptions.exportChat,
-          ),
-          PopupMenuItem<ChatDetailMoreMenuOptions>(
-            child: Text('Add shortcut'),
-            value: ChatDetailMoreMenuOptions.addShortcut,
-          ),
-        ];
-      },
-    );
+    // _morePopMenu = PopupMenuButton<ChatDetailMoreMenuOptions>(
+    //   onSelected: _onSelectMoreMenuOption,
+    //   itemBuilder: (BuildContext context) {
+    //     return [
+    //       PopupMenuItem<ChatDetailMoreMenuOptions>(
+    //         child: Text('Report'),
+    //         value: ChatDetailMoreMenuOptions.report,
+    //       ),
+    //       PopupMenuItem<ChatDetailMoreMenuOptions>(
+    //         child: Text('Block'),
+    //         value: ChatDetailMoreMenuOptions.block,
+    //       ),
+    //       PopupMenuItem<ChatDetailMoreMenuOptions>(
+    //         child: Text('Clear chat'),
+    //         value: ChatDetailMoreMenuOptions.clearChat,
+    //       ),
+    //       PopupMenuItem<ChatDetailMoreMenuOptions>(
+    //         child: Text('Export chat'),
+    //         value: ChatDetailMoreMenuOptions.exportChat,
+    //       ),
+    //       PopupMenuItem<ChatDetailMoreMenuOptions>(
+    //         child: Text('Add shortcut'),
+    //         value: ChatDetailMoreMenuOptions.addShortcut,
+    //       ),
+    //     ];
+    //   },
+    // );
     textFieldController = new TextEditingController()
       ..addListener(() {
         setState(() {
@@ -379,7 +379,6 @@ class _DetailChatScreen extends State<DetailChatScreen> {
     );
   }
 
-  // TODO
   _onSelectMenuOption(ChatDetailMenuOptions option) {
     switch (option) {
       case ChatDetailMenuOptions.viewContact:
@@ -409,8 +408,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
     }
   }
 
-  // TODO
-  _onSelectMoreMenuOption(ChatDetailMoreMenuOptions option) {}
+  // _onSelectMoreMenuOption(ChatDetailMoreMenuOptions option) {}
 
   int offsetUnsentMessage = 0;
 

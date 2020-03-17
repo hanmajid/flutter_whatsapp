@@ -3,7 +3,6 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
-import 'package:flutter_whatsapp/src/home.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class FlutteredApp extends StatefulWidget {

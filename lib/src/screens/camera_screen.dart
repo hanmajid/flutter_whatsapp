@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math' as math;
 
 import 'package:camera/camera.dart';
 import 'package:fluro/fluro.dart';
@@ -317,6 +316,7 @@ class _CameraHomeState extends State<CameraHome> {
     try {
       await controller.takePicture(filePath);
     } on CameraException catch (e) {
+      // TODO: Can't use this here.
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text('Error: ${e.description}')));
     }

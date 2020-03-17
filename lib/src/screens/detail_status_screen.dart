@@ -1,11 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_whatsapp/src/models/chat.dart';
 import 'package:flutter_whatsapp/src/models/status.dart';
-import 'package:flutter_whatsapp/src/services/chat_service.dart';
 import 'package:flutter_whatsapp/src/services/status_service.dart';
-import 'package:flutter_whatsapp/src/values/colors.dart';
-import 'package:flutter_whatsapp/src/widgets/message_item.dart';
 
 
 class DetailStatusScreen extends StatefulWidget {
@@ -144,7 +140,7 @@ class _DetailStatusScreenState extends State<DetailStatusScreen> {
                         print(snapshot.error);
                       }
                       List<Widget> children = List<Widget>();
-                      for(dynamic images in snapshot.data.imagesUrl) {
+                      for(dynamic _ in snapshot.data.imagesUrl) {
                         children.add(
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 4.0),
@@ -178,7 +174,7 @@ class _DetailStatusScreenState extends State<DetailStatusScreen> {
                     }
                     List<Widget> children = List<Widget>();
                     int i = 0;
-                    for(dynamic images in snapshot.data.imagesUrl) {
+                    for(dynamic _ in snapshot.data.imagesUrl) {
                       children.add(
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 4.0),

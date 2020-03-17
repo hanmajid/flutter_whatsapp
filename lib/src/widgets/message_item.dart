@@ -97,7 +97,6 @@ class MessageItem extends StatelessWidget {
         ),
       ],
     );
-    ;
   }
 
   Widget _getIcon() {

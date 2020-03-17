@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:fast_qr_reader_view/fast_qr_reader_view.dart';
 
 List<CameraDescription> qrCameras;

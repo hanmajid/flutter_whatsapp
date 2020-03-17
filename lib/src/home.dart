@@ -58,7 +58,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Future<dynamic> _statusList;
   AsyncMemoizer _memoizerCalls = AsyncMemoizer();
 
-  int _unreadMessages = 0;
+  // int _unreadMessages = 0;
   AnimationController unreadChatsBadgeAnimationController;
   Animation unreadChatsBadgeAnimation;
 
