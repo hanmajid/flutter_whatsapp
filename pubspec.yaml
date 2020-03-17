@@ -10,7 +10,7 @@ description: Whatsapp clone using Flutter.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -22,7 +22,7 @@ dependencies:
   intl: ^0.15.8
   http: ^0.12.0+2
   contacts_service: ^0.2.4
-  cached_network_image: ^0.7.0
+  cached_network_image: ^2.0.0
   camera: ^0.4.3+2
 #  video_player: ^0.10.0+5
   path_provider: ^0.5.0+1
@@ -32,7 +32,7 @@ dependencies:
   url_launcher: ^5.0.2
   shared_preferences: ^0.5.2
   android_intent: ^0.3.0+2
-#  fast_qr_reader_view: ^0.1.5
+  # fast_qr_reader_view: ^0.1.5
   fast_qr_reader_view:
     git:
       url: git://github.com/facundomedica/fast_qr_reader_view.git

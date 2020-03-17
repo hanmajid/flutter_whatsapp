@@ -11,6 +11,8 @@ import 'package:flutter_whatsapp/src/screens/whatsapp_web_scan_screen.dart';
 //}
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized(); 
+  
   // Fetch the available cameras before initializing the app.
   try {
     cameras = await availableCameras();
