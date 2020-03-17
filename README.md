@@ -10,7 +10,11 @@ I made this for my study/exercise on Flutter. I only make the client-side app, t
 
 ## Development
 
-**Note**: Create your own Firebase project and add the `google-services.json` to the project to use QR code reader.
+To run this project on your own, do the following: 
+1. Clone this project.
+2. Run `flutter pub get`.
+3. Create your own Firebase project and add the `google-services.json` to the folder `android/app` (for Android). This is a requirement for QR code reader package.
+4. Run the project using `flutter run` or using your IDE's tools.
 
 ## Screenshots
 
