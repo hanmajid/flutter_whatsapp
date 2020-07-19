@@ -12,6 +12,7 @@ import 'package:flutter_whatsapp/src/tabs/chats_tab.dart';
 import 'package:flutter_whatsapp/src/tabs/status_tab.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 enum HomeOptions {
   settings,
@@ -33,7 +34,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   List<Widget> _actionButtons;
   List<List<PopupMenuItem<HomeOptions>>> _popupMenus;
 
@@ -107,7 +108,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       });
     });
 
-    _searchBar  = new TextField(
+    _searchBar = new TextField(
       controller: _searchBarController,
       autofocus: true,
       decoration: InputDecoration(
@@ -125,14 +126,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         _tabIndex = _tabController.index;
         _isSearching = false;
         _searchBarController?.text = "";
-        if(_tabController.index == 2) {
+        if (_tabController.index == 2) {
           isNewStatus = false;
         }
 
-        if(_tabController.index != 1) {
+        if (_tabController.index != 1) {
           unreadChatsBadgeAnimationController.forward();
-        }
-        else {
+        } else {
           unreadChatsBadgeAnimationController.reverse();
         }
       });
@@ -159,7 +159,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       ),
     ];
 
-    _popupMenus  = [
+    _popupMenus = [
       null,
       [
         PopupMenuItem<HomeOptions>(
@@ -217,18 +217,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       ],
     ];
 
-    _fabs  = [
+    _fabs = [
       null,
       new FloatingActionButton(
           child: Icon(Icons.message),
           backgroundColor: fabBgColor,
           foregroundColor: Colors.white,
-          onPressed: () {
-            Application.router.navigateTo(
-              context,
-              "/chat/new",
-              transition: TransitionType.inFromRight,
-            );
+          onPressed: () async {
+            if (await allPermissionsGranted()) {
+              goToNewChatScreen();
+            } else {
+              requestPermission();
+            }
           }),
       Container(
         height: 150.0,
@@ -281,6 +281,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     ];
   }
 
+  void goToNewChatScreen() {
+    Application.router.navigateTo(
+      context,
+      "/chat/new",
+      transition: TransitionType.inFromRight,
+    );
+  }
+
   @override
   void dispose() {
     unreadChatsBadgeAnimationController.dispose();
@@ -303,7 +311,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
-    if(appBadgeSupported) {
+    if (appBadgeSupported) {
       FlutterAppBadger.updateBadgeCount(count);
     }
   }
@@ -314,165 +322,168 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if(_searhBarOpen) {
+        if (_searhBarOpen) {
           setState(() {
             _searhBarOpen = false;
             _isSearching = false;
             _searchBarController?.text = "";
           });
           return false;
-        }
-        else {
+        } else {
           return true;
         }
       },
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: _tabIndex == 0
             ? null
-          : AppBar(
-          backgroundColor: _isSearching
-            ? Colors.white
-            : null,
-          leading: _isSearching
-              ? IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  color: const Color(0xff075e54),
-                  onPressed: () {
-                    setState(() {
-                      _searhBarOpen = false;
-                      _isSearching = false;
-                      _searchBarController?.text = "";
-                    });
-                  },
-                )
-              : null,
-          title: _isSearching
-              ? _searchBar
-              : Text(
-                  'WhatzApp',
-                  style: _textBold,
-                ),
-          actions: _isSearching
-              ? null
-              : _actionButtons,
-          bottom: _isSearching
-            ? null
-            : TabBar(
-              controller: _tabController,
-              tabs: <Widget>[
-                Tab(
-                  icon: Icon(Icons.camera_alt),
-                ),
-                Tab(
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "CHATS",
-                          style: _textBold,
-                        ),
-                        FutureBuilder(
-                          future: _chatList,
-                          builder: (context, snapshot) {
-                            if(snapshot.data == null) return Container();
-                            if(snapshot.data.unreadMessages <= 0) return Container();
-
-                            return FadeTransition(
-                              opacity: unreadChatsBadgeAnimation,
-                              child: Container(
-                                margin: const EdgeInsets.only(left: 4.0),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(Radius.circular(9.0))
-                                ),
-                                alignment: Alignment.center,
-                                height: 18.0,
-                                width: 18.0,
-                                child: Text(
-                                  '${snapshot.data.unreadMessages}',
-                                  style: TextStyle(
-                                    fontSize: 9.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: primaryColor,
+            : AppBar(
+                backgroundColor: _isSearching ? Colors.white : null,
+                leading: _isSearching
+                    ? IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        color: const Color(0xff075e54),
+                        onPressed: () {
+                          setState(() {
+                            _searhBarOpen = false;
+                            _isSearching = false;
+                            _searchBarController?.text = "";
+                          });
+                        },
+                      )
+                    : null,
+                title: _isSearching
+                    ? _searchBar
+                    : Text(
+                        'WhatzApp',
+                        style: _textBold,
+                      ),
+                actions: _isSearching ? null : _actionButtons,
+                bottom: _isSearching
+                    ? null
+                    : TabBar(
+                        controller: _tabController,
+                        tabs: <Widget>[
+                          Tab(
+                            icon: Icon(Icons.camera_alt),
+                          ),
+                          Tab(
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "CHATS",
+                                    style: _textBold,
                                   ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "STATUS",
-                          style: _textBold,
-                        ),
-                        FutureBuilder(
-                          future: _statusList,
-                          builder: (context, snapshot) {
-                            if(snapshot.data == null) return Container();
-                            if(!isNewStatus) return Container();
+                                  FutureBuilder(
+                                    future: _chatList,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.data == null)
+                                        return Container();
+                                      if (snapshot.data.unreadMessages <= 0)
+                                        return Container();
 
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                             child: Text(
-                               '•',
-                               style: TextStyle(
-                                 fontWeight: FontWeight.bold,
-                               ),
-                             ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    "CALLS",
-                    style: _textBold,
-                  ),
-                ),
-              ],
-              labelPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            ),
-        ),
+                                      return FadeTransition(
+                                        opacity: unreadChatsBadgeAnimation,
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 4.0),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(9.0))),
+                                          alignment: Alignment.center,
+                                          height: 18.0,
+                                          width: 18.0,
+                                          child: Text(
+                                            '${snapshot.data.unreadMessages}',
+                                            style: TextStyle(
+                                              fontSize: 9.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: primaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Tab(
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "STATUS",
+                                    style: _textBold,
+                                  ),
+                                  FutureBuilder(
+                                    future: _statusList,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.data == null)
+                                        return Container();
+                                      if (!isNewStatus) return Container();
+
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 4.0),
+                                        child: Text(
+                                          '•',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              "CALLS",
+                              style: _textBold,
+                            ),
+                          ),
+                        ],
+                        labelPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      ),
+              ),
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
             CameraScreen(),
             ChatsTab(
-              searchKeyword: _searchKeyword,
-              chatList: _chatList,
-              refresh: () {
-                setState(() {
-                  _memoizerChats = new AsyncMemoizer();
-                  _chatList = _getChatList();
-                });
-              }
-            ),
-            StatusTab(
-              searchKeyword: _searchKeyword,
-              statusList: _statusList,
+                searchKeyword: _searchKeyword,
+                chatList: _chatList,
                 refresh: () {
-                  setState((){
+                  setState(() {
+                    _memoizerChats = new AsyncMemoizer();
+                    _chatList = _getChatList();
+                  });
+                }),
+            StatusTab(
+                searchKeyword: _searchKeyword,
+                statusList: _statusList,
+                refresh: () {
+                  setState(() {
                     _memoizerStatus = new AsyncMemoizer();
                     _statusList = _getStatusList();
-                  });}
-            ),
+                  });
+                }),
             CallsTab(
-              searchKeyword: _searchKeyword,
-              memoizer: _memoizerCalls,
-                refresh: () {setState((){_memoizerCalls = new AsyncMemoizer();});}
-            ),
+                searchKeyword: _searchKeyword,
+                memoizer: _memoizerCalls,
+                refresh: () {
+                  setState(() {
+                    _memoizerCalls = new AsyncMemoizer();
+                  });
+                }),
           ],
         ),
         floatingActionButton: _fabs[_tabIndex],
@@ -481,7 +492,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void _selectOption(HomeOptions option) {
-    switch(option) {
+    switch (option) {
       case HomeOptions.newGroup:
         Application.router.navigateTo(
           context,
@@ -541,6 +552,25 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           transition: TransitionType.inFromRight,
         );
         break;
+    }
+  }
+
+  Future<bool> allPermissionsGranted() async {
+    bool res = await Permission.contacts.isGranted;
+    return res;
+  }
+
+  void requestPermission() async {
+    if (await Permission.contacts.request().isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+      goToNewChatScreen();
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Permission not granted'),
+          duration: Duration(seconds: 1),
+        ),
+      );
     }
   }
 }
