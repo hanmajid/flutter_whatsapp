@@ -27,7 +27,7 @@ To run this project on your own, do the following:
 | Retrieve list of contacts in phone  | <img src="./images/image5.gif" height="300" /> |
 | See chat messages and send a new message  | <img src="./images/image6.gif" height="300" /> |
 | See status detail  | <img src="./images/image7.gif" height="300" /> |
-| (Android) Retrieve images from DCIM/Camera folder take a picture.  | <img src="./images/image_take_picture.gif" height="300" /> |
+| (Android) Retrieve images from DCIM folder and take a picture.  | <img src="./images/image_take_picture.gif" height="300" /> |
 
 
 * Others
