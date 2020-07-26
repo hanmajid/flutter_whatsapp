@@ -18,32 +18,20 @@ To run this project on your own, do the following:
 
 ## Screenshots
 
-1. AppBar & TabBar
-<img src="https://github.com/hanmajid/flutter_whatsapp/blob/master/images/image1.gif" height="300" alt="AppBar & TabBar"/>
+| Name             |             Screenshot              |
+| ---------------- | :---------------------------------: |
+| AppBar & TabBar  | <img src="./images/image1.gif" height="300" /> |
+| Retrieve list of chats from API and display them  | <img src="./images/image2.gif" height="300" /> |
+| Search through chats/statuses/calls  | <img src="./images/image3.gif" height="300" /> |
+| Show popup when profile is clicked  | <img src="./images/image4.gif" height="300" /> |
+| Retrieve list of contacts in phone  | <img src="./images/image5.gif" height="300" /> |
+| See chat messages and send a new message  | <img src="./images/image6.gif" height="300" /> |
+| See status detail  | <img src="./images/image7.gif" height="300" /> |
+| (Android) Retrieve images from DCIM/Camera folder take a picture.  | <img src="./images/image_take_picture.gif" height="300" /> |
 
-2. Retrieve list of chats from API and display them
-<img src="https://github.com/hanmajid/flutter_whatsapp/blob/master/images/image2.gif" height="300" alt="Retrieve list of chats from API and display them"/>
 
-3. Search through chats/statuses/calls
-<img src="https://github.com/hanmajid/flutter_whatsapp/blob/master/images/image3.gif" height="300" alt="Search through chats/statuses/calls"/>
-
-4. Show popup when profile is clicked
-<img src="https://github.com/hanmajid/flutter_whatsapp/blob/master/images/image4.gif" height="300" alt="Show popup when profile is clicked"/>
-
-5. Retrieve list of contacts in phone
-<img src="https://github.com/hanmajid/flutter_whatsapp/blob/master/images/image5.gif" height="300" alt="Retrieve list of contacts in phone"/>
-
-6. See chat messages and send a new message
-<img src="https://github.com/hanmajid/flutter_whatsapp/blob/master/images/image6.gif" height="300" alt="See chat messages and send a new message"/>
-
-7. See status detail
-<img src="https://github.com/hanmajid/flutter_whatsapp/blob/master/images/image7.gif" height="300" alt="See status detail"/>
-
-8. (Android) Retrieve images from DCIM/Camera folder take a picture.
-<img src="https://github.com/hanmajid/flutter_whatsapp/blob/master/images/image_take_picture.gif" height="300" alt="Take picture"/>
-
-1. Others
-    * Take a video and save it to DCIM/Camera folder.
-    * Scan a QR code (Still buggy).
-    * Make an intent to open Contacts app on Android.
-    * Make an intent to open an email app to invite friends.
+* Others
+  * Take a video and save it to DCIM/Camera folder.
+  * Scan a QR code (Still buggy).
+  * Make an intent to open Contacts app on Android.
+  * Make an intent to open an email app to invite friends.
