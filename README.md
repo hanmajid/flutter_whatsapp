@@ -39,9 +39,10 @@ To run this project on your own, do the following:
 7. See status detail
 <img src="https://github.com/hanmajid/flutter_whatsapp/blob/master/images/image7.gif" height="300" alt="See status detail"/>
 
-8. Others
-    * Retrieve images from DCIM/Camera folder in Camera tab.
-    * Take a picture and save it to DCIM/Camera folder.
+8. (Android) Retrieve images from DCIM/Camera folder take a picture.
+<img src="https://github.com/hanmajid/flutter_whatsapp/blob/master/images/image_take_picture.gif" height="300" alt="Take picture"/>
+
+1. Others
     * Take a video and save it to DCIM/Camera folder.
     * Scan a QR code (Still buggy).
     * Make an intent to open Contacts app on Android.

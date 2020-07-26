@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:ext_storage/ext_storage.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 List<CameraDescription> cameras;
@@ -24,6 +25,7 @@ class CameraHome extends StatefulWidget {
 }
 
 class _CameraHomeState extends State<CameraHome> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   CameraController controller;
   int _cameraIndex = 0;
   bool isShowGallery = true;
@@ -31,29 +33,88 @@ class _CameraHomeState extends State<CameraHome> {
   PanelController _panelController;
   String videoPath;
 
+  // Permissions
+  bool isPermissionsGranted = false;
+  List<Permission> permissionsNeeded = [
+    Permission.camera,
+    Permission.microphone,
+    Permission.storage,
+  ];
+
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIOverlays([]);
     super.initState();
 
-    _initCamera(_cameraIndex);
-    _getGalleryImages();
+    initScreen();
     _panelController = new PanelController();
   }
 
-  void _getGalleryImages() {
-    setState(() {
-      _images = getExternalStorageDirectory().then((dir) {
-        List<String> paths = new List<String>();
-        Directory dir2 = new Directory(dir.path + '/DCIM/Camera');
-        // execute an action on each entry
-        dir2.listSync(recursive: false).forEach((f) {
-          if (f.path.contains('.jpg')) {
-            paths.add(f.path);
-          }
-        });
-        return paths.reversed.toList().sublist(0, 10);
+  void initScreen() async {
+    if (await allPermissionsGranted()) {
+      setState(() {
+        isPermissionsGranted = true;
       });
+      startCamera();
+    } else {
+      requestPermission();
+    }
+  }
+
+  void startCamera() {
+    _initCamera(_cameraIndex);
+    _getGalleryImages();
+  }
+
+  Future<bool> allPermissionsGranted() async {
+    bool resVideo = await Permission.camera.isGranted;
+    bool resAudio = await Permission.microphone.isGranted;
+    return resVideo && resAudio;
+  }
+
+  void requestPermission() async {
+    Map<Permission, PermissionStatus> statuses =
+        await permissionsNeeded.request();
+    if (statuses.values.every((status) => status == PermissionStatus.granted)) {
+      // Either the permission was already granted before or the user just granted it.
+      setState(() {
+        isPermissionsGranted = true;
+      });
+      startCamera();
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('Permission not granted'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    }
+  }
+
+  void refreshGallery() {
+    _getGalleryImages();
+  }
+
+  void _getGalleryImages() async {
+    _images =
+        ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DCIM)
+            .then((path) {
+      List<String> paths = new List<String>();
+      Directory dir2 = new Directory(path);
+      // execute an action on each entry
+      dir2.listSync(recursive: true).forEach((f) {
+        if (f.path.contains('.jpg')) {
+          paths.add(f.path);
+        }
+      });
+      // Order files based on last modified
+      // TODO: This is not good for many files. Need to find more efficient method.
+      paths.sort((a, b) {
+        File fileA = File(a);
+        File fileB = File(b);
+        return fileB.lastModifiedSync().compareTo(fileA.lastModifiedSync());
+      });
+      return paths;
     });
   }
 
@@ -109,8 +170,8 @@ class _CameraHomeState extends State<CameraHome> {
       return GestureDetector(
         onTap: () {
           setState(() {
-            _minHeight = 0;
-            isShowGallery = false;
+            // _minHeight = 0;
+            isShowGallery = !isShowGallery;
           });
         },
         child: AspectRatio(
@@ -127,6 +188,7 @@ class _CameraHomeState extends State<CameraHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         color: Colors.black,
         child: Stack(
@@ -163,6 +225,11 @@ class _CameraHomeState extends State<CameraHome> {
                         future: _images,
                         builder: (BuildContext context,
                             AsyncSnapshot<List<String>> snapshot) {
+                          if (!isPermissionsGranted) {
+                            return Center(
+                              child: Text('Permission not granted'),
+                            );
+                          }
                           switch (snapshot.connectionState) {
                             case ConnectionState.none:
                               return Center(
@@ -249,7 +316,7 @@ class _CameraHomeState extends State<CameraHome> {
               },
             ),
             Positioned(
-              bottom: 2.0,
+              bottom: 8.0,
               child: Opacity(
                   opacity: 1 - _opacity,
                   child: Column(
@@ -304,10 +371,10 @@ class _CameraHomeState extends State<CameraHome> {
           SnackBar(content: Text('Error: camera is not initialized')));
     }
 //    final Directory extDir = await getApplicationDocumentsDirectory();
-    final Directory extDir = await getExternalStorageDirectory();
-    final String dirPath = '${extDir.path}/DCIM/Camera';
+    final String dirPath = await ExtStorage.getExternalStoragePublicDirectory(
+        ExtStorage.DIRECTORY_DCIM);
     //await Directory(dirPath).create(recursive: true);
-    final String filePath = '$dirPath/${timestamp()}.jpeg';
+    final String filePath = '$dirPath/${timestamp()}.jpg';
 
     if (controller.value.isTakingPicture) {
       return null;
@@ -330,8 +397,8 @@ class _CameraHomeState extends State<CameraHome> {
       return null;
     }
 
-    final Directory extDir = await getExternalStorageDirectory();
-    final String dirPath = '${extDir.path}/DCIM/Camera';
+    final String dirPath = await ExtStorage.getExternalStoragePublicDirectory(
+        ExtStorage.DIRECTORY_DCIM);
     //await Directory(dirPath).create(recursive: true);
     final String filePath = '$dirPath/${timestamp()}.mp4';
 
@@ -373,6 +440,7 @@ class _CameraHomeState extends State<CameraHome> {
         if (filePath != null) {
           Scaffold.of(context).showSnackBar(
               SnackBar(content: Text('Picture saved to $filePath')));
+          refreshGallery();
         }
       }
     });
@@ -384,9 +452,7 @@ class _CameraHomeState extends State<CameraHome> {
         setState(() {});
       }
       if (filePath != null) {
-//        Scaffold.of(context).showSnackBar(
-//            SnackBar(content: Text('Saving video to $filePath'))
-//        );
+        refreshGallery();
       }
     });
   }
@@ -411,39 +477,44 @@ class _CameraHomeState extends State<CameraHome> {
           IconButton(
             icon: Icon(Icons.flash_off),
             color: Colors.white,
-            onPressed: () {},
+            onPressed: isPermissionsGranted ? () {} : null,
           ),
           GestureDetector(
-            child: Icon(
-              Icons.panorama_fish_eye,
-              size: 70.0,
-              color: Colors.white,
-            ),
-            onTap: () {
-              if (controller == null ||
-                  !controller.value.isInitialized ||
-                  controller.value.isRecordingVideo) return;
-              onTakePictureButtonPressed();
-            },
-            onLongPress: () {
-              if (controller == null ||
-                  !controller.value.isInitialized ||
-                  controller.value.isRecordingVideo) return;
-              onVideoRecordButtonPressed();
-            },
-            onLongPressUp: () {
-              if (controller == null ||
-                  !controller.value.isInitialized ||
-                  !controller.value.isRecordingVideo) return;
-              onStopButtonPressed();
-            },
-          ),
+              child: Icon(
+                Icons.panorama_fish_eye,
+                size: 70.0,
+                color: Colors.white,
+              ),
+              onTap: isPermissionsGranted
+                  ? () {
+                      if (controller == null ||
+                          !controller.value.isInitialized ||
+                          controller.value.isRecordingVideo) return;
+                      onTakePictureButtonPressed();
+                    }
+                  : null,
+              onLongPress: isPermissionsGranted
+                  ? () {
+                      if (controller == null ||
+                          !controller.value.isInitialized ||
+                          controller.value.isRecordingVideo) return;
+                      onVideoRecordButtonPressed();
+                    }
+                  : null,
+              onLongPressUp: isPermissionsGranted
+                  ? () {
+                      if (controller == null ||
+                          !controller.value.isInitialized ||
+                          !controller.value.isRecordingVideo) return;
+                      onStopButtonPressed();
+                    }
+                  : null),
           IconButton(
             icon: Icon(Icons.switch_camera),
             color: Colors.white,
             highlightColor: Colors.green,
             splashColor: Colors.red,
-            onPressed: _toggleCamera,
+            onPressed: isPermissionsGranted ? _toggleCamera : null,
           ),
         ],
       ),
@@ -457,6 +528,16 @@ class _CameraHomeState extends State<CameraHome> {
           future: _images,
           builder:
               (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+            if (!isPermissionsGranted) {
+              return Center(
+                child: Text(
+                  'Permission not granted',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            }
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 return Center(
@@ -478,9 +559,10 @@ class _CameraHomeState extends State<CameraHome> {
                   );
                 }
                 if (snapshot.data.length <= 0) return Container();
+                List<String> displayedData = snapshot.data.sublist(0, 10);
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 1.0),
-                  itemCount: snapshot.data.length,
+                  itemCount: displayedData.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, i) {
                     //print(snapshot.data[i]);
@@ -488,11 +570,11 @@ class _CameraHomeState extends State<CameraHome> {
                       heroId: 'item-$i',
                       margin: const EdgeInsets.symmetric(horizontal: 1.0),
                       height: 81,
-                      resource: snapshot.data[i],
+                      resource: displayedData[i],
                       onTap: () {
                         Application.router.navigateTo(
                           context,
-                          "/edit/image?resource=${Uri.encodeComponent(snapshot.data[i])}&id=item-$i",
+                          "/edit/image?resource=${Uri.encodeComponent(displayedData[i])}&id=item-$i",
                           transition: TransitionType.fadeIn,
                         );
                       },
@@ -538,6 +620,8 @@ class GalleryItemThumbnail extends StatelessWidget {
                 new File(resource),
                 width: height,
                 height: height,
+                cacheWidth: height.ceil(),
+                cacheHeight: height.ceil(),
                 fit: BoxFit.cover,
               ),
             ),
