@@ -18,17 +18,16 @@ To run this project on your own, do the following:
 
 ## Screenshots
 
-| Name             |             Screenshot              |
-| ---------------- | :---------------------------------: |
-| AppBar & TabBar  | <img src="./images/image1.gif" height="300" /> |
-| Retrieve list of chats from API and display them  | <img src="./images/image2.gif" height="300" /> |
-| Search through chats/statuses/calls  | <img src="./images/image3.gif" height="300" /> |
-| Show popup when profile is clicked  | <img src="./images/image4.gif" height="300" /> |
-| Retrieve list of contacts in phone  | <img src="./images/image5.gif" height="300" /> |
-| See chat messages and send a new message  | <img src="./images/image6.gif" height="300" /> |
-| See status detail  | <img src="./images/image7.gif" height="300" /> |
-| (Android) Retrieve images from DCIM folder and take a picture.  | <img src="./images/image_take_picture.gif" height="300" /> |
-
+|     |     |
+| :-: | :-: |
+| AppBar & TabBar | List chats from API |
+| <img src="./images/image1.gif" height="300" /> | <img src="./images/image2.gif" height="300" /> |
+| Search through chats/statuses/calls  | Show popup when profile is clicked |
+| <img src="./images/image3.gif" height="300" /> | <img src="./images/image4.gif" height="300" /> |
+| Retrieve list of contacts in phone  | See chat messages and send a new message |
+| <img src="./images/image5.gif" height="300" /> | <img src="./images/image6.gif" height="300" /> |
+| See status detail | (Android) Retrieve images from DCIM folder and take a picture. |
+| <img src="./images/image7.gif" height="300" /> | <img src="./images/image_take_picture.gif" height="300" /> |
 
 * Others
   * Take a video and save it to DCIM/Camera folder.
