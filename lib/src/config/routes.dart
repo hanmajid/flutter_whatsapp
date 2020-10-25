@@ -23,11 +23,13 @@ class Routes {
   static String settings = '/settings';
   static String accountSettings = '/settings/accounts';
   static String accountPrivacySettings = '/settings/accounts/privacy';
-  static String privacyLiveLocation = '/settings/accounts/privacy/live_location';
+  static String privacyLiveLocation =
+      '/settings/accounts/privacy/live_location';
   static String privacyBlocked = '/settings/accounts/privacy/blocked';
   static String accountSecuritySettings = '/settings/accounts/security';
   static String accountTwoStepSettings = '/settings/accounts/two_step';
-  static String accountEnableTwoStepSettings = '/settings/accounts/two_step/enable';
+  static String accountEnableTwoStepSettings =
+      '/settings/accounts/two_step/enable';
   static String accountChangeNumSettings = '/settings/accounts/change_num';
   static String accountRequestSettings = '/settings/accounts/request';
   static String accountDeleteSettings = '/settings/accounts/delete';
@@ -52,13 +54,12 @@ class Routes {
 
   static String futureTodo = '/future';
 
-  static void configureRoutes(Router router) {
+  static void configureRoutes(FluroRouter router) {
     router.notFoundHandler = new Handler(
-      handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-        print('Route was not found.');
-        return null;
-      }
-    );
+        handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+      print('Route was not found.');
+      return null;
+    });
     router.define(root, handler: rootHandler);
 
     router.define(chatDetail, handler: chatDetailHandler);
@@ -79,14 +80,20 @@ class Routes {
 
     router.define(settings, handler: settingsHandler);
     router.define(accountSettings, handler: accountSettingsHandler);
-    router.define(accountPrivacySettings, handler: accountPrivacySettingsHandler);
+    router.define(accountPrivacySettings,
+        handler: accountPrivacySettingsHandler);
     router.define(privacyLiveLocation, handler: privacyLiveLocationHandler);
     router.define(privacyBlocked, handler: privacyBlockedHandler);
-    router.define(accountSecuritySettings, handler: accountSecuritySettingsHandler);
-    router.define(accountTwoStepSettings, handler: accountTwoStepSettingsHandler);
-    router.define(accountEnableTwoStepSettings, handler: accountEnableTwoStepSettingsHandler);
-    router.define(accountChangeNumSettings, handler: accountChangeNumSettingsHandler);
-    router.define(accountRequestSettings, handler: accountRequestSettingsHandler);
+    router.define(accountSecuritySettings,
+        handler: accountSecuritySettingsHandler);
+    router.define(accountTwoStepSettings,
+        handler: accountTwoStepSettingsHandler);
+    router.define(accountEnableTwoStepSettings,
+        handler: accountEnableTwoStepSettingsHandler);
+    router.define(accountChangeNumSettings,
+        handler: accountChangeNumSettingsHandler);
+    router.define(accountRequestSettings,
+        handler: accountRequestSettingsHandler);
     router.define(accountDeleteSettings, handler: accountDeleteSettingsHandler);
 
     router.define(chatsSettings, handler: chatsSettingsHandler);
