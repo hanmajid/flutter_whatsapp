@@ -81,24 +81,26 @@ class ChatItem extends StatelessWidget {
               new DateFormat('dd/MM/yy').format(chat.lastMessage.timestamp),
               style: TextStyle(
                 fontSize: 12.0,
-                color: chat.unreadMessages > 0 ? notificationBadgeColor : Colors.grey,
+                color: chat.unreadMessages > 0
+                    ? notificationBadgeColor
+                    : Colors.grey,
               ),
             ),
             chat.unreadMessages > 0
-              ? Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                color: notificationBadgeColor,
-              ),
-              width: 24.0,
-              height: 24.0,
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(right: 4.0, top: 4.0),
-              child: Text(
-                  '${chat.unreadMessages}',
-                style: TextStyle(color: Colors.white),
-              ),
-            )
+                ? Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      color: notificationBadgeColor,
+                    ),
+                    width: 24.0,
+                    height: 24.0,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(right: 4.0, top: 4.0),
+                    child: Text(
+                      '${chat.unreadMessages}',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
                 : Text(''),
           ],
         ),

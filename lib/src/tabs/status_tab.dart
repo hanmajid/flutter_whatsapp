@@ -6,7 +6,6 @@ import 'package:flutter_whatsapp/src/models/status_list.dart';
 import 'package:flutter_whatsapp/src/widgets/status_item.dart';
 
 class StatusTab extends StatelessWidget {
-
   final String searchKeyword;
   final Future<dynamic> statusList;
   final refresh;
@@ -42,13 +41,15 @@ class StatusTab extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text('Error: ${snapshot.error}', textAlign: TextAlign.center,),
+                    Text(
+                      'Error: ${snapshot.error}',
+                      textAlign: TextAlign.center,
+                    ),
                     RaisedButton(
                       child: Text('Refresh'),
                       onPressed: refresh,
                     )
-                  ]
-              );
+                  ]);
             }
             bool isFound = false;
             StatusList _statusList = snapshot.data;
@@ -56,8 +57,8 @@ class StatusTab extends StatelessWidget {
             data.add(StatusItem(
               title: 'My Status',
               subtitle: 'Tap to add status update',
-              thumbnail: 'https://api.adorable.io/avatars/285/circle@adorable.png',
-              onTap: (){
+              thumbnail: 'http://placekitten.com/g/150/150',
+              onTap: () {
                 Application.router.navigateTo(
                   context,
                   Routes.newStatus,
@@ -69,19 +70,20 @@ class StatusTab extends StatelessWidget {
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, i) {
-                if(i == 0) {
+                if (i == 0) {
                   return data[i];
                 }
                 if (searchKeyword.isNotEmpty) {
-                  if (!data[i].name
+                  if (!data[i]
+                      .name
                       .toLowerCase()
                       .contains(searchKeyword.toLowerCase())) {
                     if (!isFound && i >= data.length - 1) {
                       return Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Center(
-                            child: Text(
-                                'No results found for \'$searchKeyword\''),
+                            child:
+                                Text('No results found for \'$searchKeyword\''),
                           ));
                     }
                     return SizedBox(

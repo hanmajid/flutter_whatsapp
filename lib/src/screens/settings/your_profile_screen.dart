@@ -22,7 +22,7 @@ class YourProfileScreen extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 70.0,
                     backgroundImage:
-                        NetworkImage('https://api.adorable.io/avatars/285/circle@adorable.png'),
+                        NetworkImage('http://placekitten.com/g/150/150'),
                   ),
                 ),
                 Positioned(
@@ -37,7 +37,8 @@ class YourProfileScreen extends StatelessWidget {
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             leading: Icon(
               Icons.account_circle,
               color: Color.fromRGBO(7, 94, 84, 0.7),
@@ -61,12 +62,11 @@ class YourProfileScreen extends StatelessWidget {
                 )
               ],
             ),
-            subtitle:
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text('This is not your username or pin. This name will be '
-                      'visible to your WhatzApp contacts.'),
-                ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text('This is not your username or pin. This name will be '
+                  'visible to your WhatzApp contacts.'),
+            ),
             trailing: Icon(Icons.mode_edit),
             onTap: () {},
           ),
@@ -75,7 +75,8 @@ class YourProfileScreen extends StatelessWidget {
             indent: 72.0,
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             leading: Icon(
               Icons.info_outline,
               color: Color.fromRGBO(7, 94, 84, 0.7),
@@ -87,11 +88,13 @@ class YourProfileScreen extends StatelessWidget {
                 fontSize: 15.0,
               ),
             ),
-            subtitle: Text('Hey, I am using WhatzApp!',
+            subtitle: Text(
+              'Hey, I am using WhatzApp!',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16.0,
-              ),),
+              ),
+            ),
             trailing: Icon(Icons.mode_edit),
             onTap: () {},
           ),
@@ -100,7 +103,8 @@ class YourProfileScreen extends StatelessWidget {
             indent: 72.0,
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             leading: Icon(
               Icons.call,
               color: Color.fromRGBO(7, 94, 84, 0.7),
