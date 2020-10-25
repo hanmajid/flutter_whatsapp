@@ -1,4 +1,3 @@
-
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
@@ -10,11 +9,9 @@ class FlutteredApp extends StatefulWidget {
   _FlutteredAppState createState() => _FlutteredAppState();
 }
 
-
 class _FlutteredAppState extends State<FlutteredApp> {
-
   _FlutteredAppState() {
-    final router = new Router();
+    final router = new FluroRouter();
     Routes.configureRoutes(router);
     Application.router = router;
   }
@@ -35,5 +32,4 @@ class _FlutteredAppState extends State<FlutteredApp> {
       onGenerateRoute: Application.router.generator,
     );
   }
-
 }
