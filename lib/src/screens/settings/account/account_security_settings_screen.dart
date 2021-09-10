@@ -91,6 +91,7 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
           ),
           FutureBuilder(
             future: _showSecurityNotifications,
+            key: Key('Security_notifications'),
             builder: (context, snapshot) {
               var onChanged;
               bool showSecurityNotifications = SharedPreferencesHelpers.defaultShowSecurityNotifications;

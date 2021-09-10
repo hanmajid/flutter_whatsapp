@@ -62,6 +62,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
         children: <Widget>[
           FutureBuilder(
             future: _enterIsSend,
+            key: Key('Enter_is_Send'),
             builder: (context, snapshot) {
               var onChanged;
               bool enterIsSend = SharedPreferencesHelpers.defaultEnterIsSend;
@@ -92,6 +93,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
           ),
           FutureBuilder(
             future: _mediaVisibility,
+            key: Key('Visibility'),
             builder: (context, snapshot) {
               var onChanged;
               bool mediaVisibility = SharedPreferencesHelpers.defaultMediaVisibility;
