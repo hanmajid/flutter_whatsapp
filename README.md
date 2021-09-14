@@ -15,7 +15,22 @@ To run this project on your own, do the following:
 2. Run `flutter pub get`.
 3. Create your own Firebase project and add the `google-services.json` to the folder `android/app` (for Android). This is a requirement for QR code reader package.
 4. Run the project using `flutter run` or using your IDE's tools.
-5. To run the test run the script 'run_ui_tests.bat' in the terminal.
+
+## Integration Testing
+
+Integration testing utilizes `integration_test` library. Here's how to run the integration test:
+
+- Windows:
+  - Run the script `run_ui_tests.bat` in the terminal.
+- Mac/Linux:
+  - Run this command in the terminal:
+    ```
+    flutter drive --driver=test_driver/app.dart --target=integration_test/app_test.dart
+    ```
+
+Integration testing in action (Credit to [@karinamuraya](https://github.com/karinamuraya)):
+
+<img src="./images/integration_test.gif" height="300" />
 
 ## Screenshots
 

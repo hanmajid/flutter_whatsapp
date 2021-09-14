@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_whatsapp/main.dart' as app;
 
 void main() {
-  group('Bob App', () {
+  group('Flutter WhatsApp App', () {
     IntegrationTestWidgetsFlutterBinding.ensureInitialized();
     testWidgets('full app test', (tester) async {
       app.main();
@@ -45,8 +45,10 @@ void main() {
       final notifications = find.byIcon(Icons.notifications);
       final notificationsArrow = find.byIcon(Icons.arrow_back);
       final conversationTones = find.byKey(Key('Conversation tones'));
-      final highPriorityNotifications = find.byKey(Key('High_priority_notifications'));
-      final groupHighPriorityNotifications = find.byKey(Key('Group_high_priority_notifications'));
+      final highPriorityNotifications =
+          find.byKey(Key('High_priority_notifications'));
+      final groupHighPriorityNotifications =
+          find.byKey(Key('Group_high_priority_notifications'));
       final popupMenuButton = find.byKey(Key('popupMenu'));
       final popupMenuItem = find.byKey(Key('RNS'));
       final listView = find.byKey(Key('ListView'));
@@ -62,7 +64,6 @@ void main() {
       //final sendIcon = find.byIcon(Icons.send);
       //final status2 = find.text('Cindy');
       //final statusArrow = find.byIcon(Icons.arrow_back);
-
 
       // is fab on chat screen clickable
       await tester.tap(fab);
@@ -82,7 +83,6 @@ void main() {
       //await tester.pumpAndSettle();
       //await tester.tap(arrowChat1);
       //await tester.pumpAndSettle();
-
 
       // test search icon
       await tester.tap(searchIcon);
@@ -111,7 +111,6 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(settings);
       await tester.pumpAndSettle();
-
 
       //test navigation to profile screen
       await tester.tap(circleAvatar);
@@ -179,7 +178,6 @@ void main() {
       await tester.tap(notificationsArrow);
       await tester.pumpAndSettle();
 
-
       //test navigation from settings screen
       await tester.tap(settingsArrow);
       await tester.pumpAndSettle();
@@ -207,6 +205,5 @@ void main() {
       await tester.enterText(textField, 'Hacked');
       await tester.pumpAndSettle();
     });
-  });}
-
-
+  });
+}
