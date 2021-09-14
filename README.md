@@ -15,6 +15,7 @@ To run this project on your own, do the following:
 2. Run `flutter pub get`.
 3. Create your own Firebase project and add the `google-services.json` to the folder `android/app` (for Android). This is a requirement for QR code reader package.
 4. Run the project using `flutter run` or using your IDE's tools.
+5. To run the test run the script 'run_ui_tests.bat' in the terminal.
 
 ## Screenshots
 

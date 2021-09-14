@@ -7,6 +7,7 @@ import 'package:flutter_whatsapp/src/helpers/dialog_helpers.dart';
 import 'package:flutter_whatsapp/src/screens/settings/help/android_intent_helpers.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter_whatsapp/src/widgets/contact_item.dart';
+import 'dart:ui';
 
 enum NewChatOptions {
   inviteAFriend,

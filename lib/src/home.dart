@@ -13,6 +13,7 @@ import 'package:flutter_whatsapp/src/tabs/status_tab.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'dart:ui';
 
 enum HomeOptions {
   settings,
@@ -151,6 +152,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         },
       ),
       PopupMenuButton<HomeOptions>(
+        key: Key('moreOptions'),
         tooltip: "More options",
         onSelected: _selectOption,
         itemBuilder: (BuildContext context) {
@@ -172,14 +174,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         ),
         PopupMenuItem<HomeOptions>(
           child: Text("WhatzApp Web"),
+          key: Key('Web'),
           value: HomeOptions.whatsappWeb,
         ),
         PopupMenuItem<HomeOptions>(
           child: Text("Starred messages"),
+          key: Key('Starred'),
           value: HomeOptions.starredMessages,
         ),
         PopupMenuItem<HomeOptions>(
           child: Text("Settings"),
+          key: Key('Settings'),
           value: HomeOptions.settings,
         ),
         PopupMenuItem<HomeOptions>(
@@ -419,6 +424,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 children: <Widget>[
                                   Text(
                                     "STATUS",
+                                    key: Key('Status'),
                                     style: _textBold,
                                   ),
                                   FutureBuilder(
@@ -447,6 +453,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           Tab(
                             child: Text(
                               "CALLS",
+                              key: Key('Calls'),
                               style: _textBold,
                             ),
                           ),
@@ -457,7 +464,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
-            CameraScreen(),
+            CameraScreen(
+            ),
             ChatsTab(
                 searchKeyword: _searchKeyword,
                 chatList: _chatList,

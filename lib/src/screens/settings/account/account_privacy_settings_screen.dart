@@ -98,6 +98,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
           ),
           FutureBuilder(
             future: _readReceipts,
+            key: Key('Receipts'),
             builder: (context, snapshot) {
               var onChanged;
               bool readReceipts = false;

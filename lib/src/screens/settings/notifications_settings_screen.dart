@@ -270,11 +270,13 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
         title: Text('Notifications'),
         actions: <Widget>[
           PopupMenuButton<NotificationsOptions>(
+            key: Key('popupMenu'),
             tooltip: 'More options',
             onSelected: _selectOption,
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem(
+                  key: Key('RNS'),
                   value: NotificationsOptions.resetNotificationSettings,
                   child: Text('Reset notification settings'),
                 )
@@ -284,8 +286,10 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
         ],
       ),
       body: ListView(
+        key: Key('ListView'),
         children: <Widget>[
           FutureBuilder(
+            key: Key('Conversation tones'),
             future: _conversationTones,
             builder: (context, snapshot) {
               var onChanged;
@@ -322,7 +326,7 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
           _buildFutureSettingItem(context, 'Notification tone', notificationToneOptionsList, _notificationTone, _getNotificationToneText, true, (NotificationToneOptions value) {
             _setNotificationTone(value.index);
           }),
-          _buildFutureSettingItem(context, 'Vibrate', vibrateOptionsList, _vibrate, _getVibrateText, false, (VibrateOptions value) {
+          _buildFutureSettingItem(context,'Vibrate', vibrateOptionsList, _vibrate, _getVibrateText, false, (VibrateOptions value) {
             _setVibrate(value.index);
           }),
           _buildFutureSettingItem(context, 'Popup notification', popupNotificationOptionsList, _popupNotification, _getPopupNotificationText, false, (PopupNotificationOptions value) {
@@ -332,6 +336,7 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
             _setLight(value.index);
           }),
           FutureBuilder(
+            key: Key('High_priority_notifications'),
             future: _useHighPriorityNotifications,
             builder: (context, snapshot) {
               var onChanged;
@@ -378,6 +383,7 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
             _setGroupLight(value.index);
           }),
           FutureBuilder(
+            key: Key('Group_high_priority_notifications'),
             future: _groupUseHighPriorityNotifications,
             builder: (context, snapshot) {
               var onChanged;
