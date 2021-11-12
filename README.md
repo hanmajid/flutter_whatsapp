@@ -8,6 +8,10 @@ Whatsapp (ver. 2.19.98) clone using Flutter.
 
 I made this for my study/exercise on Flutter. I only make the client-side app, the server side is a dummy server.
 
+## API Server Documentation
+
+Refer to this [documentation](README_API.md).
+
 ## Development
 
 To run this project on your own, do the following: 
