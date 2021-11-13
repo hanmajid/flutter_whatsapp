@@ -61,7 +61,7 @@ Success Response:
 |             |                                                   |
 | ----------- | ------------------------------------------------- |
 | Method      | `GET`                                             |
-| URL         | `https://hanmajid.com/api/{chatId}`               |
+| URL         | `https://hanmajid.com/api/chats/{chatId}`         |
 | Description | Get detail of a chat with the specified `chatId`. |
 
 Success Response:
@@ -93,7 +93,7 @@ Success Response:
 |             |                                                        |
 | ----------- | ------------------------------------------------------ |
 | Method      | `POST`                                                 |
-| URL         | `https://hanmajid.com/api/{chatId}`                    |
+| URL         | `https://hanmajid.com/api/chats/{chatId}`              |
 | Description | Add new message to a chat with the specified `chatId`. |
 
 Form Data:
