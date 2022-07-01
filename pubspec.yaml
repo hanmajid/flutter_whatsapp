@@ -50,8 +50,8 @@ dependencies:
   #     url: git://github.com/facundomedica/fast_qr_reader_view.git
 
 dev_dependencies:
-  # integration_test:
-  #   sdk: flutter
+  integration_test:
+    sdk: flutter
   flutter_driver:
     sdk: flutter
   flutter_test:
