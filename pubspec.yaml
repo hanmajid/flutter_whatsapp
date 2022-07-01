@@ -37,19 +37,21 @@ dependencies:
 #  video_player: ^0.10.0+5
   path_provider: ^1.6.22
   fluro: ^1.7.6
-  sliding_up_panel: ^1.0.2
+  sliding_up_panel: ^2.0.0
   flutter_app_badger: ^1.1.2
   url_launcher: ^5.7.8
   shared_preferences: ^0.5.12+2
   android_intent: ^0.3.7+6
   permission_handler: ^5.0.1+1
-  integration_test: ^1.0.2+3
+  # integration_test: ^1.0.2+3
   # fast_qr_reader_view: ^0.1.5
   # fast_qr_reader_view:
   #   git:
   #     url: git://github.com/facundomedica/fast_qr_reader_view.git
 
 dev_dependencies:
+  integration_test:
+    sdk: flutter
   flutter_driver:
     sdk: flutter
   flutter_test:
