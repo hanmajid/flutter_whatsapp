@@ -21,6 +21,9 @@ class _FlutteredAppState extends State<FlutteredApp> {
     primaryColor: primaryColor,
     accentColor: Colors.white,
     scaffoldBackgroundColor: scaffoldBgColor,
+    appBarTheme: AppBarTheme(
+      backgroundColor: primaryColor,
+    ),
   );
 
   @override
