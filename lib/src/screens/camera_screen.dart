@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:ext_storage/ext_storage.dart';
+// import 'package:ext_storage/ext_storage.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-List<CameraDescription> cameras;
+late List<CameraDescription> cameras;
 
 class CameraScreen extends StatelessWidget {
   @override
@@ -26,12 +26,12 @@ class CameraHome extends StatefulWidget {
 
 class _CameraHomeState extends State<CameraHome> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  CameraController controller;
+  CameraController? controller;
   int _cameraIndex = 0;
   bool isShowGallery = true;
-  Future<List<String>> _images;
-  PanelController _panelController;
-  String videoPath;
+  late Future<List<String>> _images;
+  late PanelController _panelController;
+  String? videoPath;
 
   // Permissions
   bool isPermissionsGranted = false;
@@ -43,7 +43,7 @@ class _CameraHomeState extends State<CameraHome> {
 
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     super.initState();
 
     initScreen();
@@ -82,7 +82,7 @@ class _CameraHomeState extends State<CameraHome> {
       });
       startCamera();
     } else {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Permission not granted'),
           duration: Duration(seconds: 1),
@@ -96,57 +96,58 @@ class _CameraHomeState extends State<CameraHome> {
   }
 
   void _getGalleryImages() async {
-    _images =
-        ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DCIM)
-            .then((path) {
-      List<String> paths = new List<String>();
-      Directory dir2 = new Directory(path);
-      // execute an action on each entry
-      dir2.listSync(recursive: true).forEach((f) {
-        if (f.path.contains('.jpg')) {
-          paths.add(f.path);
-        }
-      });
-      // Order files based on last modified
-      // TODO: This is not good for many files. Need to find more efficient method.
-      paths.sort((a, b) {
-        File fileA = File(a);
-        File fileB = File(b);
-        return fileB.lastModifiedSync().compareTo(fileA.lastModifiedSync());
-      });
-      return paths;
-    });
+    _images = Future.delayed((Duration.zero), () => []); // TODO Fix this
+    // _images =
+    //     ExtStorage.getExternalStoragePublicDirectory(ExtStorage.DIRECTORY_DCIM)
+    //         .then((path) {
+    //   List<String> paths = new List<String>();
+    //   Directory dir2 = new Directory(path);
+    //   // execute an action on each entry
+    //   dir2.listSync(recursive: true).forEach((f) {
+    //     if (f.path.contains('.jpg')) {
+    //       paths.add(f.path);
+    //     }
+    //   });
+    //   // Order files based on last modified
+    //   // TODO: This is not good for many files. Need to find more efficient method.
+    //   paths.sort((a, b) {
+    //     File fileA = File(a);
+    //     File fileB = File(b);
+    //     return fileB.lastModifiedSync().compareTo(fileA.lastModifiedSync());
+    //   });
+    //   return paths;
+    // });
   }
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     _disposeCamera();
     super.dispose();
   }
 
   _disposeCamera() async {
     if (controller != null) {
-      await controller.dispose();
+      await controller!.dispose();
     }
   }
 
   _initCamera(int index) async {
     if (controller != null) {
-      await controller.dispose();
+      await controller!.dispose();
     }
     controller = CameraController(cameras[index], ResolutionPreset.high);
 
     // If the controller is updated then update the UI.
-    controller.addListener(() {
+    controller?.addListener(() {
       if (mounted) setState(() {});
-      if (controller.value.hasError) {
-        print('Camera error ${controller.value.errorDescription}');
+      if (controller?.value.hasError == true) {
+        print('Camera error ${controller!.value.errorDescription}');
       }
     });
 
     try {
-      await controller.initialize();
+      await controller?.initialize();
     } on CameraException catch (e) {
       print(e);
     }
@@ -157,7 +158,7 @@ class _CameraHomeState extends State<CameraHome> {
   }
 
   Widget _cameraPreviewWidget() {
-    if (controller == null || !controller.value.isInitialized) {
+    if (controller == null || controller?.value.isInitialized != true) {
       return Center(
         child: Text(
           '',
@@ -175,8 +176,8 @@ class _CameraHomeState extends State<CameraHome> {
           });
         },
         child: AspectRatio(
-          aspectRatio: controller.value.aspectRatio,
-          child: CameraPreview(controller),
+          aspectRatio: controller!.value.aspectRatio,
+          child: CameraPreview(controller!),
         ),
       );
     }
@@ -252,7 +253,8 @@ class _CameraHomeState extends State<CameraHome> {
                                   child: Text('Error: ${snapshot.error}'),
                                 );
                               }
-                              if (snapshot.data.length <= 0) return Container();
+                              if (snapshot.data!.length <= 0)
+                                return Container();
                               return CustomScrollView(
                                 slivers: <Widget>[
                                   SliverPersistentHeader(
@@ -273,23 +275,22 @@ class _CameraHomeState extends State<CameraHome> {
                                         return GalleryItemThumbnail(
                                           heroId: 'itemPanel-$index',
                                           height: 150,
-                                          resource: snapshot.data[index],
+                                          resource: snapshot.data![index],
                                           onTap: () {
-                                            Application.router.navigateTo(
+                                            Application.router!.navigateTo(
                                               context,
-                                              "/edit/image?resource=${Uri.encodeComponent(snapshot.data[index])}&id=itemPanel-$index",
+                                              "/edit/image?resource=${Uri.encodeComponent(snapshot.data![index])}&id=itemPanel-$index",
                                               transition: TransitionType.fadeIn,
                                             );
                                           },
                                         );
                                       },
-                                      childCount: snapshot.data.length,
+                                      childCount: snapshot.data?.length ?? 0,
                                     ),
                                   )
                                 ],
                               );
                           }
-                          return null;
                         }),
                   ),
                 ),
@@ -300,7 +301,7 @@ class _CameraHomeState extends State<CameraHome> {
                 decoration: BoxDecoration(
                   border: Border.all(
                     color:
-                        controller != null && controller.value.isRecordingVideo
+                        controller != null && controller!.value.isRecordingVideo
                             ? Colors.red
                             : Colors.black,
                     width: 2.0,
@@ -365,52 +366,54 @@ class _CameraHomeState extends State<CameraHome> {
 
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
-  Future<String> _takePicture() async {
-    if (!controller.value.isInitialized) {
-      Scaffold.of(context).showSnackBar(
+  Future<String?> _takePicture() async {
+    if (controller?.value.isInitialized != true) {
+      ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: camera is not initialized')));
     }
 //    final Directory extDir = await getApplicationDocumentsDirectory();
-    final String dirPath = await ExtStorage.getExternalStoragePublicDirectory(
-        ExtStorage.DIRECTORY_DCIM);
+    // final String dirPath = await ExtStorage.getExternalStoragePublicDirectory(
+    //     ExtStorage.DIRECTORY_DCIM);
+    final String dirPath = '/'; // TODO Fix this
     //await Directory(dirPath).create(recursive: true);
     final String filePath = '$dirPath/${timestamp()}.jpg';
 
-    if (controller.value.isTakingPicture) {
+    if (controller?.value.isTakingPicture == true) {
       return null;
     }
 
     try {
-      await controller.takePicture(filePath);
+      await controller?.takePicture();
     } on CameraException catch (e) {
       // TODO: Can't use this here.
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Error: ${e.description}')));
     }
     return filePath;
   }
 
-  Future<String> startVideoRecording() async {
-    if (!controller.value.isInitialized) {
-      Scaffold.of(context).showSnackBar(
+  Future<String?> startVideoRecording() async {
+    if (controller?.value.isInitialized != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: camera is not initialized')));
       return null;
     }
 
-    final String dirPath = await ExtStorage.getExternalStoragePublicDirectory(
-        ExtStorage.DIRECTORY_DCIM);
+    final String dirPath = '/'; // TODO Fix this
+    // final String dirPath = await ExtStorage.getExternalStoragePublicDirectory(
+    //     ExtStorage.DIRECTORY_DCIM);
     //await Directory(dirPath).create(recursive: true);
     final String filePath = '$dirPath/${timestamp()}.mp4';
 
-    if (controller.value.isRecordingVideo) {
+    if (controller?.value.isRecordingVideo != true) {
       return null;
     }
 
     try {
       videoPath = filePath;
-      await controller.startVideoRecording(filePath);
+      await controller?.startVideoRecording();
     } on CameraException catch (e) {
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Error: ${e.description}')));
       return null;
     }
@@ -418,14 +421,14 @@ class _CameraHomeState extends State<CameraHome> {
   }
 
   Future<void> stopVideoRecording() async {
-    if (!controller.value.isRecordingVideo) {
+    if (controller?.value.isRecordingVideo != null) {
       return null;
     }
 
     try {
-      await controller.stopVideoRecording();
+      await controller?.stopVideoRecording();
     } on CameraException catch (e) {
-      Scaffold.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Error: ${e.description}')));
       return null;
     }
@@ -434,11 +437,11 @@ class _CameraHomeState extends State<CameraHome> {
   }
 
   void onTakePictureButtonPressed() {
-    _takePicture().then((String filePath) {
+    _takePicture().then((String? filePath) {
       if (mounted) {
         setState(() {});
         if (filePath != null) {
-          Scaffold.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Picture saved to $filePath')));
           refreshGallery();
         }
@@ -447,7 +450,7 @@ class _CameraHomeState extends State<CameraHome> {
   }
 
   void onVideoRecordButtonPressed() {
-    startVideoRecording().then((String filePath) {
+    startVideoRecording().then((String? filePath) {
       if (mounted) {
         setState(() {});
       }
@@ -462,7 +465,7 @@ class _CameraHomeState extends State<CameraHome> {
       if (mounted) {
         setState(() {});
       }
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Video recorded to $videoPath')));
     });
   }
@@ -572,7 +575,7 @@ class _CameraHomeState extends State<CameraHome> {
                       height: 81,
                       resource: displayedData[i],
                       onTap: () {
-                        Application.router.navigateTo(
+                        Application.router!.navigateTo(
                           context,
                           "/edit/image?resource=${Uri.encodeComponent(displayedData[i])}&id=item-$i",
                           transition: TransitionType.fadeIn,

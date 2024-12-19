@@ -8,11 +8,11 @@ class Message {
   bool isSent;
 
   Message({
-    this.content,
-    this.timestamp,
-    this.isYou,
-    this.isRead,
-    this.isSent
+    required this.content,
+    required this.timestamp,
+    required this.isYou,
+    required this.isRead,
+    required this.isSent,
   });
 
   factory Message.fromJson(Map<String, dynamic> json) {
@@ -40,17 +40,17 @@ class Chat {
   int id;
   String name;
   String avatarUrl;
-  Message lastMessage;
+  Message? lastMessage;
   List<Message> messages;
   int unreadMessages;
 
   Chat({
-    this.id,
-    this.name,
-    this.avatarUrl,
+    required this.id,
+    required this.name,
+    required this.avatarUrl,
+    required this.unreadMessages,
+    this.messages = const [],
     this.lastMessage,
-    this.messages,
-    this.unreadMessages,
   });
 
   factory Chat.fromJson(Map<String, dynamic> json) {
@@ -64,8 +64,9 @@ class Chat {
   }
 
   factory Chat.fromJsonFull(Map<String, dynamic> json) {
-    List<Message> messages = new List<Message>();
-    messages = json["messages"].map<Message>((i) => Message.fromJson(i)).toList();
+    List<Message> messages = [];
+    messages =
+        json["messages"].map<Message>((i) => Message.fromJson(i)).toList();
 
     return new Chat(
       id: json["id"],

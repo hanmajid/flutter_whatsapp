@@ -29,7 +29,6 @@ class SelectContact extends StatefulWidget {
 }
 
 class _SelectContact extends State<SelectContact> {
-
   Future<Iterable<Contact>> _contacts;
   var numContacts;
 
@@ -65,7 +64,7 @@ class _SelectContact extends State<SelectContact> {
             Padding(
               padding: const EdgeInsets.only(bottom: 2.0),
               child: Text(
-                  'Select contact',
+                'Select contact',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -73,13 +72,13 @@ class _SelectContact extends State<SelectContact> {
             ),
             Container(
               child: numContacts == null
-               ? null
-              : Text(
-                  '$numContacts contacts',
-                style: TextStyle(
-                  fontSize: 12.0,
-                ),
-              ),
+                  ? null
+                  : Text(
+                      '$numContacts contacts',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                      ),
+                    ),
             )
           ],
         ),
@@ -157,8 +156,8 @@ class _SelectContact extends State<SelectContact> {
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     )),
-                onTap: (){
-                  Application.router.navigateTo(
+                onTap: () {
+                  Application.router!.navigateTo(
                     context,
                     //Routes.newChatGroup,
                     Routes.futureTodo,
@@ -184,7 +183,7 @@ class _SelectContact extends State<SelectContact> {
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     )),
-                onTap: (){
+                onTap: () {
                   AndroidIntentHelpers.createContact(context);
                 },
               ));
@@ -213,8 +212,8 @@ class _SelectContact extends State<SelectContact> {
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     )),
-                onTap: (){
-                  Application.router.navigateTo(
+                onTap: () {
+                  Application.router!.navigateTo(
                     context,
                     Routes.contactsHelp,
                     transition: TransitionType.inFromRight,
@@ -224,15 +223,14 @@ class _SelectContact extends State<SelectContact> {
               return ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, i) {
-                    if(i < 2 || i > data.length-3) {
+                    if (i < 2 || i > data.length - 3) {
                       return data[i];
                     }
                     return ContactItem(
                         contact: data.elementAt(i),
-                        onProfileTap: () => onTapProfileContactItem(context, snapshot.data.elementAt(i)),
-                        onTap:() {
-                        }
-                        );
+                        onProfileTap: () => onTapProfileContactItem(
+                            context, snapshot.data.elementAt(i)),
+                        onTap: () {});
                   });
           }
           return null; // unreachable
@@ -249,14 +247,11 @@ class _SelectContact extends State<SelectContact> {
       name: contact.displayName,
     );
     showDialog(
-        context: context,
-        builder: (BuildContext context) => profileDialog
-    );
+        context: context, builder: (BuildContext context) => profileDialog);
   }
 
-
   void _onSelectOption(NewChatOptions option) {
-    switch(option) {
+    switch (option) {
       case NewChatOptions.inviteAFriend:
         AndroidIntentHelpers.inviteFriend(context);
         break;
@@ -266,7 +261,7 @@ class _SelectContact extends State<SelectContact> {
       case NewChatOptions.refresh:
         break;
       case NewChatOptions.help:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           Routes.contactsHelp,
           transition: TransitionType.inFromRight,

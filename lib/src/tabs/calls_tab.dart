@@ -8,18 +8,17 @@ import 'package:flutter_whatsapp/src/services/call_service.dart';
 import 'package:flutter_whatsapp/src/widgets/call_item.dart';
 
 class CallsTab extends StatelessWidget {
-
   final String searchKeyword;
-  final AsyncMemoizer memoizer;
+  final AsyncMemoizer<CallList> memoizer;
   final refresh;
 
   CallsTab({
-    this.memoizer,
-    this.searchKeyword,
-    this.refresh,
+    required this.memoizer,
+    required this.searchKeyword,
+    required this.refresh,
   });
 
-  _getCallList() {
+  Future<CallList> _getCallList() {
     return memoizer.runOnce(() {
       return CallService.getCalls();
     });
@@ -27,7 +26,7 @@ class CallsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<CallList>(
       future: _getCallList(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
@@ -50,16 +49,18 @@ class CallsTab extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text('Error: ${snapshot.error}', textAlign: TextAlign.center,),
-                    RaisedButton(
+                    Text(
+                      'Error: ${snapshot.error}',
+                      textAlign: TextAlign.center,
+                    ),
+                    ElevatedButton(
                       child: Text('Refresh'),
                       onPressed: refresh,
                     )
-                  ]
-              );
+                  ]);
             }
             bool isFound = false;
-            CallList _callList = snapshot.data;
+            CallList _callList = snapshot.data!;
             return ListView.builder(
               itemCount: _callList.calls.length,
               itemBuilder: (context, i) {
@@ -71,8 +72,8 @@ class CallsTab extends StatelessWidget {
                       return Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Center(
-                            child: Text(
-                                'No results found for \'$searchKeyword\''),
+                            child:
+                                Text('No results found for \'$searchKeyword\''),
                           ));
                     }
                     return SizedBox(
@@ -84,8 +85,8 @@ class CallsTab extends StatelessWidget {
                 return CallItem(
                   call: _callList.calls[i],
                   searchKeyword: searchKeyword,
-                  onTap: (){
-                    Application.router.navigateTo(
+                  onTap: () {
+                    Application.router!.navigateTo(
                       context,
                       "/call?id=${_callList.calls[i]}",
                       transition: TransitionType.inFromRight,
@@ -100,19 +101,17 @@ class CallsTab extends StatelessWidget {
                     );
                     showDialog(
                         context: context,
-                        builder: (BuildContext context) => profileDialog
-                    );
+                        builder: (BuildContext context) => profileDialog);
                   },
                   onLeadingTap: () {
-                    Scaffold.of(context).showSnackBar(
-                      new SnackBar(content: Text('Calling ${_callList.calls[i].name}...'))
-                    );
+                    ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+                        content:
+                            Text('Calling ${_callList.calls[i].name}...')));
                   },
                 );
               },
             );
         }
-        return null; // unreachable
       },
     );
   }

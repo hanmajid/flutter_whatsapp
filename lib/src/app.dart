@@ -19,7 +19,7 @@ class _FlutteredAppState extends State<FlutteredApp> {
   /// Default theme.
   static final ThemeData _defaultTheme = new ThemeData(
     primaryColor: primaryColor,
-    accentColor: Colors.white,
+    // accentColor: Colors.white,
     scaffoldBackgroundColor: scaffoldBgColor,
     appBarTheme: AppBarTheme(
       backgroundColor: primaryColor,
@@ -32,7 +32,7 @@ class _FlutteredAppState extends State<FlutteredApp> {
       debugShowCheckedModeBanner: false,
       title: 'Fluttered WhatzApp',
       theme: _defaultTheme,
-      onGenerateRoute: Application.router.generator,
+      onGenerateRoute: Application.router?.generator,
     );
   }
 }

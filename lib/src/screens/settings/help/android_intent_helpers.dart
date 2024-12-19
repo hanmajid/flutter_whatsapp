@@ -11,16 +11,16 @@ class AndroidIntentHelpers {
         arguments: <String, dynamic>{
           //'sms_body': 'Body Create a Flutter app',
           'android.intent.extra.TITLE': 'Invite a friend via...',
-          'android.intent.extra.SUBJECT': 'WhatzApp Messenger: Android + iPhone + Windows Phone',
-          'android.intent.extra.TEXT': 'Hey,\n\nWhatzApp Messenger is a fast, simple and secure app that I use to message and call the people I care about.\n\nGet it for free at https://whatsapp.com/download/',
+          'android.intent.extra.SUBJECT':
+              'WhatzApp Messenger: Android + iPhone + Windows Phone',
+          'android.intent.extra.TEXT':
+              'Hey,\n\nWhatzApp Messenger is a fast, simple and secure app that I use to message and call the people I care about.\n\nGet it for free at https://whatsapp.com/download/',
         },
       );
       intent.launch();
-    }
-    else {
-      Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text('Sorry, this only works in Android.'))
-      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sorry, this only works in Android.')));
     }
   }
 
@@ -31,11 +31,9 @@ class AndroidIntentHelpers {
         data: Uri.encodeFull('content://contacts/people'),
       );
       intent.launch();
-    }
-    else {
-      Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text('Sorry, this only works in Android.'))
-      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sorry, this only works in Android.')));
     }
   }
 
@@ -46,11 +44,9 @@ class AndroidIntentHelpers {
         data: Uri.encodeFull('content://contacts/people'),
       );
       intent.launch();
-    }
-    else {
-      Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text('Sorry, this only works in Android.'))
-      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sorry, this only works in Android.')));
     }
   }
 }

@@ -87,7 +87,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
             title: 'Status',
             subtitle: 'No contacts selected',
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 //Routes.statusPrivacy,
                 Routes.futureTodo,
@@ -131,7 +131,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
             title: 'Live location',
             subtitle: 'None',
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 //Routes.privacyLiveLocation,
                 Routes.futureTodo,
@@ -144,7 +144,7 @@ class _AccountPrivacySettingsScreenState extends State<AccountPrivacySettingsScr
             title: 'Blocked contacts',
             subtitle: 'None',
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 //Routes.privacyBlocked,
                 Routes.futureTodo,

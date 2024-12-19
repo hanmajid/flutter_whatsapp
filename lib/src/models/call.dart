@@ -6,18 +6,19 @@ class Call {
   String avatarUrl;
   List<CallDetail> callDetails;
 
-  get lastCall => callDetails[callDetails.length-1];
+  get lastCall => callDetails[callDetails.length - 1];
 
   Call({
-    this.id,
-    this.name,
-    this.avatarUrl,
-    this.callDetails,
+    required this.id,
+    required this.name,
+    required this.avatarUrl,
+    required this.callDetails,
   });
 
   factory Call.fromJson(Map<String, dynamic> json) {
-    List<CallDetail> callDetails = new List<CallDetail>();
-    callDetails = json['calls'].map<CallDetail>((i) => CallDetail.fromJson(i)).toList();
+    List<CallDetail> callDetails = [];
+    callDetails =
+        json['calls'].map<CallDetail>((i) => CallDetail.fromJson(i)).toList();
 
     return Call(
       id: json['id'],

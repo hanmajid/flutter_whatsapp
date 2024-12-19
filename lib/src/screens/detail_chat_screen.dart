@@ -59,22 +59,23 @@ class _DetailChatScreen extends State<DetailChatScreen> {
     _prefs.then((SharedPreferences prefs) {
       int size = prefs.getInt(SharedPreferencesHelpers.fontSize);
       setState(() {
-        if(size == 0) { // small
+        if (size == 0) {
+          // small
           _fontSize = 13.0;
-        }
-        else if(size == 1) { // medium
+        } else if (size == 1) {
+          // medium
           _fontSize = 15.0;
-        }
-        else if(size == 2) { // large
+        } else if (size == 2) {
+          // large
           _fontSize = 18.0;
         }
       });
-      bool enterIsSend = prefs.getBool(SharedPreferencesHelpers.enterIsSend) ?? SharedPreferencesHelpers.defaultEnterIsSend;
+      bool enterIsSend = prefs.getBool(SharedPreferencesHelpers.enterIsSend) ??
+          SharedPreferencesHelpers.defaultEnterIsSend;
       setState(() {
-        if(enterIsSend) {
+        if (enterIsSend) {
           _textInputAction = TextInputAction.send;
-        }
-        else {
+        } else {
           _textInputAction = TextInputAction.newline;
         }
       });
@@ -82,14 +83,13 @@ class _DetailChatScreen extends State<DetailChatScreen> {
 
     _chat = widget.chat;
     int chatId = widget.chat?.id ?? widget.id;
-    _fMessages =
-        ChatService.getChat(chatId).then((chat) {
-          setState(() {
-            _chat = chat;
-            _messages = chat.messages.reversed.toList();
-          });
-          return null;
-        });
+    _fMessages = ChatService.getChat(chatId).then((chat) {
+      setState(() {
+        _chat = chat;
+        _messages = chat.messages.reversed.toList();
+      });
+      return null;
+    });
     // _morePopMenu = PopupMenuButton<ChatDetailMoreMenuOptions>(
     //   onSelected: _onSelectMoreMenuOption,
     //   itemBuilder: (BuildContext context) {
@@ -130,7 +130,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
     return Scaffold(
       backgroundColor: chatDetailScaffoldBgColor,
       appBar: AppBar(
-        leading: FlatButton(
+        leading: TextButton(
           shape: CircleBorder(),
           padding: const EdgeInsets.only(left: 1.0),
           onPressed: () {
@@ -145,7 +145,8 @@ class _DetailChatScreen extends State<DetailChatScreen> {
               ),
               CircleAvatar(
                 radius: 15.0,
-                backgroundImage: _chat == null ? null : NetworkImage(_chat.avatarUrl),
+                backgroundImage:
+                    _chat == null ? null : NetworkImage(_chat.avatarUrl),
               ),
             ],
           ),
@@ -156,7 +157,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
             highlightColor: highlightColor,
             splashColor: secondaryColor,
             onTap: () {
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 //"/profile?id=${_chat.id}",
                 Routes.futureTodo,
@@ -192,9 +193,8 @@ class _DetailChatScreen extends State<DetailChatScreen> {
               return IconButton(
                 icon: Icon(Icons.videocam),
                 onPressed: () {
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('Video Call Button tapped'))
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Video Call Button tapped')));
                 },
               );
             },
@@ -204,9 +204,8 @@ class _DetailChatScreen extends State<DetailChatScreen> {
               return IconButton(
                 icon: Icon(Icons.call),
                 onPressed: () {
-                  Scaffold.of(context).showSnackBar(
-                      SnackBar(content: Text('Call Button tapped'))
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Call Button tapped')));
                 },
               );
             },
@@ -334,7 +333,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                               counterText: '',
                             ),
                             onSubmitted: (String text) {
-                              if(_textInputAction == TextInputAction.send) {
+                              if (_textInputAction == TextInputAction.send) {
                                 _sendMessage();
                               }
                             },
@@ -382,7 +381,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
   _onSelectMenuOption(ChatDetailMenuOptions option) {
     switch (option) {
       case ChatDetailMenuOptions.viewContact:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           //"/profile?id=${_chat.id}",
           Routes.futureTodo,
@@ -390,7 +389,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
         );
         break;
       case ChatDetailMenuOptions.media:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           //"/chat/media?id=${_chat.id}",
           Routes.futureTodo,
@@ -413,30 +412,28 @@ class _DetailChatScreen extends State<DetailChatScreen> {
   int offsetUnsentMessage = 0;
 
   void _sendMessage() {
-    if(_message == null || _message.isEmpty) return;
+    if (_message == null || _message.isEmpty) return;
 
     ChatService.updateChat(_chat.id, _message).then((chat) {
       setState(() {
-        _messages[offsetUnsentMessage-1].isSent = true;
+        _messages[offsetUnsentMessage - 1].isSent = true;
         offsetUnsentMessage--;
       });
     });
-    
+
     setState(() {
       _messages.insert(
-        0,
+          0,
           new Message(
             content: _message,
             timestamp: DateTime.now(),
             isRead: false,
             isYou: true,
             isSent: false,
-          )
-      );
+          ));
       offsetUnsentMessage++;
       _message = '';
       textFieldController.text = '';
     });
-    
   }
 }

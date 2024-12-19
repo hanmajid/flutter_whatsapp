@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/config/application.dart';
 import 'package:flutter_whatsapp/src/config/routes.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_whatsapp/src/models/call_list.dart';
+import 'package:flutter_whatsapp/src/models/chat_list.dart';
 import 'package:flutter_whatsapp/src/screens/camera_screen.dart';
 import 'package:flutter_whatsapp/src/services/chat_service.dart';
 import 'package:flutter_whatsapp/src/services/status_service.dart';
@@ -13,7 +15,6 @@ import 'package:flutter_whatsapp/src/tabs/status_tab.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:ui';
 
 enum HomeOptions {
   settings,
@@ -36,17 +37,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  List<Widget> _actionButtons;
-  List<List<PopupMenuItem<HomeOptions>>> _popupMenus;
+  late List<Widget> _actionButtons;
+  late List<List<PopupMenuItem<HomeOptions>>?> _popupMenus;
 
-  int _tabIndex;
-  TabController _tabController;
+  late int _tabIndex;
+  late TabController _tabController;
 
-  bool _isSearching;
-  TextField _searchBar;
-  TextEditingController _searchBarController;
+  late bool _isSearching;
+  late TextField _searchBar;
+  late TextEditingController _searchBarController;
 
-  List<Widget> _fabs;
+  late List<Widget?> _fabs;
 
   static final TextStyle _textBold = const TextStyle(
     fontWeight: FontWeight.bold,
@@ -54,17 +55,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   String _searchKeyword = '';
 
-  AsyncMemoizer _memoizerChats = AsyncMemoizer();
-  Future<dynamic> _chatList;
+  AsyncMemoizer<ChatList> _memoizerChats = AsyncMemoizer();
+  late Future<ChatList> _chatList;
   AsyncMemoizer _memoizerStatus = AsyncMemoizer();
-  Future<dynamic> _statusList;
-  AsyncMemoizer _memoizerCalls = AsyncMemoizer();
+  late Future<dynamic> _statusList;
+  AsyncMemoizer<CallList> _memoizerCalls = AsyncMemoizer();
 
   // int _unreadMessages = 0;
-  AnimationController unreadChatsBadgeAnimationController;
-  Animation unreadChatsBadgeAnimation;
+  late AnimationController unreadChatsBadgeAnimationController;
+  late Animation<double> unreadChatsBadgeAnimation;
 
-  Future<dynamic> _getChatList() {
+  Future<ChatList> _getChatList() {
     return _memoizerChats.runOnce(() {
       return ChatService.getChats().then((chatlist) {
         updateAppBadge(chatlist.unreadMessages);
@@ -126,7 +127,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       setState(() {
         _tabIndex = _tabController.index;
         _isSearching = false;
-        _searchBarController?.text = "";
+        _searchBarController.text = "";
         if (_tabController.index == 2) {
           isNewStatus = false;
         }
@@ -147,7 +148,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           setState(() {
             _searhBarOpen = true;
             _isSearching = true;
-            _searchBarController?.text = "";
+            _searchBarController.text = "";
           });
         },
       ),
@@ -156,7 +157,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         tooltip: "More options",
         onSelected: _selectOption,
         itemBuilder: (BuildContext context) {
-          return _popupMenus[_tabIndex];
+          return _popupMenus[_tabIndex]!;
         },
       ),
     ];
@@ -248,7 +249,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 backgroundColor: Colors.white,
                 foregroundColor: fabBgSecondaryColor,
                 onPressed: () {
-                  Application.router.navigateTo(
+                  Application.router!.navigateTo(
                     context,
                     Routes.newTextStatus,
                     transition: TransitionType.inFromRight,
@@ -263,7 +264,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 backgroundColor: fabBgColor,
                 foregroundColor: Colors.white,
                 onPressed: () {
-                  Application.router.navigateTo(
+                  Application.router!.navigateTo(
                     context,
                     Routes.newStatus,
                     transition: TransitionType.inFromRight,
@@ -277,7 +278,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           backgroundColor: fabBgColor,
           foregroundColor: Colors.white,
           onPressed: () {
-            Application.router.navigateTo(
+            Application.router!.navigateTo(
               context,
               Routes.newCall,
               transition: TransitionType.inFromRight,
@@ -287,7 +288,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void goToNewChatScreen() {
-    Application.router.navigateTo(
+    Application.router!.navigateTo(
       context,
       "/chat/new",
       transition: TransitionType.inFromRight,
@@ -331,7 +332,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           setState(() {
             _searhBarOpen = false;
             _isSearching = false;
-            _searchBarController?.text = "";
+            _searchBarController.text = "";
           });
           return false;
         } else {
@@ -352,7 +353,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           setState(() {
                             _searhBarOpen = false;
                             _isSearching = false;
-                            _searchBarController?.text = "";
+                            _searchBarController.text = "";
                           });
                         },
                       )
@@ -381,12 +382,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     "CHATS",
                                     style: _textBold,
                                   ),
-                                  FutureBuilder(
+                                  FutureBuilder<ChatList>(
                                     future: _chatList,
                                     builder: (context, snapshot) {
                                       if (snapshot.data == null)
                                         return Container();
-                                      if (snapshot.data.unreadMessages <= 0)
+                                      if (snapshot.data!.unreadMessages <= 0)
                                         return Container();
 
                                       return FadeTransition(
@@ -402,7 +403,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           height: 18.0,
                                           width: 18.0,
                                           child: Text(
-                                            '${snapshot.data.unreadMessages}',
+                                            '${snapshot.data!.unreadMessages}',
                                             style: TextStyle(
                                               fontSize: 9.0,
                                               fontWeight: FontWeight.bold,
@@ -464,8 +465,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
-            CameraScreen(
-            ),
+            CameraScreen(),
             ChatsTab(
                 searchKeyword: _searchKeyword,
                 chatList: _chatList,
@@ -502,7 +502,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   void _selectOption(HomeOptions option) {
     switch (option) {
       case HomeOptions.newGroup:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           //Routes.newChatGroup,
           Routes.futureTodo,
@@ -510,7 +510,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         );
         break;
       case HomeOptions.newBroadcast:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           //Routes.newChatBroadcast,
           Routes.futureTodo,
@@ -518,28 +518,28 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         );
         break;
       case HomeOptions.whatsappWeb:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           Routes.whatsappWeb,
           transition: TransitionType.inFromRight,
         );
         break;
       case HomeOptions.starredMessages:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           Routes.starredMessages,
           transition: TransitionType.inFromRight,
         );
         break;
       case HomeOptions.settings:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           Routes.settings,
           transition: TransitionType.inFromRight,
         );
         break;
       case HomeOptions.statusPrivacy:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           //Routes.statusPrivacy,
           Routes.futureTodo,
@@ -547,14 +547,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         );
         break;
       case HomeOptions.clearCallLog:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           Routes.clearCallLog,
           transition: TransitionType.inFromRight,
         );
         break;
       case HomeOptions.readMe:
-        Application.router.navigateTo(
+        Application.router!.navigateTo(
           context,
           Routes.futureTodo,
           transition: TransitionType.inFromRight,
@@ -573,7 +573,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       // Either the permission was already granted before or the user just granted it.
       goToNewChatScreen();
     } else {
-      _scaffoldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Permission not granted'),
           duration: Duration(seconds: 1),

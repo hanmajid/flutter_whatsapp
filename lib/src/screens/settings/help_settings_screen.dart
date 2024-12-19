@@ -27,7 +27,7 @@ class HelpSettingsScreen extends StatelessWidget {
             title: 'Contact us',
             subtitle: 'Questions? Need help?',
             onTap: () {
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 //Routes.helpContactSettings,
                 Routes.futureTodo,
@@ -47,7 +47,7 @@ class HelpSettingsScreen extends StatelessWidget {
             icon: Icons.info_outline,
             title: 'App info',
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 Routes.helpAppInfoSettings,
                 transition: TransitionType.inFromRight,

@@ -15,7 +15,7 @@ class WhatsappWebScreen extends StatelessWidget {
             icon: Icon(Icons.add),
             tooltip: 'Scan QR code',
             onPressed: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 Routes.whatsappWebScan,
                 transition: TransitionType.inFromRight,
@@ -71,7 +71,7 @@ class WhatsappWebScreen extends StatelessWidget {
                     'Windows 10',
                   ),
                   onTap: (){
-                    Application.router.navigateTo(
+                    Application.router!.navigateTo(
                       context,
                       Routes.logoutDevice,
                       transition: TransitionType.inFromRight,
@@ -94,7 +94,7 @@ class WhatsappWebScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: (){
-                    Application.router.navigateTo(
+                    Application.router!.navigateTo(
                       context,
                       Routes.logoutAllDevices,
                       transition: TransitionType.inFromRight,

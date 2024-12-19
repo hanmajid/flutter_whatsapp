@@ -37,7 +37,7 @@ class ChatsTab extends StatelessWidget {
   }
 
   void onTapChatItem(BuildContext context, Chat chat) {
-    Application.router.navigateTo(
+    Application.router!.navigateTo(
         context,
         "/chat?profileId=${chat.id}",
       transition: TransitionType.inFromRight,

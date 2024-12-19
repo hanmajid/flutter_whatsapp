@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter_whatsapp/src/models/call.dart';
@@ -12,11 +11,11 @@ class CallList {
   List<Call> calls;
 
   CallList({
-    this.calls,
+    required this.calls,
   });
 
   factory CallList.fromJson(List<dynamic> json) {
-    List<Call> calls = new List<Call>();
+    List<Call> calls = [];
     calls = json.map<Call>((i) => Call.fromJson(i)).toList();
 
     return new CallList(

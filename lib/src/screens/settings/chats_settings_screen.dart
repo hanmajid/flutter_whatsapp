@@ -167,7 +167,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
             title: 'Chat backup',
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 Routes.futureTodo,
                 transition: TransitionType.inFromRight,
@@ -179,7 +179,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
             title: 'Chat history',
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 Routes.futureTodo,
                 transition: TransitionType.inFromRight,

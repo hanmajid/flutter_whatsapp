@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TextHelpers {
-  static RichText getHighlightedText(
-      String text, String keyword, TextStyle normalStyle, TextStyle highlightStyle) {
-
+  static RichText getHighlightedText(String text, String keyword,
+      TextStyle normalStyle, TextStyle highlightStyle) {
     int index = text.toLowerCase().indexOf(keyword.toLowerCase());
 
-    List<TextSpan> texts = new List<TextSpan>();
+    List<TextSpan> texts = [];
     if (index > 0) {
       texts.add(TextSpan(
         text: text.substring(0, index),

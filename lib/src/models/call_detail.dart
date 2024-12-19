@@ -4,9 +4,9 @@ class CallDetail {
   DateTime timestamp;
 
   CallDetail({
-    this.isIncoming,
-    this.isMissed,
-    this.timestamp,
+    required this.isIncoming,
+    required this.isMissed,
+    required this.timestamp,
   });
 
   factory CallDetail.fromJson(Map<String, dynamic> json) {

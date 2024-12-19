@@ -40,7 +40,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                Application.router.navigateTo(
+                Application.router!.navigateTo(
                   context,
                   Routes.yourProfile,
                   transition: TransitionType.fadeIn,
@@ -55,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
                 title: 'Account',
                 subtitle: 'Privacy, security, change number',
                 onTap: () {
-                  Application.router.navigateTo(
+                  Application.router!.navigateTo(
                     context,
                     Routes.accountSettings,
                     transition: TransitionType.inFromRight,
@@ -66,7 +66,7 @@ class SettingsScreen extends StatelessWidget {
                 title: 'Chats',
                 subtitle: 'Backup, history, wallpaper',
                 onTap: () {
-                  Application.router.navigateTo(
+                  Application.router!.navigateTo(
                     context,
                     Routes.chatsSettings,
                     transition: TransitionType.inFromRight,
@@ -77,7 +77,7 @@ class SettingsScreen extends StatelessWidget {
                 title: 'Notifications',
                 subtitle: 'Message, group & call tones',
                 onTap: () {
-                  Application.router.navigateTo(
+                  Application.router!.navigateTo(
                     context,
                     Routes.notificationsSettings,
                     transition: TransitionType.inFromRight,
@@ -88,7 +88,7 @@ class SettingsScreen extends StatelessWidget {
                 title: 'Data and storage usage',
                 subtitle: 'Network usage, auto-download',
                 onTap: () {
-                  Application.router.navigateTo(
+                  Application.router!.navigateTo(
                     context,
                     //Routes.dataSettings,
                     Routes.futureTodo,
@@ -100,7 +100,7 @@ class SettingsScreen extends StatelessWidget {
                 title: 'Help',
                 subtitle: 'FAQ, contact us, privacy policy',
                 onTap: () {
-                  Application.router.navigateTo(
+                  Application.router!.navigateTo(
                     context,
                     Routes.helpSettings,
                     transition: TransitionType.inFromRight,

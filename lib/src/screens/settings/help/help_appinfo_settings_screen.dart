@@ -11,8 +11,10 @@ class HelpAppInfoSettingsScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [darkColor, primaryColor], begin: Alignment.topCenter, end: Alignment.bottomCenter)
-        ),
+            gradient: LinearGradient(
+                colors: [darkColor, primaryColor],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
@@ -41,15 +43,14 @@ class HelpAppInfoSettingsScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 24.0),
                   child: SizedBox(
-                    width: 100.0,
-                    height: 100.0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(60.0),
-                        color: secondaryColor,
-                      ),
-                    )
-                  ),
+                      width: 100.0,
+                      height: 100.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(60.0),
+                          color: secondaryColor,
+                        ),
+                      )),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 24.0),
@@ -63,10 +64,11 @@ class HelpAppInfoSettingsScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0),
-                  child: FlatButton(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-                      onPressed: (){
-                        Application.router.navigateTo(
+                  child: TextButton(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 24.0),
+                      onPressed: () {
+                        Application.router!.navigateTo(
                           context,
                           Routes.licenses,
                           transition: TransitionType.inFromRight,
@@ -79,8 +81,7 @@ class HelpAppInfoSettingsScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           fontSize: 18.0,
                         ),
-                      )
-                  ),
+                      )),
                 ),
               ],
             ),
@@ -89,5 +90,4 @@ class HelpAppInfoSettingsScreen extends StatelessWidget {
       ),
     );
   }
-
 }

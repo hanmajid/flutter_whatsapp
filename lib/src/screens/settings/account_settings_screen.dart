@@ -17,7 +17,7 @@ class AccountSettingsScreen extends StatelessWidget {
             icon: Icons.lock,
             title: 'Privacy',
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 Routes.accountPrivacySettings,
                 transition: TransitionType.inFromRight,
@@ -28,7 +28,7 @@ class AccountSettingsScreen extends StatelessWidget {
             icon: Icons.security,
             title: 'Security',
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 Routes.accountSecuritySettings,
                 transition: TransitionType.inFromRight,
@@ -39,7 +39,7 @@ class AccountSettingsScreen extends StatelessWidget {
             icon: Icons.verified_user,
             title: 'Two-step verification',
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 Routes.accountTwoStepSettings,
                 transition: TransitionType.inFromRight,
@@ -50,7 +50,7 @@ class AccountSettingsScreen extends StatelessWidget {
             icon: Icons.phonelink_setup,
             title: 'Change number',
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 //Routes.accountChangeNumSettings,
                 Routes.futureTodo,
@@ -62,7 +62,7 @@ class AccountSettingsScreen extends StatelessWidget {
             icon: Icons.insert_drive_file,
             title: 'Request account info',
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 //Routes.accountRequestSettings,
                 Routes.futureTodo,
@@ -74,7 +74,7 @@ class AccountSettingsScreen extends StatelessWidget {
             icon: Icons.delete,
             title: 'Delete my account',
             onTap: (){
-              Application.router.navigateTo(
+              Application.router!.navigateTo(
                 context,
                 //Routes.accountDeleteSettings,
                 Routes.futureTodo,

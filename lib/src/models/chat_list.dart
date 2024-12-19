@@ -12,18 +12,16 @@ class ChatList {
 
   int get unreadMessages {
     int i = 0;
-    for(Chat c in chats) {
+    for (Chat c in chats) {
       i += c.unreadMessages;
     }
     return i;
   }
 
-  ChatList({
-    this.chats
-  });
+  ChatList({required this.chats});
 
   factory ChatList.fromJson(List<dynamic> json) {
-    List<Chat> chats = new List<Chat>();
+    List<Chat> chats = [];
     chats = json.map<Chat>((i) => Chat.fromJson(i)).toList();
 
     return new ChatList(

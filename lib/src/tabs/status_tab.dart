@@ -59,7 +59,7 @@ class StatusTab extends StatelessWidget {
               subtitle: 'Tap to add status update',
               thumbnail: 'http://placekitten.com/g/150/150',
               onTap: () {
-                Application.router.navigateTo(
+                Application.router!.navigateTo(
                   context,
                   Routes.newStatus,
                   transition: TransitionType.inFromRight,
@@ -96,7 +96,7 @@ class StatusTab extends StatelessWidget {
                   status: data[i],
                   searchKeyword: searchKeyword,
                   onTap: () {
-                    Application.router.navigateTo(
+                    Application.router!.navigateTo(
                       context,
                       "/status?id=${data[i].id}",
                       transition: TransitionType.inFromRight,

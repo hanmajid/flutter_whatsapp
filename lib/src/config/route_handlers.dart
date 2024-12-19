@@ -41,305 +41,267 @@ import 'package:flutter_whatsapp/src/screens/whatsapp_web_screen.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
 var rootHandler = new Handler(
-  handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return new Home();
-  }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new Home();
+});
 
 var chatDetailHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      int profileId = int.tryParse(params['profileId']?.first) ?? null;
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  int profileId = int.parse(params['profileId']?.first ?? '');
 
-      return new DetailChatScreen(
-        id: profileId,
-      );
-    }
-);
+  return new DetailChatScreen(
+    id: profileId,
+  );
+});
 
 var newChatHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new NewChatScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new NewChatScreen();
+});
 
 var newChatGroupHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new NewChatGroupScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new NewChatGroupScreen();
+});
 
 var newChatBroadcastHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new NewChatBroadcastScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new NewChatBroadcastScreen();
+});
 
 var whatsappWebHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new WhatsappWebScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new WhatsappWebScreen();
+});
 
 var starredMessagesHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new StarredMessagesScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new StarredMessagesScreen();
+});
 
 var settingsHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new SettingsScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new SettingsScreen();
+});
 
 var statusDetailHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      int id = int.tryParse(params['id']?.first) ?? null;
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  int id = int.parse(params['id']?.first ?? '');
 
-      return new DetailStatusScreen(
-        id: id,
-      );
-    }
-);
+  return new DetailStatusScreen(
+    id: id,
+  );
+});
 
 var newStatusHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new CameraScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new CameraScreen();
+});
 
 var newTextStatusHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new NewTextStatusScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new NewTextStatusScreen();
+});
 
 var statusPrivacyHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new StatusPrivacyScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new StatusPrivacyScreen();
+});
 
 var callDetailHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      int id = int.tryParse(params['id']?.first) ?? null;
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  int id = int.parse(params['id']?.first ?? '');
 
-      return new DetailCallScreen(
-        id: id,
-      );
-    }
-);
+  return new DetailCallScreen(
+    id: id,
+  );
+});
 
 var newCallHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new NewCallScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new NewCallScreen();
+});
 
 var clearCallLogHandler = new Handler(
     type: HandlerType.function,
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return OKCancelDialog(
-            title: 'Do you want to clear your entire call log?',
-            ok: 'OK',
-            cancel: 'CANCEL',
-          );
-        }
-      );
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+      if (context?.mounted == true) {
+        showDialog(
+            context: context!,
+            builder: (context) {
+              return OKCancelDialog(
+                title: 'Do you want to clear your entire call log?',
+                ok: 'OK',
+                cancel: 'CANCEL',
+              );
+            });
+      }
       return null;
-    }
-);
+    });
 
 var logoutDeviceHandler = new Handler(
     type: HandlerType.function,
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return OKCancelDialog(
-              title: 'Log out from this device?',
-              ok: 'LOG OUT',
-              cancel: 'CANCEL',
-            );
-          }
-      );
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+      if (context?.mounted == true) {
+        showDialog(
+            context: context!,
+            builder: (context) {
+              return OKCancelDialog(
+                title: 'Log out from this device?',
+                ok: 'LOG OUT',
+                cancel: 'CANCEL',
+              );
+            });
+      }
       return null;
-    }
-);
+    });
 
 var editImageHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      String id = params['id']?.first;
-      String resource = params['resource']?.first;
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  String id = params['id']!.first;
+  String resource = params['resource']!.first;
 
-      print('!!!!!!!!!!!!!!!!! $id : $resource');
+  print('!!!!!!!!!!!!!!!!! $id : $resource');
 
-      return new EditImageScreen(
-        id: id,
-        resource: Uri.decodeComponent(resource),
-      );
-    }
-);
+  return new EditImageScreen(
+    id: id,
+    resource: Uri.decodeComponent(resource),
+  );
+});
 
 var logoutAllDevicesHandler = new Handler(
     type: HandlerType.function,
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return OKCancelDialog(
-              title: 'Are you sure you want to log out from all devices?',
-              ok: 'LOG OUT',
-              cancel: 'CANCEL',
-            );
-          }
-      );
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+      if (context?.mounted == true) {
+        showDialog(
+            context: context!,
+            builder: (context) {
+              return OKCancelDialog(
+                title: 'Are you sure you want to log out from all devices?',
+                ok: 'LOG OUT',
+                cancel: 'CANCEL',
+              );
+            });
+      }
       return null;
-    }
-);
+    });
 
-var contactsHelpHandler  = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new ContactsHelpScreen();
-    }
-);
+var contactsHelpHandler = new Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new ContactsHelpScreen();
+});
 
 var profileHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      // int id = int.tryParse(params['id']?.first) ?? null;
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  // int id = int.tryParse(params['id']?.first) ?? null;
 
-      return new ProfileScreen(
-      );
-    }
-);
+  return new ProfileScreen();
+});
 
 var yourProfileHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-
-      return new YourProfileScreen(
-      );
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new YourProfileScreen();
+});
 
 var chatMediaHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      // int id = int.tryParse(params['id']?.first) ?? null;
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  // int id = int.tryParse(params['id']?.first) ?? null;
 
-      return new ChatMediaScreen();
-    }
-);
+  return new ChatMediaScreen();
+});
 
-var accountSettingsHandler  = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new AccountSettingsScreen();
-    }
-);
-var chatsSettingsHandler  = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new ChatsSettingsScreen();
-    }
-);
-var notificationsSettingsHandler  = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new NotificationsSettingsScreen();
-    }
-);
-var dataSettingsHandler  = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new DataSettingsScreen();
-    }
-);
-var helpSettingsHandler  = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new HelpSettingsScreen();
-    }
-);
+var accountSettingsHandler = new Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new AccountSettingsScreen();
+});
+var chatsSettingsHandler = new Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new ChatsSettingsScreen();
+});
+var notificationsSettingsHandler = new Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new NotificationsSettingsScreen();
+});
+var dataSettingsHandler = new Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new DataSettingsScreen();
+});
+var helpSettingsHandler = new Handler(
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new HelpSettingsScreen();
+});
 var helpContactSettingsHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new HelpContactSettingsScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new HelpContactSettingsScreen();
+});
 var helpAppInfoSettingsHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new HelpAppInfoSettingsScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new HelpAppInfoSettingsScreen();
+});
 var accountPrivacySettingsHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new AccountPrivacySettingsScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new AccountPrivacySettingsScreen();
+});
 var accountSecuritySettingsHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new AccountSecuritySettingsScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new AccountSecuritySettingsScreen();
+});
 var accountTwoStepSettingsHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new AccountTwoStepSettingsScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new AccountTwoStepSettingsScreen();
+});
 var accountEnableTwoStepSettingsHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new AccountEnableTwoStepSettingsScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new AccountEnableTwoStepSettingsScreen();
+});
 var accountChangeNumSettingsHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new AccountChangeNumSettingsScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new AccountChangeNumSettingsScreen();
+});
 var accountRequestSettingsHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new AccountRequestSettingsScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new AccountRequestSettingsScreen();
+});
 var accountDeleteSettingsHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new AccountDeleteSettingsScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new AccountDeleteSettingsScreen();
+});
 
 var licensesHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new LicensesScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new LicensesScreen();
+});
 
 var futureTodoHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new FutureTodoScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new FutureTodoScreen();
+});
 
 var whatsappWebScanHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new WhatsappWebScanScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new WhatsappWebScanScreen();
+});
 
 var privacyLiveLocationHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new PrivacyLiveLocationScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new PrivacyLiveLocationScreen();
+});
 
 var privacyBlockedHandler = new Handler(
-    handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return new PrivacyBlockedScreen();
-    }
-);
+    handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
+  return new PrivacyBlockedScreen();
+});
 
 class OKCancelDialog extends StatelessWidget {
-
   final String title;
   final String ok;
   final String cancel;
 
-  OKCancelDialog({this.title, this.ok, this.cancel});
+  OKCancelDialog({
+    required this.title,
+    required this.ok,
+    required this.cancel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -352,7 +314,7 @@ class OKCancelDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         Material(
-          child: FlatButton(
+          child: TextButton(
             child: Text(
               cancel,
               style: TextStyle(
@@ -365,7 +327,7 @@ class OKCancelDialog extends StatelessWidget {
             },
           ),
         ),
-        FlatButton(
+        TextButton(
           child: Text(
             ok,
             style: TextStyle(
@@ -380,5 +342,4 @@ class OKCancelDialog extends StatelessWidget {
       ],
     );
   }
-
 }

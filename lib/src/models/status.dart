@@ -20,13 +20,13 @@ class Status {
   List<String> imagesUrl;
 
   Status({
-    this.id,
-    this.name,
-    this.timestamp,
-    this.isSeen,
-    this.thumbnailUrl,
-    this.numImages,
-    this.imagesUrl,
+    required this.id,
+    required this.name,
+    required this.timestamp,
+    required this.isSeen,
+    required this.thumbnailUrl,
+    required this.numImages,
+    this.imagesUrl = const [],
   });
 
   factory Status.fromJson(Map<String, dynamic> json) {
@@ -41,7 +41,7 @@ class Status {
   }
 
   factory Status.fromJsonFull(Map<String, dynamic> jsonData) {
-    List<String> imagesUrl = new List<String>();
+    List<String> imagesUrl = [];
     for (dynamic img in jsonData["images"]) {
       imagesUrl.add(img["path"]);
     }

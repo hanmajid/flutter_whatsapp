@@ -59,7 +59,7 @@ class AccountChangeNumSettingsScreen extends StatelessWidget {
 //                ),
 //              ),
 //              onPressed: (){
-//                Application.router.navigateTo(
+//                Application.router!.navigateTo(
 //                  context,
 //                  Routes.accountEnableTwoStepSettings,
 //                  transition: TransitionType.inFromRight,

@@ -11,11 +11,11 @@ class StatusList {
   List<Status> statuses;
 
   StatusList({
-    this.statuses,
+    required this.statuses,
   });
 
   factory StatusList.fromJson(List<dynamic> json) {
-    List<Status> statuses = new List<Status>();
+    List<Status> statuses = [];
     statuses = json.map<Status>((i) => Status.fromJson(i)).toList();
 
     return new StatusList(

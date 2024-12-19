@@ -7,30 +7,33 @@ import 'package:flutter_whatsapp/src/values/colors.dart';
 
 class DialogHelpers {
   static Dialog getProfileDialog({
-    @required BuildContext context,
-    int id,
-    String imageUrl,
-    String name,
-    GestureTapCallback onTapMessage,
-    GestureTapCallback onTapCall,
-    GestureTapCallback onTapVideoCall,
-    GestureTapCallback onTapInfo,
+    required BuildContext context,
+    required int id,
+    String? imageUrl,
+    required String name,
+    GestureTapCallback? onTapMessage,
+    GestureTapCallback? onTapCall,
+    GestureTapCallback? onTapVideoCall,
+    GestureTapCallback? onTapInfo,
   }) {
     Widget image = imageUrl == null
         ? SizedBox(
-        child: Container(
-          decoration: BoxDecoration(
-            color: profileDialogBgColor,
-          ),
-          height: 250.0,
-          child: Center(
-            child: Icon(Icons.account_circle, color: profileDialogIconColor, size: 120.0,),
-          ),
-        )
-    )
+            child: Container(
+            decoration: BoxDecoration(
+              color: profileDialogBgColor,
+            ),
+            height: 250.0,
+            child: Center(
+              child: Icon(
+                Icons.account_circle,
+                color: profileDialogIconColor,
+                size: 120.0,
+              ),
+            ),
+          ))
         : Image(
-      image: CachedNetworkImageProvider(imageUrl),
-    );
+            image: CachedNetworkImageProvider(imageUrl),
+          );
     return new Dialog(
       shape: RoundedRectangleBorder(),
       child: Container(
@@ -71,7 +74,8 @@ class DialogHelpers {
                 children: <Widget>[
                   IconButton(
                     icon: Icon(Icons.message),
-                    onPressed: onTapMessage ?? () => _defOnTapMessage(context, id),
+                    onPressed:
+                        onTapMessage ?? () => _defOnTapMessage(context, id),
                     color: secondaryColor,
                   ),
                   IconButton(
@@ -81,7 +85,8 @@ class DialogHelpers {
                   ),
                   IconButton(
                     icon: Icon(Icons.videocam),
-                    onPressed: onTapVideoCall ?? () => _defOnTapVideoCall(context),
+                    onPressed:
+                        onTapVideoCall ?? () => _defOnTapVideoCall(context),
                     color: secondaryColor,
                   ),
                   IconButton(
@@ -98,19 +103,23 @@ class DialogHelpers {
     );
   }
 
-  static showRadioDialog(List allOptions, String title, Function getText, BuildContext context, option, bool isActions, onChanged) {
+  static showRadioDialog<T>(List<T> allOptions, String title, Function getText,
+      BuildContext context, option, bool isActions, onChanged) {
     showDialog(
         barrierDismissible: !isActions,
         context: context,
         builder: (context) {
           List<Widget> widgets = [];
-          for(dynamic opt in allOptions) {
+          for (dynamic opt in allOptions) {
             widgets.add(
               ListTileTheme(
                 contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: RadioListTile(
+                child: RadioListTile<T>(
                   value: opt,
-                  title: Text(getText(opt), style: TextStyle(fontSize: 18.0),),
+                  title: Text(
+                    getText(opt),
+                    style: TextStyle(fontSize: 18.0),
+                  ),
                   groupValue: option,
                   onChanged: (value) {
                     onChanged(value);
@@ -126,7 +135,10 @@ class DialogHelpers {
             contentPadding: EdgeInsets.only(bottom: 8.0),
             title: Padding(
               padding: EdgeInsets.only(bottom: 8.0),
-              child: Text(title, style: TextStyle(fontWeight: FontWeight.w600),),
+              child: Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -141,78 +153,85 @@ class DialogHelpers {
                 ),
               ],
             ),
-            actions: !isActions ? null : <Widget>[
-              InkWell(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-                  child: Text(
-                    'CANCEL',
-                    style: TextStyle(
-                      color: secondaryColor,
-                      fontWeight: FontWeight.bold,
+            actions: !isActions
+                ? null
+                : <Widget>[
+                    InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 24.0),
+                        child: Text(
+                          'CANCEL',
+                          style: TextStyle(
+                            color: secondaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pop(false);
+                      },
                     ),
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pop(false);
-                },
-              ),
-              InkWell(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-                  child: Text(
-                    'OK',
-                    style: TextStyle(
-                      color: secondaryColor,
-                      fontWeight: FontWeight.bold,
+                    InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 24.0),
+                        child: Text(
+                          'OK',
+                          style: TextStyle(
+                            color: secondaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).pop(true);
+                      },
                     ),
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pop(true);
-                },
-              ),
-            ],
+                  ],
           );
-        }
-    );
+        });
   }
 
   static _defOnTapMessage(BuildContext context, int id) {
-    Application.router.navigateTo(
+    Application.router!
+        .navigateTo(
       context,
       "/chat?profileId=$id",
       transition: TransitionType.inFromRight,
-    ).then((result) {
+    )
+        .then((result) {
       Navigator.of(context).pop();
     });
   }
 
   static _defOnTapCall(BuildContext context) {
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: Text('Call Button tapped'),
+        content: Text('Call Button tapped'),
         duration: Duration(seconds: 1),
       ),
     );
   }
 
   static _defOnTapVideoCall(BuildContext context) {
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: Text('Video Call Button tapped'),
-          duration: Duration(seconds: 1),
+        content: Text('Video Call Button tapped'),
+        duration: Duration(seconds: 1),
       ),
     );
   }
 
   static _defOnTapInfo(BuildContext context, int id) {
-    Application.router.navigateTo(
+    Application.router!
+        .navigateTo(
       context,
       //"/profile?id=$id",
       Routes.futureTodo,
       transition: TransitionType.inFromRight,
-    ).then((result) {
+    )
+        .then((result) {
       Navigator.of(context).pop();
     });
   }
