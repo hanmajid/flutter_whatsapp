@@ -8,13 +8,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class AccountSecuritySettingsScreen extends StatefulWidget {
   @override
-  _AccountSecuritySettingsScreenState createState() => _AccountSecuritySettingsScreenState();
-
+  _AccountSecuritySettingsScreenState createState() =>
+      _AccountSecuritySettingsScreenState();
 }
 
-class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsScreen> {
-
-  Future<bool> _showSecurityNotifications;
+class _AccountSecuritySettingsScreenState
+    extends State<AccountSecuritySettingsScreen> {
+  late Future<bool> _showSecurityNotifications;
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -24,21 +24,23 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
 
     // initialize variables
     _showSecurityNotifications = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getBool(SharedPreferencesHelpers.showSecurityNotifications) ?? SharedPreferencesHelpers.defaultShowSecurityNotifications);
+      return (prefs
+              .getBool(SharedPreferencesHelpers.showSecurityNotifications) ??
+          SharedPreferencesHelpers.defaultShowSecurityNotifications);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final String _firstText = 'Your messages and calls are secured with '
-      'end-to-end encryption, which means '
-      'WhatzApp and third parties can\'t read or '
-      'listen to them. ';
+        'end-to-end encryption, which means '
+        'WhatzApp and third parties can\'t read or '
+        'listen to them. ';
     final String _lastText = 'Turn on this setting to receive '
-      'notifications when a contact\'s security '
-      'code has changed. Your messages and '
-      'calls are encrypted regardless of this '
-      'setting.';
+        'notifications when a contact\'s security '
+        'code has changed. Your messages and '
+        'calls are encrypted regardless of this '
+        'setting.';
     return Scaffold(
       appBar: AppBar(
         title: Text('Security'),
@@ -59,42 +61,42 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 24.0, left: 24.0, bottom: 24.0),
+            padding:
+                const EdgeInsets.only(right: 24.0, left: 24.0, bottom: 24.0),
             child: RichText(
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(
-                      text: _firstText,
-                    style: TextStyle(
-                        color: Colors.black,
-                      fontSize: 16.0,
-                    ),
+              text: TextSpan(children: <TextSpan>[
+                TextSpan(
+                  text: _firstText,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.0,
                   ),
-                  TextSpan(
-                      text: 'Learn more',
+                ),
+                TextSpan(
+                    text: 'Learn more',
                     style: TextStyle(
                       color: Colors.blue,
                       fontSize: 16.0,
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        String url = 'https://www.whatsapp.com/security?lg=en&lc=US&eea=0';
+                        String url =
+                            'https://www.whatsapp.com/security?lg=en&lc=US&eea=0';
                         _launchURL(url);
-                      }
-                  ),
-                ]
-              ),
+                      }),
+              ]),
             ),
           ),
           Divider(
             height: 16.0,
           ),
-          FutureBuilder(
+          FutureBuilder<bool>(
             future: _showSecurityNotifications,
             key: Key('Security_notifications'),
             builder: (context, snapshot) {
               var onChanged;
-              bool showSecurityNotifications = SharedPreferencesHelpers.defaultShowSecurityNotifications;
+              bool showSecurityNotifications =
+                  SharedPreferencesHelpers.defaultShowSecurityNotifications;
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.active:
@@ -103,16 +105,17 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
                 case ConnectionState.done:
                   if (snapshot.hasError) {
                     print(snapshot.error);
-                  }
-                  else {
-                    showSecurityNotifications = snapshot.data;
+                  } else {
+                    showSecurityNotifications =
+                        snapshot.data ?? showSecurityNotifications;
                     onChanged = (bool value) {
                       _setShowSecurityNotifications(value);
                     };
                   }
               }
               return ListTileTheme(
-                contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                 child: SwitchListTile(
                   title: Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
@@ -139,7 +142,9 @@ class _AccountSecuritySettingsScreenState extends State<AccountSecuritySettingsS
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _showSecurityNotifications = prefs.setBool(SharedPreferencesHelpers.showSecurityNotifications, value).then((bool success) {
+      _showSecurityNotifications = prefs
+          .setBool(SharedPreferencesHelpers.showSecurityNotifications, value)
+          .then((bool success) {
         return value;
       });
     });

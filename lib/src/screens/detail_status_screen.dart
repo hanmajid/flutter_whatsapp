@@ -7,19 +7,19 @@ class DetailStatusScreen extends StatefulWidget {
   final int id;
 
   DetailStatusScreen({
-    this.id,
+    required this.id,
   });
 
   _DetailStatusScreenState createState() => _DetailStatusScreenState();
 }
 
 class _DetailStatusScreenState extends State<DetailStatusScreen> {
-  Future<Status> _fStatus;
-  List<double> _width;
+  late Future<Status> _fStatus;
+  late List<double> _width;
   int index = 0;
-  int count;
-  ImageProvider _image;
-  List<String> imageList;
+  late int count;
+  ImageProvider? _image;
+  late List<String> imageList;
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _DetailStatusScreenState extends State<DetailStatusScreen> {
       setState(() {
         count = status.numImages;
         imageList = status.imagesUrl;
-        _width = new List<double>(count);
+        _width = List.generate(count, (_) => 0);
         for (int i = 0; i < count; i++) {
           _width[i] = 0.0;
         }
@@ -99,9 +99,8 @@ class _DetailStatusScreenState extends State<DetailStatusScreen> {
                           if (_image == null) {
                             return Container();
                           }
-                          return Image(image: _image);
+                          return Image(image: _image!);
                       }
-                      return null; //
                     }),
               ),
               Padding(
@@ -127,7 +126,7 @@ class _DetailStatusScreenState extends State<DetailStatusScreen> {
                   ),
                 ),
               ),
-              FutureBuilder(
+              FutureBuilder<Status>(
                   future: _fStatus,
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
@@ -140,8 +139,8 @@ class _DetailStatusScreenState extends State<DetailStatusScreen> {
                         if (snapshot.hasError) {
                           print(snapshot.error);
                         }
-                        List<Widget> children = List<Widget>();
-                        for (dynamic _ in snapshot.data.imagesUrl) {
+                        List<Widget> children = [];
+                        for (dynamic _ in snapshot.data?.imagesUrl ?? []) {
                           children.add(Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 2.0, vertical: 4.0),
@@ -149,8 +148,8 @@ class _DetailStatusScreenState extends State<DetailStatusScreen> {
                               height: 2.5,
                               width: (mediaWidth -
                                       4.0 -
-                                      (snapshot.data.numImages - 1) * 4.0) /
-                                  snapshot.data.numImages,
+                                      (snapshot.data!.numImages - 1) * 4.0) /
+                                  snapshot.data!.numImages,
                               color: Color.fromRGBO(255, 255, 255, 0.4),
                             ),
                           ));
@@ -159,9 +158,8 @@ class _DetailStatusScreenState extends State<DetailStatusScreen> {
                           children: children,
                         );
                     }
-                    return null; //
                   }),
-              FutureBuilder(
+              FutureBuilder<Status>(
                   future: _fStatus,
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
@@ -174,9 +172,9 @@ class _DetailStatusScreenState extends State<DetailStatusScreen> {
                         if (snapshot.hasError) {
                           print(snapshot.error);
                         }
-                        List<Widget> children = List<Widget>();
+                        List<Widget> children = [];
                         int i = 0;
-                        for (dynamic _ in snapshot.data.imagesUrl) {
+                        for (dynamic _ in snapshot.data?.imagesUrl ?? []) {
                           children.add(Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 2.0, vertical: 4.0),
@@ -193,7 +191,6 @@ class _DetailStatusScreenState extends State<DetailStatusScreen> {
                           children: children,
                         );
                     }
-                    return null; //
                   }),
             ],
           ),

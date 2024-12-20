@@ -5,36 +5,32 @@ import 'package:flutter_whatsapp/src/models/call_detail.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 import 'package:intl/intl.dart';
 
-enum CallDetailOptions {
-  removeLog,
-  block
-}
+enum CallDetailOptions { removeLog, block }
 
 class DetailCallScreen extends StatefulWidget {
-
   final int id;
 
   DetailCallScreen({
-    this.id,
+    required this.id,
   });
 
-    _DetailCallScreen createState() => _DetailCallScreen();
+  _DetailCallScreen createState() => _DetailCallScreen();
 }
 
 class _DetailCallScreen extends State<DetailCallScreen> {
   @override
   Widget build(BuildContext context) {
     Call call = new Call(
-      name: 'NAME',
-      avatarUrl: 'https://via.placeholder.com/100x100',
-      callDetails: <CallDetail>[
-        new CallDetail(
-          timestamp: DateTime.now(),
-          isMissed: true,
-          isIncoming: true,
-        )
-      ]
-    );
+        id: 1, // FIXME Break?
+        name: 'NAME',
+        avatarUrl: 'https://via.placeholder.com/100x100',
+        callDetails: <CallDetail>[
+          new CallDetail(
+            timestamp: DateTime.now(),
+            isMissed: true,
+            isIncoming: true,
+          )
+        ]);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,7 +39,7 @@ class _DetailCallScreen extends State<DetailCallScreen> {
           IconButton(
             tooltip: 'New chat',
             icon: Icon(Icons.message),
-            onPressed: (){},
+            onPressed: () {},
           ),
           PopupMenuButton<CallDetailOptions>(
             tooltip: 'More options',
@@ -69,32 +65,30 @@ class _DetailCallScreen extends State<DetailCallScreen> {
             margin: EdgeInsets.all(0.0),
             shape: RoundedRectangleBorder(),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Builder(
-                    builder: (BuildContext context) {
-                      return GestureDetector(
-                        onTap: () {
-                          Dialog profileDialog = DialogHelpers.getProfileDialog(
+                  Builder(builder: (BuildContext context) {
+                    return GestureDetector(
+                      onTap: () {
+                        Dialog profileDialog = DialogHelpers.getProfileDialog(
+                          context: context,
+                          id: 1,
+                          imageUrl: call.avatarUrl,
+                          name: call.name,
+                        );
+                        showDialog(
                             context: context,
-                            id: 1,
-                            imageUrl: call.avatarUrl,
-                            name: call.name,
-                          );
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => profileDialog
-                          );
-                        },
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage: NetworkImage(call.avatarUrl),
-                        ),
-                      );
-                    }
-                  ),
+                            builder: (BuildContext context) => profileDialog);
+                      },
+                      child: CircleAvatar(
+                        radius: 30.0,
+                        backgroundImage: NetworkImage(call.avatarUrl),
+                      ),
+                    );
+                  }),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -110,12 +104,12 @@ class _DetailCallScreen extends State<DetailCallScreen> {
                   IconButton(
                     icon: Icon(Icons.call),
                     color: Theme.of(context).primaryColor,
-                    onPressed: (){},
+                    onPressed: () {},
                   ),
                   IconButton(
                     icon: Icon(Icons.videocam),
                     color: Theme.of(context).primaryColor,
-                    onPressed: (){},
+                    onPressed: () {},
                   ),
                 ],
               ),
@@ -127,7 +121,8 @@ class _DetailCallScreen extends State<DetailCallScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(right: 14.0, left: 14.0, top: 16.0),
+                  padding:
+                      const EdgeInsets.only(right: 14.0, left: 14.0, top: 16.0),
                   child: Text(
                     new DateFormat('MMMM dd').format(call.lastCall.timestamp),
                     style: TextStyle(
@@ -147,9 +142,9 @@ class _DetailCallScreen extends State<DetailCallScreen> {
   }
 
   Widget _buildCallDetails(Call call) {
-    List<Widget> callDetails = new List<Widget>();
+    List<Widget> callDetails = [];
 
-    for(CallDetail detail in call.callDetails.reversed.toList()) {
+    for (CallDetail detail in call.callDetails.reversed.toList()) {
       callDetails.add(new Padding(
         padding: const EdgeInsets.all(14.0),
         child: Row(
@@ -167,7 +162,9 @@ class _DetailCallScreen extends State<DetailCallScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  detail.isMissed ? 'Missed' : (detail.isIncoming ? 'Incoming' : 'Outgoing'),
+                  detail.isMissed
+                      ? 'Missed'
+                      : (detail.isIncoming ? 'Incoming' : 'Outgoing'),
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -193,7 +190,7 @@ class _DetailCallScreen extends State<DetailCallScreen> {
   }
 
   _onSelectedOption(CallDetailOptions option) {
-    switch(option) {
+    switch (option) {
       case CallDetailOptions.removeLog:
         break;
       case CallDetailOptions.block:

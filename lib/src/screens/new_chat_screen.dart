@@ -29,11 +29,11 @@ class SelectContact extends StatefulWidget {
 }
 
 class _SelectContact extends State<SelectContact> {
-  Future<Iterable<Contact>> _contacts;
+  late Future<List<Contact>> _contacts;
   var numContacts;
 
   Future<int> _getNumContacts() async {
-    Iterable<Contact> contacts = await ContactsService.getContacts();
+    List<Contact> contacts = await ContactsService.getContacts();
     return contacts.length;
   }
 
@@ -48,7 +48,7 @@ class _SelectContact extends State<SelectContact> {
     });
   }
 
-  Future<Iterable<Contact>> _getContacts() async {
+  Future<List<Contact>> _getContacts() async {
     return await ContactsService.getContacts();
   }
 
@@ -114,7 +114,7 @@ class _SelectContact extends State<SelectContact> {
           ),
         ],
       ),
-      body: FutureBuilder<Iterable<Contact>>(
+      body: FutureBuilder<List<Contact>>(
         future: _contacts,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
@@ -137,7 +137,7 @@ class _SelectContact extends State<SelectContact> {
                   child: Text('Error: ${snapshot.error}'),
                 );
               }
-              List<dynamic> data = List<dynamic>();
+              List<dynamic> data = [];
               data.add(ListTile(
                 leading: Container(
                   decoration: BoxDecoration(
@@ -187,7 +187,7 @@ class _SelectContact extends State<SelectContact> {
                   AndroidIntentHelpers.createContact(context);
                 },
               ));
-              data.addAll(snapshot.data);
+              data.addAll(snapshot.data ?? []);
               data.add(ListTile(
                 leading: Container(
                   padding: const EdgeInsets.all(8.0),
@@ -229,11 +229,12 @@ class _SelectContact extends State<SelectContact> {
                     return ContactItem(
                         contact: data.elementAt(i),
                         onProfileTap: () => onTapProfileContactItem(
-                            context, snapshot.data.elementAt(i)),
+                              context,
+                              snapshot.data!.elementAt(i),
+                            ),
                         onTap: () {});
                   });
           }
-          return null; // unreachable
         },
       ),
     );
@@ -244,7 +245,7 @@ class _SelectContact extends State<SelectContact> {
       context: context,
       id: 1,
       imageUrl: null,
-      name: contact.displayName,
+      name: contact.displayName ?? '',
     );
     showDialog(
         context: context, builder: (BuildContext context) => profileDialog);

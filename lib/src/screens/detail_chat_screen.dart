@@ -29,24 +29,24 @@ enum ChatDetailMoreMenuOptions {
 }
 
 class DetailChatScreen extends StatefulWidget {
-  final Chat chat;
+  final Chat? chat;
   final int id;
 
   DetailChatScreen({
+    required this.id,
     this.chat,
-    this.id,
   });
 
   _DetailChatScreen createState() => _DetailChatScreen();
 }
 
 class _DetailChatScreen extends State<DetailChatScreen> {
-  Chat _chat;
-  String _message = '';
+  Chat? _chat;
+  String? _message = '';
   // PopupMenuButton<ChatDetailMoreMenuOptions> _morePopMenu;
-  Future<List<Message>> _fMessages;
-  List<Message> _messages;
-  TextEditingController textFieldController;
+  late Future<List<Message>?> _fMessages;
+  late List<Message> _messages;
+  late TextEditingController textFieldController;
 
   double _fontSize = 15.0; // default = medium
   TextInputAction _textInputAction = TextInputAction.newline;
@@ -57,7 +57,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
   void initState() {
     super.initState();
     _prefs.then((SharedPreferences prefs) {
-      int size = prefs.getInt(SharedPreferencesHelpers.fontSize);
+      int? size = prefs.getInt(SharedPreferencesHelpers.fontSize);
       setState(() {
         if (size == 0) {
           // small
@@ -131,8 +131,8 @@ class _DetailChatScreen extends State<DetailChatScreen> {
       backgroundColor: chatDetailScaffoldBgColor,
       appBar: AppBar(
         leading: TextButton(
-          shape: CircleBorder(),
-          padding: const EdgeInsets.only(left: 1.0),
+          // shape: CircleBorder(),
+          // padding: const EdgeInsets.only(left: 1.0),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -145,8 +145,9 @@ class _DetailChatScreen extends State<DetailChatScreen> {
               ),
               CircleAvatar(
                 radius: 15.0,
-                backgroundImage:
-                    _chat == null ? null : NetworkImage(_chat.avatarUrl),
+                backgroundImage: _chat?.avatarUrl == null
+                    ? null
+                    : NetworkImage(_chat!.avatarUrl),
               ),
             ],
           ),
@@ -174,7 +175,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2.0),
                       child: Text(
-                        _chat == null ? '' : _chat.name,
+                        _chat?.name == null ? '' : _chat!.name,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.0,
@@ -292,7 +293,6 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                             );
                           });
                   }
-                  return null; //
                 }),
           ),
           Padding(
@@ -347,7 +347,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                           icon: Icon(Icons.attach_file),
                           onPressed: () {},
                         ),
-                        _message.isEmpty || _message == null
+                        _message?.isEmpty == true || _message == null
                             ? IconButton(
                                 color: iconColor,
                                 icon: Icon(Icons.camera_alt),
@@ -364,7 +364,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
                     elevation: 2.0,
                     backgroundColor: secondaryColor,
                     foregroundColor: Colors.white,
-                    child: _message.isEmpty || _message == null
+                    child: _message?.isEmpty == true || _message == null
                         ? Icon(Icons.settings_voice)
                         : Icon(Icons.send),
                     onPressed: _sendMessage,
@@ -412,9 +412,9 @@ class _DetailChatScreen extends State<DetailChatScreen> {
   int offsetUnsentMessage = 0;
 
   void _sendMessage() {
-    if (_message == null || _message.isEmpty) return;
+    if (_message == null || _message?.isEmpty == true || _chat == null) return;
 
-    ChatService.updateChat(_chat.id, _message).then((chat) {
+    ChatService.updateChat(_chat!.id, _message!).then((chat) {
       setState(() {
         _messages[offsetUnsentMessage - 1].isSent = true;
         offsetUnsentMessage--;
@@ -425,7 +425,7 @@ class _DetailChatScreen extends State<DetailChatScreen> {
       _messages.insert(
           0,
           new Message(
-            content: _message,
+            content: _message ?? '',
             timestamp: DateTime.now(),
             isRead: false,
             isYou: true,

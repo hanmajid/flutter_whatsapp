@@ -491,24 +491,24 @@ class _CameraHomeState extends State<CameraHome> {
               onTap: isPermissionsGranted
                   ? () {
                       if (controller == null ||
-                          !controller.value.isInitialized ||
-                          controller.value.isRecordingVideo) return;
+                          controller?.value.isInitialized != true ||
+                          controller?.value.isRecordingVideo == true) return;
                       onTakePictureButtonPressed();
                     }
                   : null,
               onLongPress: isPermissionsGranted
                   ? () {
                       if (controller == null ||
-                          !controller.value.isInitialized ||
-                          controller.value.isRecordingVideo) return;
+                          controller?.value.isInitialized != true ||
+                          controller?.value.isRecordingVideo == true) return;
                       onVideoRecordButtonPressed();
                     }
                   : null,
               onLongPressUp: isPermissionsGranted
                   ? () {
                       if (controller == null ||
-                          !controller.value.isInitialized ||
-                          !controller.value.isRecordingVideo) return;
+                          controller?.value.isInitialized != true ||
+                          controller?.value.isRecordingVideo == true) return;
                       onStopButtonPressed();
                     }
                   : null),
@@ -561,8 +561,8 @@ class _CameraHomeState extends State<CameraHome> {
                     child: Text('Error: ${snapshot.error}'),
                   );
                 }
-                if (snapshot.data.length <= 0) return Container();
-                List<String> displayedData = snapshot.data.sublist(0, 10);
+                if (snapshot.data!.length <= 0) return Container();
+                List<String> displayedData = snapshot.data!.sublist(0, 10);
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 1.0),
                   itemCount: displayedData.length,
@@ -585,7 +585,6 @@ class _CameraHomeState extends State<CameraHome> {
                   },
                 );
             }
-            return null;
           }),
     );
   }
@@ -593,10 +592,10 @@ class _CameraHomeState extends State<CameraHome> {
 
 class GalleryItemThumbnail extends StatelessWidget {
   GalleryItemThumbnail({
-    this.heroId,
-    this.resource,
-    this.onTap,
-    this.height,
+    required this.heroId,
+    required this.resource,
+    required this.onTap,
+    required this.height,
     this.margin,
   });
 
@@ -604,7 +603,7 @@ class GalleryItemThumbnail extends StatelessWidget {
   final double height;
   final String resource;
   final GestureTapCallback onTap;
-  final margin;
+  final EdgeInsetsGeometry? margin;
 
   @override
   Widget build(BuildContext context) {
@@ -637,7 +636,7 @@ class GalleryItemThumbnail extends StatelessWidget {
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate({
-    @required this.text,
+    required this.text,
   });
 
   final String text;

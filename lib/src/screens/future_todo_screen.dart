@@ -8,39 +8,40 @@ class FutureTodoScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [darkColor, primaryColor], begin: Alignment.topLeft, end: Alignment.bottomRight)
-        ),
-        child:
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Hi, thanks for checking out this project. I made this just for my '
-                        'study/excersise on Flutter. This is obviously non-affiliated (duh!) and '
-                        'I make no profit of it. Download the real WhatsApp by clicking the button below. Cheers!'
-                    ,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [darkColor, primaryColor],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Hi, thanks for checking out this project. I made this just for my '
+                  'study/excersise on Flutter. This is obviously non-affiliated (duh!) and '
+                  'I make no profit of it. Download the real WhatsApp by clicking the button below. Cheers!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
                   ),
-                  SizedBox(height: 8.0,),
-                  RaisedButton(
-                    child: Text('Download WhatsApp'),
-                    onPressed: (){
-                      String url = 'https://www.whatsapp.com/download/';
-                      _launchURL(url);
-                    },
-                  )
-                ],
-              ),
-            )
-      ),
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                ElevatedButton(
+                  child: Text('Download WhatsApp'),
+                  onPressed: () {
+                    String url = 'https://www.whatsapp.com/download/';
+                    _launchURL(url);
+                  },
+                )
+              ],
+            ),
+          )),
     );
   }
 

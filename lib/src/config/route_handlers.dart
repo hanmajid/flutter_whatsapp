@@ -49,7 +49,7 @@ var chatDetailHandler = new Handler(
     handlerFunc: (BuildContext? context, Map<String, List<String>> params) {
   int profileId = int.parse(params['profileId']?.first ?? '');
 
-  return new DetailChatScreen(
+  return DetailChatScreen(
     id: profileId,
   );
 });

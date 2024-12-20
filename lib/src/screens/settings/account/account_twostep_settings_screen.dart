@@ -8,9 +8,9 @@ class AccountTwoStepSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String text = 'For added security, enable two-step '
-      'verfication, which will require a PIN when '
-      'registering your phone number with '
-      'WhatzApp again.';
+        'verfication, which will require a PIN when '
+        'registering your phone number with '
+        'WhatzApp again.';
 
     return Scaffold(
       appBar: AppBar(
@@ -50,15 +50,15 @@ class AccountTwoStepSettingsScreen extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: RaisedButton(
-              color: fabBgColor,
+            child: ElevatedButton(
+              // color: fabBgColor,
               child: Text(
-                  'ENABLE',
+                'ENABLE',
                 style: TextStyle(
                   color: Colors.white,
                 ),
               ),
-              onPressed: (){
+              onPressed: () {
                 Application.router!.navigateTo(
                   context,
                   //Routes.accountEnableTwoStepSettings,
@@ -72,5 +72,4 @@ class AccountTwoStepSettingsScreen extends StatelessWidget {
       ),
     );
   }
-
 }

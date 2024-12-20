@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_whatsapp/src/values/colors.dart';
 
-
 import 'dart:math';
 
 final _random = new Random();
@@ -13,24 +12,25 @@ int getRandomInt(int min, int max) => min + _random.nextInt(max - min);
 class NewTextStatusScreen extends StatefulWidget {
   @override
   _NewTextStatusScreenState createState() => _NewTextStatusScreenState();
-
 }
 
 class _NewTextStatusScreenState extends State<NewTextStatusScreen> {
-  Color _bgColor;
-  int _bgColorIndex;
+  late Color _bgColor;
+  late int _bgColorIndex;
 
   @override
   void initState() {
     super.initState();
-    _bgColorIndex = getRandomInt(2, 4)*100;
-    _bgColor = Colors.primaries[getRandomInt(0, Colors.primaries.length-1)][_bgColorIndex];
+    _bgColorIndex = getRandomInt(2, 4) * 100;
+    _bgColor = Colors.primaries[getRandomInt(0, Colors.primaries.length - 1)]
+        [_bgColorIndex]!;
   }
 
   void _changeBgColor() {
     setState(() {
-      _bgColorIndex = getRandomInt(2, 4)*100;
-      _bgColor = Colors.primaries[getRandomInt(0, Colors.primaries.length-1)][_bgColorIndex];
+      _bgColorIndex = getRandomInt(2, 4) * 100;
+      _bgColor = Colors.primaries[getRandomInt(0, Colors.primaries.length - 1)]
+          [_bgColorIndex]!;
     });
   }
 
@@ -64,14 +64,13 @@ class _NewTextStatusScreenState extends State<NewTextStatusScreen> {
                       fontSize: 40.0,
                     ),
                     decoration: InputDecoration(
-                      counterText: '',
+                        counterText: '',
                         border: InputBorder.none,
                         hintText: 'Type a status',
                         hintStyle: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 0.5),
                           fontSize: 40.0,
-                        )
-                    ),
+                        )),
                   ),
                 ),
               ],
@@ -86,25 +85,23 @@ class _NewTextStatusScreenState extends State<NewTextStatusScreen> {
                     IconButton(
                       color: Colors.white,
                       icon: Icon(Icons.insert_emoticon),
-                      onPressed: (){},
+                      onPressed: () {},
                     ),
                     RawMaterialButton(
                       onPressed: () {},
-                      child: Text(
-                          'T',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        )
-                      ),
+                      child: Text('T',
+                          style: TextStyle(
+                            fontSize: 24.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          )),
                       shape: new CircleBorder(),
                       padding: const EdgeInsets.all(18.0),
                     ),
                     IconButton(
                       color: Colors.white,
                       icon: Icon(Icons.color_lens),
-                      onPressed: (){
+                      onPressed: () {
                         _changeBgColor();
                       },
                     ),
@@ -117,7 +114,7 @@ class _NewTextStatusScreenState extends State<NewTextStatusScreen> {
                   backgroundColor: secondaryColor,
                   foregroundColor: Colors.white,
                   child: Icon(Icons.send),
-                  onPressed: (){},
+                  onPressed: () {},
                 ),
               )
             ],
@@ -126,5 +123,4 @@ class _NewTextStatusScreenState extends State<NewTextStatusScreen> {
       ),
     );
   }
-
 }

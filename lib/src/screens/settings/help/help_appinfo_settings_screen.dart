@@ -65,8 +65,8 @@ class HelpAppInfoSettingsScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0),
                   child: TextButton(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 16.0, horizontal: 24.0),
+                      // padding: const EdgeInsets.symmetric(
+                      //     vertical: 16.0, horizontal: 24.0),
                       onPressed: () {
                         Application.router!.navigateTo(
                           context,

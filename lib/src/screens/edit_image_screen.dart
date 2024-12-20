@@ -9,8 +9,8 @@ class EditImageScreen extends StatefulWidget {
   final String resource;
 
   EditImageScreen({
-    this.id,
-    this.resource,
+    required this.id,
+    required this.resource,
   });
 
   @override

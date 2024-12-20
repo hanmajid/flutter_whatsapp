@@ -30,9 +30,9 @@ class ChatsSettingsScreen extends StatefulWidget {
 class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
   FontSizeOptions defaultFontSize = FontSizeOptions.medium;
 
-  Future<bool> _enterIsSend;
-  Future<bool> _mediaVisibility;
-  Future<FontSizeOptions> _fontSize;
+  late Future<bool> _enterIsSend;
+  late Future<bool> _mediaVisibility;
+  late Future<FontSizeOptions> _fontSize;
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -42,13 +42,18 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
 
     // initialize variables
     _enterIsSend = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getBool(SharedPreferencesHelpers.enterIsSend) ?? SharedPreferencesHelpers.defaultEnterIsSend);
+      return (prefs.getBool(SharedPreferencesHelpers.enterIsSend) ??
+          SharedPreferencesHelpers.defaultEnterIsSend);
     });
     _mediaVisibility = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getBool(SharedPreferencesHelpers.mediaVisibility) ?? SharedPreferencesHelpers.defaultMediaVisibility);
+      return (prefs.getBool(SharedPreferencesHelpers.mediaVisibility) ??
+          SharedPreferencesHelpers.defaultMediaVisibility);
     });
     _fontSize = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getInt(SharedPreferencesHelpers.fontSize) != null ? fontSizeOptionsList[prefs.getInt(SharedPreferencesHelpers.fontSize)] : defaultFontSize);
+      return (prefs.getInt(SharedPreferencesHelpers.fontSize) != null
+          ? fontSizeOptionsList[
+              prefs.getInt(SharedPreferencesHelpers.fontSize)!]
+          : defaultFontSize);
     });
   }
 
@@ -60,7 +65,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
       ),
       body: ListView(
         children: <Widget>[
-          FutureBuilder(
+          FutureBuilder<bool>(
             future: _enterIsSend,
             key: Key('Enter_is_Send'),
             builder: (context, snapshot) {
@@ -74,29 +79,30 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
                 case ConnectionState.done:
                   if (snapshot.hasError) {
                     print(snapshot.error);
-                  }
-                  else {
-                    enterIsSend = snapshot.data;
+                  } else {
+                    enterIsSend = snapshot.data ?? enterIsSend;
                     onChanged = (bool value) {
                       _setEnterIsSend(value);
                     };
                   }
               }
-              return  SwitchSettingItem(
+              return SwitchSettingItem(
                 title: 'Enter is send',
                 subtitle: 'Enter key will send your message',
                 onChanged: onChanged,
                 value: enterIsSend,
-                padding: EdgeInsets.only(right: 16.0, left: 70.0, top: 12.0, bottom: 12.0),
+                padding: EdgeInsets.only(
+                    right: 16.0, left: 70.0, top: 12.0, bottom: 12.0),
               );
             },
           ),
-          FutureBuilder(
+          FutureBuilder<bool>(
             future: _mediaVisibility,
             key: Key('Visibility'),
             builder: (context, snapshot) {
               var onChanged;
-              bool mediaVisibility = SharedPreferencesHelpers.defaultMediaVisibility;
+              bool mediaVisibility =
+                  SharedPreferencesHelpers.defaultMediaVisibility;
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
                 case ConnectionState.active:
@@ -105,9 +111,8 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
                 case ConnectionState.done:
                   if (snapshot.hasError) {
                     print(snapshot.error);
-                  }
-                  else {
-                    mediaVisibility = snapshot.data;
+                  } else {
+                    mediaVisibility = snapshot.data ?? mediaVisibility;
                     onChanged = (bool value) {
                       _setMediaVisibility(value);
                     };
@@ -115,14 +120,16 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
               }
               return SwitchSettingItem(
                 title: 'Media visibility',
-                subtitle: 'Show newly downloaded media in your phone\'s gallery',
+                subtitle:
+                    'Show newly downloaded media in your phone\'s gallery',
                 onChanged: onChanged,
                 value: mediaVisibility,
-                padding: EdgeInsets.only(right: 16.0, left: 70.0, top: 12.0, bottom: 12.0),
+                padding: EdgeInsets.only(
+                    right: 16.0, left: 70.0, top: 12.0, bottom: 12.0),
               );
             },
           ),
-          FutureBuilder(
+          FutureBuilder<FontSizeOptions>(
             future: _fontSize,
             builder: (context, snapshot) {
               String fontSize = '-';
@@ -137,21 +144,29 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
                   if (snapshot.hasError) {
                     fontSize = 'Error: ${snapshot.error}';
                     print(snapshot.error);
-                  }
-                  else {
-                    fontSize = _getFontSizeText(snapshot.data);
-                    onTap = (){
-                      DialogHelpers.showRadioDialog(fontSizeOptionsList, 'Font size', _getFontSizeText, context, snapshot.data, false, (FontSizeOptions value) {
+                  } else {
+                    fontSize = _getFontSizeText(snapshot.data!);
+                    onTap = () {
+                      DialogHelpers.showRadioDialog(
+                          fontSizeOptionsList,
+                          'Font size',
+                          _getFontSizeText,
+                          context,
+                          snapshot.data,
+                          false, (FontSizeOptions value) {
                         _setFontSize(value.index);
                       });
                     };
                   }
               }
               return SettingItem(
-                  title: 'Font size',
-                  subtitle: fontSize,
-                  onTap: onTap,
-                padding: EdgeInsets.only(right: 16.0, left: 70.0,),
+                title: 'Font size',
+                subtitle: fontSize,
+                onTap: onTap,
+                padding: EdgeInsets.only(
+                  right: 16.0,
+                  left: 70.0,
+                ),
               );
             },
           ),
@@ -160,13 +175,13 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
             icon: Icons.wallpaper,
             title: 'Wallpaper',
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
-            onTap: (){},
+            onTap: () {},
           ),
           SettingItem(
             icon: Icons.cloud_upload,
             title: 'Chat backup',
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
-            onTap: (){
+            onTap: () {
               Application.router!.navigateTo(
                 context,
                 Routes.futureTodo,
@@ -178,7 +193,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
             icon: Icons.history,
             title: 'Chat history',
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
-            onTap: (){
+            onTap: () {
               Application.router!.navigateTo(
                 context,
                 Routes.futureTodo,
@@ -192,7 +207,7 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
   }
 
   String _getFontSizeText(FontSizeOptions option) {
-    switch(option) {
+    switch (option) {
       case FontSizeOptions.small:
         return 'Small';
       case FontSizeOptions.medium:
@@ -207,7 +222,9 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _enterIsSend = prefs.setBool(SharedPreferencesHelpers.enterIsSend, value).then((bool success) {
+      _enterIsSend = prefs
+          .setBool(SharedPreferencesHelpers.enterIsSend, value)
+          .then((bool success) {
         return value;
       });
     });
@@ -217,7 +234,9 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _mediaVisibility = prefs.setBool(SharedPreferencesHelpers.mediaVisibility, value).then((bool success) {
+      _mediaVisibility = prefs
+          .setBool(SharedPreferencesHelpers.mediaVisibility, value)
+          .then((bool success) {
         return value;
       });
     });
@@ -227,7 +246,9 @@ class _ChatsSettingsScreenState extends State<ChatsSettingsScreen> {
     final SharedPreferences prefs = await _prefs;
 
     setState(() {
-      _fontSize = prefs.setInt(SharedPreferencesHelpers.fontSize, value).then((bool success) {
+      _fontSize = prefs
+          .setInt(SharedPreferencesHelpers.fontSize, value)
+          .then((bool success) {
         return fontSizeOptionsList[value];
       });
     });
